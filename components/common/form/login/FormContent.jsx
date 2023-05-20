@@ -8,8 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../Loading/Loading";
 import { setLoading, setUser } from "../../../../features/user/userSlice";
 import axios from "axios";
+import Cookies from "js-cookie";
 
-const FormContent = ({ handleSignIn, isLoginSuccess }) => {
+
+const FormContent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -23,8 +25,13 @@ const FormContent = ({ handleSignIn, isLoginSuccess }) => {
       const {user} =await signInWithEmailAndPassword(auth,email,password)
       
       if (user) {
-        const data = await axios.post('/api/jwt',{user:user})
-        console.log(data);
+        const token = await user.getIdToken()
+        console.log(token);
+        // const in30Minutes = 1/48;
+        // Cookies.set('token',token,{
+        //   expires: in30Minutes
+        // })
+        await axios.post('api/jwt',{token:token})
         router.push("/");
        
         // setLoading(false)

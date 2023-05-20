@@ -11,9 +11,24 @@ import userSlice from "../features/user/userSlice";
 import thunk from "redux-thunk";
 import session from "redux-persist/lib/storage/session";
 import { persistReducer } from "redux-persist";
-import storage from 'redux-persist/lib/storage'
+// import storage from 'redux-persist/lib/storage'
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
+const createNoopStorage = () => {
+    return {
+        getItem(_key) {
+            return Promise.resolve(null);
+        },
+        setItem(_key, value) {
+            return Promise.resolve(value);
+        },
+        removeItem(_key) {
+            return Promise.resolve();
+        },
+    };
+};
 
+const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage();
 const persistConfig = {
     key: 'root',
     storage: storage,
@@ -33,8 +48,6 @@ const reducer = combineReducers({
 const persistedReducer = persistReducer(persistConfig, reducer)
 export const store = configureStore({
     reducer: persistedReducer,
-
-
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false
 

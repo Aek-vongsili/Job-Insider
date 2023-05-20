@@ -7,6 +7,8 @@ const index = () => {
       className="banner-section-four -type-16"
       style={{ backgroundImage: "url(images/index-16/header/bg.png)" }}
     >
+
+      {/* <img src="images/index-16/header/bg.png" alt="" className="image-bg"/> */}
       <div className="auto-container">
         <div className="content-box">
           <div className="title-box" data-wow-delay="500" data-aos="fade-up">

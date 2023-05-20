@@ -128,8 +128,7 @@ const HeaderNavContent = () => {
               router.asPath === "/candidates-dashboard/dashboard"
                 ? "current"
                 : ""
-                ? "current"
-                : ""
+               
             } dropdown`}
           >
             <span>Candidates</span>
@@ -197,7 +196,7 @@ const HeaderNavContent = () => {
           </li>
           {/* End Blog menu items */}
 
-          <li
+          {/* <li
             className={`${
               isActiveParentChaild(pageItems, router.asPath) ||
               isActiveParentChaild(shopItems[0].items, router.asPath)
@@ -245,7 +244,7 @@ const HeaderNavContent = () => {
                 </li>
               ))}
             </ul>
-          </li>
+          </li> */}
           <li>
             <Link href={"/about"}>
               <span

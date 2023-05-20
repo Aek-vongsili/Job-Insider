@@ -10,11 +10,13 @@ import { auth } from "../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setUser } from "../../features/user/userSlice";
 import axios from "axios";
+import Cookies from "js-cookie";
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
   const router = useRouter();
   const isLogin = useSelector((state) => state.user.isLoggedIn);
-  // const session = sessionStorage.getItem("persist:root")
+  const coo = Cookies.get()
+  console.log(coo)
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -24,32 +26,36 @@ const Header = () => {
   };
   const dispatch = useDispatch();
   const Logout = async () => {
-    signOut(auth)
-      .then(() => {
-        console.log("You are Log out");
-        router.push("/");
-        dispatch(setLogout());
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    const rs = await axios.get("/api/logout");
-    console.log(rs);
+    try {
+      await signOut(auth);
+      console.log("You are Log out");
+      await axios.get("/api/logout");
+      dispatch(setLogout());
+      router.push("/");
+    } catch (err) {
+      console.log(err);
+    }
+
+    // const rs = await axios.get("/api/logout");
+    // console.log(rs);
   };
- 
+  const checkTokenIsExpire = async () => {
+    const token = Cookies.get("token");
+    console.log(token);
+    if (token == null) {
+      dispatch(setLogout());
+      await signOut(auth);
+    }
+  };
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user.getIdToken());
         dispatch(setUser(user));
-      }
-      else {
-        Logout()
+      } else {
+        dispatch(setLogout());
       }
     });
-    
-    
   }, []);
 
   return (

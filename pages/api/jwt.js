@@ -1,8 +1,7 @@
 import { serialize } from "cookie";
 export default async function (req, res) {
     // const { token } = req.body
-    const {user} = req.body
-    const token = user?.stsTokenManager?.accessToken
+    const {token} = req.body
     console.log(token);
     
     if (token !== null && token != undefined) {
@@ -10,7 +9,7 @@ export default async function (req, res) {
             httpOnly: true,
             secure: process.env.NODE_ENV !== "development",
             samSite: "strict",
-            maxAge: 60 * 60 * 24 * 7, // 1 week,
+            maxAge: 60 * 60 , // 1 week,
             path: "/",
         })
         res.setHeader("Set-Cookie", serialized)

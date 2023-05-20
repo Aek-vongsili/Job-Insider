@@ -4,19 +4,19 @@ const ImgBox = () => {
   const imgContent = [
     {
       id: 1,
-      block: [{ img: "about-img-1" }],
+      block: [{ img: "ab4.jpeg" }],
     },
     {
       id: 2,
-      block: [{ img: "about-img-2" }, { img: "about-img-3" }],
+      block: [{ img: "ab2.jpeg" }, { img: "ab3.jpeg" },{ img: "ab2.jpeg" }],
     },
     {
       id: 3,
-      block: [{ img: "about-img-4" }, { img: "about-img-5" }],
+      block: [{ img: "ab2.jpeg" }, { img: "ab3.jpeg" },{ img: "ab2.jpeg" }],
     },
     {
       id: 4,
-      block: [{ img: "about-img-6" }],
+      block: [{ img: "ab1.jpg" }],
     },
   ];
 
@@ -28,7 +28,7 @@ const ImgBox = () => {
             {item.block.map((itemImg, i) => (
               <figure className="image" key={i}>
                 <Image
-                  src={`/images/resource/${itemImg.img}.jpg`}
+                  src={`/images/about/${itemImg.img}`}
                   alt="about image"
                   width={300}
                   height={200}

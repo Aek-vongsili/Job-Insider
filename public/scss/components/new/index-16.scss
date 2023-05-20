@@ -11,10 +11,18 @@
 .banner-section-four.-type-16 {
   padding: 0;
   height: auto;
-
+  // position: relative;
+  // min-height: 500px;
+  // position: relative;
+  
   .content-box {
-    padding-top: 290px;
-    padding-bottom: 60px;
+    padding-bottom: 100px;
+    padding-top: 240px;
+    // position: absolute;
+    // top: 55%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
+    // width: 100%;
 
     @include media-below(lg) {
       padding-top: 220px;
