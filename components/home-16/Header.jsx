@@ -30,7 +30,6 @@ const Header = () => {
       await signOut(auth);
       console.log("You are Log out");
       await axios.get("/api/logout");
-      dispatch(setLogout());
       router.push("/");
     } catch (err) {
       console.log(err);
@@ -38,14 +37,6 @@ const Header = () => {
 
     // const rs = await axios.get("/api/logout");
     // console.log(rs);
-  };
-  const checkTokenIsExpire = async () => {
-    const token = Cookies.get("token");
-    console.log(token);
-    if (token == null) {
-      dispatch(setLogout());
-      await signOut(auth);
-    }
   };
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);

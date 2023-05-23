@@ -1,12 +1,15 @@
 import dynamic from "next/dynamic";
 import Seo from "../components/common/Seo";
 import CandidatesListV3 from "../components/candidates-listing-pages/candidates-list-v3";
+import Layout from "../components/Layout";
 
 const index = () => {
   return (
     <>
-      <Seo pageTitle="Candidates List V3" />
-      <CandidatesListV3 />
+      <Layout >
+        <Seo pageTitle="Candidates List V3" />
+        <CandidatesListV3 />
+      </Layout>
     </>
   );
 };

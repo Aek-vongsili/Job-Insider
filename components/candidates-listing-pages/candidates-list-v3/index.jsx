@@ -14,7 +14,7 @@ const Index = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DefaulHeader2 />
+      {/* <DefaulHeader2 /> */}
       {/* End Header with upload cv btn */}
 
       <MobileMenu />
@@ -45,7 +45,7 @@ const Index = () => {
       </section>
       {/* <!--End Listing Page Section --> */}
 
-      <FooterDefault footerStyle="alternate5" />
+      {/* <FooterDefault footerStyle="alternate5" /> */}
       {/* <!-- End Main Footer --> */}
     </>
   );

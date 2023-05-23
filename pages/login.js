@@ -13,9 +13,6 @@ const index = () => {
   );
 };
 
-export default dynamic(() => Promise.resolve(index), { ssr: false });
-
-
 export async function getServerSideProps({req}){
   const {cookies} = req
   const token = cookies?.token || null
@@ -31,3 +28,7 @@ export async function getServerSideProps({req}){
     props:{}
   }
 }
+
+export default dynamic(() => Promise.resolve(index), { ssr: false });
+
+

@@ -68,10 +68,10 @@ const HeaderNavContent = () => {
             }`}
             id="has-mega-menu"
           >
-            <Link href={"/job-list-v5"}>
+            <Link href={"/job-list"}>
               <span
                 style={
-                  router.pathname === "/job-list-v5" ? { color: "#1967d2" } : {}
+                  router.pathname === "/job-list" ? { color: "#1967d2" } : {}
                 }
               >
                 Find Jobs
@@ -123,16 +123,22 @@ const HeaderNavContent = () => {
           {/* End Employers menu items */}
 
           <li
-            className={`${
+            className={
               isActiveParent(candidateItems, router.asPath) ||
               router.asPath === "/candidates-dashboard/dashboard"
                 ? "current"
                 : ""
-               
-            } dropdown`}
+            }
           >
-            <span>Candidates</span>
-            <ul>
+            <Link href="/candidates-list">
+              <span style={
+                  router.pathname === "/candidates-list"
+                    ? { color: "#1967d2" }
+                    : {}
+                }>Candidates</span>
+            </Link>
+            
+            {/* <ul>
               {candidateItems.map((item) => (
                 <li className="dropdown" key={item.id}>
                   <span
@@ -171,11 +177,11 @@ const HeaderNavContent = () => {
                   Candidates Dashboard
                 </Link>
               </li>
-            </ul>
+            </ul> */}
           </li>
           {/* End Candidates menu items */}
 
-          <li
+          {/* <li
             className={`${
               isActiveParentChaild(blogItems, router.asPath) ? "current" : ""
             } dropdown`}
@@ -193,7 +199,7 @@ const HeaderNavContent = () => {
                 </li>
               ))}
             </ul>
-          </li>
+          </li> */}
           {/* End Blog menu items */}
 
           {/* <li
