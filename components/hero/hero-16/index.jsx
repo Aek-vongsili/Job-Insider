@@ -5,9 +5,77 @@ const index = () => {
   return (
     <section
       className="banner-section-four -type-16"
-      style={{ backgroundImage: "url(images/index-16/header/bg.png)" }}
+      // style={{ backgroundImage: "url(images/index-16/header/bg.png)" }}
     >
-
+      <div
+        id="carouselExampleIndicators"
+        class="carousel slide image-slide"
+        data-bs-ride="true"
+      >
+        <div class="carousel-indicators ">
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="0"
+            class="active"
+            aria-current="true"
+            aria-label="Slide 1"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="1"
+            aria-label="Slide 2"
+          ></button>
+          <button
+            type="button"
+            data-bs-target="#carouselExampleIndicators"
+            data-bs-slide-to="2"
+            aria-label="Slide 3"
+          ></button>
+        </div>
+        <div class="carousel-inner img">
+          <div class="carousel-item active item" data-bs-interval="5000">
+            <img
+              src="images/index-16/header/bg.png"
+              class="d-block banner"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item item" data-bs-interval="2000">
+            <img
+              src="images/index-16/header/bg4.png"
+              class="d-block banner"
+              alt="..."
+            />
+          </div>
+          <div class="carousel-item item">
+            <img
+              src="images/index-16/header/bg5.png"
+              class="d-block banner"
+              alt="..."
+            />
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#carouselExampleIndicators"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
       {/* <img src="images/index-16/header/bg.png" alt="" className="image-bg"/> */}
       <div className="auto-container">
         <div className="content-box">

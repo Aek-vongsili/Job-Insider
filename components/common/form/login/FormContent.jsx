@@ -10,30 +10,30 @@ import { setLoading, setUser } from "../../../../features/user/userSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-
 const FormContent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
-  const dispatch = useDispatch()
+  const [showpass, setShowPass] = useState(false);
+  const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const {user} =await signInWithEmailAndPassword(auth,email,password)
-      
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+
       if (user) {
-        const token = await user.getIdToken()
-        console.log(token);
+        // const token = await user.getIdToken(true)
+        // console.log(token);
         // const in30Minutes = 1/48;
         // Cookies.set('token',token,{
         //   expires: in30Minutes
         // })
-        await axios.post('api/jwt',{token:token})
+
         router.push("/");
-       
+
         // setLoading(false)
       }
     } catch (err) {
@@ -63,13 +63,27 @@ const FormContent = () => {
         <div className="form-group">
           <label>Password</label>
           <input
-            type="password"
+            type={showpass ? "text" : "password"}
             name="password"
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <p>{err ? err : ""}</p>
+          {showpass ? (
+            <i
+              class="fa fa-eye eye-open"
+              aria-hidden="true"
+              onClick={() => setShowPass((prev) => !prev)}
+            ></i>
+          ) : (
+            <i
+              class="fa fa-eye-slash eye-close"
+              aria-hidden="true"
+              onClick={() => setShowPass((prev) => !prev)}
+            ></i>
+          )}
+          <p className="err-message">{err ? err : ""}</p>
         </div>
+        
         {/* password */}
 
         <div className="form-group">

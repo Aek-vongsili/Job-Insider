@@ -1,5 +1,5 @@
 import Link from "next/link";
-import ListingShowing from "../components/ListingShowing";
+import Pagination from "../components/Pagination";
 import candidatesData from "../../../data/candidates";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -109,59 +109,52 @@ const FilterTopBox = () => {
         ?.filter(qualificationFilter)
         ?.sort(sortFilter)
         ?.map((candidate) => (
-            <div className="candidate-block-three" key={candidate.id}>
+            <div
+                className="candidate-block-four col-lg-4 col-md-6 col-sm-12"
+                key={candidate.id}
+            >
                 <div className="inner-box">
-                    <div className="content">
-                        <figure className="image">
-                            <img src={candidate.avatar} alt="candidates" />
-                        </figure>
-                        <h4 className="name">
-                            <Link
-                                href={`/candidates-single/${candidate.id}`}
-                            >
-                                {candidate.name}
-                            </Link>
-                        </h4>
+                    <ul className="job-other-info">
+                        <li className="green">Featured</li>
+                    </ul>
 
-                        <ul className="candidate-info">
-                            <li className="designation">
-                                {candidate.designation}
-                            </li>
-                            <li>
-                                <span className="icon flaticon-map-locator"></span>{" "}
-                                {candidate.location}
-                            </li>
-                            <li>
-                                <span className="icon flaticon-money"></span> $
-                                {candidate.hourlyRate} / hour
-                            </li>
-                        </ul>
-                        {/* End candidate-info */}
-
-                        <ul className="post-tags">
-                            {candidate.tags.map((val, i) => (
-                                <li key={i}>
-                                    <a href="#">{val}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    {/* End content */}
-
-                    <div className="btn-box">
-                        <button className="bookmark-btn me-2">
-                            <span className="flaticon-bookmark"></span>
-                        </button>
-                        {/* End bookmark-btn */}
-
-                        <Link
-                            href={`/candidates-single-v1/${candidate.id}`}
-                            className="theme-btn btn-style-three"
-                        >
-                            <span className="btn-title">View Profile</span>
+                    <span className="thumb">
+                        <img src={candidate.avatar} alt="candidates" />
+                    </span>
+                    <h3 className="name">
+                        <Link href={`/candidates-single/${candidate.id}`}>
+                            {candidate.name}
                         </Link>
-                    </div>
-                    {/* End btn-box */}
+                    </h3>
+                    <span className="cat">{candidate.designation}</span>
+
+                    <ul className="job-info">
+                        <li>
+                            <span className="icon flaticon-map-locator"></span>{" "}
+                            {candidate.location}
+                        </li>
+                        <li>
+                            <span className="icon flaticon-money"></span> $
+                            {candidate.hourlyRate} / hour
+                        </li>
+                    </ul>
+                    {/* End candidate-info */}
+
+                    <ul className="post-tags">
+                        {candidate.tags.map((val, i) => (
+                            <li key={i}>
+                                <a href="#">{val}</a>
+                            </li>
+                        ))}
+                    </ul>
+                    {/* End tags */}
+
+                    <Link
+                        href={`/candidates-single/${candidate.id}`}
+                        className="theme-btn btn-style-three"
+                    >
+                        View Profile
+                    </Link>
                 </div>
             </div>
         ));
@@ -193,26 +186,57 @@ const FilterTopBox = () => {
         dispatch(addSort(""));
         dispatch(addPerPage({ start: 0, end: 0 }));
     };
-
     return (
         <>
             <div className="ls-switcher">
                 <div className="showing-result">
-                    <div className="show-1023">
-                        <button
-                            type="button"
-                            className="theme-btn toggle-filters "
-                            data-bs-toggle="offcanvas"
-                            data-bs-target="#filter-sidebar"
-                        >
-                            <span className="icon icon-filter"></span> Filter
-                        </button>
-                    </div>
-                    {/* Collapsible sidebar button */}
+                    {/* <div className="top-filters">
+                        <div className="form-group">
+                            <select className="chosen-single form-select">
+                                <option>Candidate Gender</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>other</option>
+                            </select>
+                        </div>
 
-                    <div className="text">
-                        <strong>{content?.length}</strong> jobs
-                    </div>
+                        <div className="form-group">
+                            <select className="chosen-single form-select">
+                                <option>Date Posted</option>
+                                <option>New Jobs</option>
+                                <option>Freelance</option>
+                                <option>Full Time</option>
+                                <option>Internship</option>
+                                <option>Part Time</option>
+                                <option>Temporary</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <select className="chosen-single form-select">
+                                <option>Experience Level</option>
+                                <option>New Jobs</option>
+                                <option>Freelance</option>
+                                <option>Full Time</option>
+                                <option>Internship</option>
+                                <option>Part Time</option>
+                                <option>Temporary</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <select className="chosen-single form-select">
+                                <option>Education Level</option>
+                                <option>New Jobs</option>
+                                <option>Freelance</option>
+                                <option>Full Time</option>
+                                <option>Internship</option>
+                                <option>Part Time</option>
+                                <option>Temporary</option>
+                            </select>
+                        </div>
+                    </div> */}
+                    {/* End top-left-filter */}
                 </div>
                 {/* End showing-result */}
 
@@ -292,9 +316,10 @@ const FilterTopBox = () => {
             </div>
             {/* End top filter bar box */}
 
-            {content}
+            <div className="row">{content}</div>
+            {/* End .row */}
 
-            <ListingShowing />
+            <Pagination />
             {/* <!-- Listing Show More --> */}
         </>
     );

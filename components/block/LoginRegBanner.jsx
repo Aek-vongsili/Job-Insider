@@ -2,7 +2,12 @@ const LoginRegBanner = () => {
   return (
     <section
       className="cta -type-2"
-      style={{ backgroundImage: "url(images/index-16/cta-2/bg.png)" }}
+      style={{
+        backgroundImage: "url(images/index-16/header/bg2.jpeg)",
+        backgroundPosition: "center",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
     >
       <div className="auto-container">
         <div className="row grid-base justify-content-between">

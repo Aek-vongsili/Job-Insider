@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import Seo from "../components/common/Seo";
-import EmployersListV3 from "../components/employers-listing-pages/employers-list-v3";
+import EmployersList from "../components/employers-listing-pages/employers-list";
 import Layout from "../components/Layout";
 
 const index = () => {
@@ -8,7 +8,7 @@ const index = () => {
     <>
       <Seo pageTitle="Employers List" />
       <Layout>
-        <EmployersListV3 />
+        <EmployersList />
       </Layout>
      
     </>

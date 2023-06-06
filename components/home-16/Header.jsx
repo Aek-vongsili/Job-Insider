@@ -8,15 +8,14 @@ import HeaderNavContent from "../header/HeaderNavContent";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogout, setUser } from "../../features/user/userSlice";
+import { setLogout, setUser, setRole } from "../../features/user/userSlice";
+
 import axios from "axios";
-import Cookies from "js-cookie";
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
   const router = useRouter();
   const isLogin = useSelector((state) => state.user.isLoggedIn);
-  const coo = Cookies.get()
-  console.log(coo)
+  const user = useSelector((state) => state.user.user);
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -25,11 +24,12 @@ const Header = () => {
     }
   };
   const dispatch = useDispatch();
+  // const ssrDispatch =  useAppDispatch()
   const Logout = async () => {
     try {
       await signOut(auth);
-      console.log("You are Log out");
       await axios.get("/api/logout");
+      console.log("You are Log out");
       router.push("/");
     } catch (err) {
       console.log(err);
@@ -40,9 +40,30 @@ const Header = () => {
   };
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
+
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        dispatch(setUser(user));
+        user.getIdToken(true).then((token) => {
+          axios
+            .post("/api/jwt", { token: token })
+            .then((rs) => {
+              console.log(rs);
+            })
+            .catch((err) => {
+              alert(err);
+            })
+            .catch((err) => {
+              alert(err);
+            });
+        });
+        // let {stsTokenManager,accessToken,auth,...newUser} = user
+        // delete user.stsTokenManager
+        let newUser = { ...user };
+        delete newUser.stsTokenManager;
+        delete newUser.auth;
+        delete newUser.accessToken;
+
+        dispatch(setUser(newUser));
       } else {
         dispatch(setLogout());
       }

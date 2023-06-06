@@ -6,33 +6,37 @@ import { useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase/clientApp";
 
-const index = ({ token }) => {
+import { setLogout } from "../features/user/userSlice";
+const index = () => {
  
-  useEffect(() => {
-    const checkToken = async() => {
-      if (token === null) {
-        await signOut(auth)
-        // dispatch(setLogout());
-      }
-    };
+  // useEffect(() => {
+  //   const checkToken = async() => {
+  //     if (token === null) {
+  //       await signOut(auth)
+  //       // dispatch(setLogout());
+  //     }
+  //   };
 
-    checkToken();
-  }, [token]);
+  //   checkToken();
+  // }, [token]);
 
   return (
     <>
       <Seo pageTitle="Home" />
       <Layout>
-        <Home16 token={token} />
+        <Home16 />
       </Layout>
     </>
   );
 };
 
+
 export async function getServerSideProps({ req }) {
   const { cookies } = req;
   const token = cookies.token || null;
-
+  if(token === null){
+    await signOut(auth);
+  }
   return {
     props: { token },
   };
