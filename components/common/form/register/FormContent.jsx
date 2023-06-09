@@ -1,7 +1,7 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { auth, db } from "../../../../firebase/clientApp";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Loading from "../../../Loading/Loading";
 import { useRouter } from "next/router";
 
@@ -23,6 +23,7 @@ const FormContent = ({ userType }) => {
                 ? result.user.email.substring(0, result.user.email.indexOf("@"))
                 : result.user.displayName,
             role: userType,
+            createAt:serverTimestamp()
           },
         });
         router.push("/")

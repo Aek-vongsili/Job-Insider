@@ -1,8 +1,9 @@
 import Map from "../../../Map";
 import Select from "react-select";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../../../../firebase/clientApp";
+import { db, storage } from "../../../../../firebase/clientApp";
 import { useState } from "react";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const PostBoxForm = () => {
   const specialisms = [
@@ -30,6 +31,8 @@ const PostBoxForm = () => {
   const [tag2, setTag2] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+  const [logoImg, setLogoImg] = useState("");
+  const [percent, setPercent] = useState(0);
 
   const jobID = doc(db, "Job-Featured", "eA0qbWcY3XzWWQmd8QFD");
   const jobtype = [
@@ -38,63 +41,132 @@ const PostBoxForm = () => {
     { value: "Private", label: "Private" },
     { value: "Urgent", label: "Urgent" },
   ];
-  let jobtypes = []
-  const handleSubmit = async (e) => {
-    
-    handleJobtype();
-    await updateDoc(jobID, {
-      jop_feature: arrayUnion({
-        id:2,
-        logo:logoLink,
-        jobTitle:jobtitle,
-        company:jobCompany,
-        location:`${country}, ${city}`,
-        time: "1 hours ago",
-        salary:"400$ - 600$",
-        joptype:jobtypes,
-        link:Link,
-        tag:tag,
-        destination:{
-          min:minDetination,
-          max:maxDetination
-        },
-        category:category,
-        created_at: "Last Hour",
-        experience: experience,
-        totalSalary: {
-          min: minSalary,
-          max: maxSalary,
-        },
-        tag2: tag2,
-      }),
-    });
-   
+  const logoHandler = (file) => {
+    setLogoImg(file);
   };
+
+  let jobtypes = [];
+  // const handleSubmit = async (e) => {
+  //   handleJobtype();
+  //   await updateDoc(jobID, {
+  //     jop_feature: arrayUnion({
+  //       id: 2,
+  //       logo: logoLink,
+  //       jobTitle: jobtitle,
+  //       company: jobCompany,
+  //       location: `${country}, ${city}`,
+  //       time: "1 hours ago",
+  //       salary: "400$ - 600$",
+  //       joptype: jobtypes,
+  //       link: Link,
+  //       tag: tag,
+  //       destination: {
+  //         min: minDetination,
+  //         max: maxDetination,
+  //       },
+  //       category: category,
+  //       created_at: "Last Hour",
+  //       experience: experience,
+  //       totalSalary: {
+  //         min: minSalary,
+  //         max: maxSalary,
+  //       },
+  //       tag2: tag2,
+  //     }),
+  //   });
+  // };
   const handleChange = (e) => {
     setSelectedValue(Array.isArray(e) ? e.map((x) => x.value) : []);
   };
-  
 
   const handleJobtype = () => {
-    for (let i = 0; i <= selectedValue.length-1; i++) {
-      jobtypes.push(
-        {
-          styleClass: selectedValue[i].includes("Private")
-            ? "privacy"
-            : selectedValue[i].includes("Urgent")
-            ? "required"
-            : selectedValue[i].includes("Full Time")
-            ? "time"
-            : selectedValue[i].includes("Freelancer")
-            ? "time"
-            : "time",
-         
-          type:selectedValue[i]
+    for (let i = 0; i <= selectedValue.length - 1; i++) {
+      jobtypes.push({
+        styleClass: selectedValue[i].includes("Private")
+          ? "privacy"
+          : selectedValue[i].includes("Urgent")
+          ? "required"
+          : selectedValue[i].includes("Full Time")
+          ? "time"
+          : selectedValue[i].includes("Freelancer")
+          ? "time"
+          : "time",
+
+        type: selectedValue[i],
+      });
+    }
+  };
+  // const handleDrop = (e) => {
+  //   e.preventDefault()
+  //   const file = e.dataTransfer.files[0];
+  //   if (file && file.type.startsWith("image/")) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       setLogoImg(e.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  // const handleDragOver = (e) => {
+  //   e.preventDefault();
+  // };
+
+  // const handleFileInputChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file && file.type.startsWith("image/")) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       setLogoImg(e.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    setLogoImg(file);
+  };
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    setLogoImg(file);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!logoImg) {
+      alert("choose image first");
+      return;
+    } else {
+      const imageName = `${Date.now()}_${logoImg.name}`;
+      const storageRef = ref(storage, `/files/${imageName}`);
+      const uploadTask = uploadBytesResumable(storageRef, logoImg);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+
+          // update progress
+          setPercent(percent);
         },
-      ); 
-    
-    };
-  }
+        (err) => console.log(err),
+        () => {
+          // download url
+          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+            console.log(url);
+          });
+        }
+      );
+    }
+
+    console.log(logoImg.name);
+  };
+
   return (
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="row">
@@ -109,23 +181,58 @@ const PostBoxForm = () => {
           />
         </div>
         <div className="form-group col-lg-12 col-md-12">
-          <label>Company</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Company"
-            onChange={(e) => setJobCompany(e.target.value)}
-          />
+          <label>Job Description</label>
+          <textarea
+            name=""
+            id=""
+            cols="30"
+            rows="10"
+            placeholder="Description"
+          ></textarea>
         </div>
-
         <div className="form-group col-lg-12 col-md-12">
-          <label>Logo Link</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Logo Link"
-            onChange={(e) => setLogoLink(e.target.value)}
-          />
+          <label>Job Logo</label>
+          <div className="uploading-outer">
+            <div
+              className="uploadButton"
+              // onDrop={handleDrop}
+              // onDragOver={handleDragOver}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            >
+              <input
+                className="uploadButton-input"
+                type="file"
+                name="attachments[]"
+                accept="image/*"
+                id="upload"
+                // required
+                // onChange={(e) => logoHandler(e.target.files[0])}
+                onChange={handleFileUpload}
+              />
+              <label
+                className="uploadButton-button ripple-effect"
+                htmlFor="upload"
+              >
+                {logoImg ? (
+                  <img
+                    src={URL.createObjectURL(logoImg)}
+                    alt="uploaded image"
+                  />
+                ) : (
+                  <p>Drag and drop your image here or click to upload</p>
+                )}
+              </label>
+              <span className="uploadButton-file-name"></span>
+              {/* {logoImg !== null ? logoImg?.name : " Browse Logo"} */}
+            </div>
+            <div className="text">
+              Image should be png, jpg, jpeg
+              {/* <p>{percent} "% done"</p> */}
+              <p>{logoImg?logoImg.name:""}</p>
+            </div>
+          </div>
+          
         </div>
 
         {/* <!-- Search Select --> */}

@@ -15,7 +15,6 @@ const Header = () => {
   const [navbar, setNavbar] = useState(false);
   const router = useRouter();
   const isLogin = useSelector((state) => state.user.isLoggedIn);
-  const user = useSelector((state) => state.user.user);
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -43,19 +42,22 @@ const Header = () => {
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        user.getIdToken(true).then((token) => {
-          axios
-            .post("/api/jwt", { token: token })
-            .then((rs) => {
-              console.log(rs);
-            })
-            .catch((err) => {
-              alert(err);
-            })
-            .catch((err) => {
-              alert(err);
-            });
-        });
+        user
+          .getIdToken(true)
+          .then((token) => {
+            axios
+              .post("/api/jwt", { token: token })
+              .then((rs) => {
+                console.log(rs);
+              })
+              .catch((err) => {
+                alert(err);
+              });
+          })
+          .catch(async (err) => {
+            console.log(err);
+            await Logout();
+          });
         // let {stsTokenManager,accessToken,auth,...newUser} = user
         // delete user.stsTokenManager
         let newUser = { ...user };

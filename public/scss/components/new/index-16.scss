@@ -213,6 +213,7 @@
 .tab-buttons.-pills-condensed.-blue {
   .active-btn {
     background-color: var(--primary-color) !important;
+    transition: 0.25s ease-out;
   }
 }
 
