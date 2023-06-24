@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import Seo from "../components/common/Seo";
+import Image from "next/image";
 
 const index = () => {
   return (
@@ -16,7 +17,7 @@ const index = () => {
         <div className="content">
           <div className="logo">
             <Link href="/">
-              <img src="/images/jisd.png" alt="brand" style={{ width: "12rem" }}/>
+              <Image src="/images/jisd.png" alt="brand" width={200} height={200}/>
             </Link>
           </div>
           {/* End logo */}

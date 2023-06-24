@@ -63,9 +63,33 @@
   border: 2px dashed #ced4e1;
   overflow: hidden;
   p{
-   text-align: center;
-   margin-bottom: 0;
-   margin-top: 10px;
+    text-align:center;
+    margin-top:35px;
+  }
+}
+
+.upload-image-btn {
+  height: 43vh !important;
+  width: 58vw !important;
+  // @include media-below(lg) {
+  //   background-color: black;
+  // }
+  @include media-below(md) {
+    height: 32vh !important;
+  }
+  @include media-below(sm) {
+    height: auto !important;
+    min-height: 230px;
+    min-width: 260px !important;
+  }
+  .upload-img {
+    object-fit: cover;
+    object-position: center;
+  }
+  p {
+    text-align: center;
+    margin-bottom: 0;
+    margin-top: 10px;
   }
 }
 

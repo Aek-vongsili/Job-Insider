@@ -9,24 +9,25 @@ const FormContent = ({ userType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
     createUserWithEmailAndPassword(auth, email, password)
       .then((result) => {
         console.log(result);
-        setDoc(doc(db, "users", result.user.email), {
+        setDoc(doc(db, "users", result.user.uid), {
           user: {
             displayName:
               result.user.displayName === null
                 ? result.user.email.substring(0, result.user.email.indexOf("@"))
                 : result.user.displayName,
             role: userType,
-            createAt:serverTimestamp()
+            email: result.user.email,
+            createAt: serverTimestamp(),
           },
-        });
-        router.push("/")
+        });     
+        router.push("/");
       })
       .catch((err) => {
         console.log(err);
@@ -60,7 +61,7 @@ const FormContent = ({ userType }) => {
 
       <div className="form-group">
         <button className="theme-btn btn-style-one" type="submit">
-        { loading?<Loading/>: "Register"}
+          {loading ? <Loading /> : "Register"}
         </button>
       </div>
       {/* login */}

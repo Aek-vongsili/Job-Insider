@@ -1,102 +1,199 @@
+import { useEffect, useState } from "react";
 import Map from "../../../Map";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../../firebase/clientApp";
+import { useSelector } from "react-redux";
 
 const ContactInfoBox = () => {
-    return (
-        <form className="default-form">
-            <div className="row">
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-6 col-md-12">
-                    <label>Country</label>
-                    <select className="chosen-single form-select" required>
-                        <option>Australia</option>
-                        <option>Pakistan</option>
-                        <option>Chaina</option>
-                        <option>Japan</option>
-                        <option>India</option>
-                    </select>
-                </div>
+  const [markerPosition, setMarkerPosition] = useState({
+    lat: 0,
+    lng: 0,
+  });
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("Vientiane Prefecture");
+  console.log(city)
+  const userUid = useSelector((state) => state.user?.user?.uid);
+  const userRef = doc(db, "users", userUid);
+  const getCurrentLocation = () => {
+    const geocoder = new google.maps.Geocoder();
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-6 col-md-12">
-                    <label>City</label>
-                    <select className="chosen-single form-select" required>
-                        <option>Melbourne</option>
-                        <option>Pakistan</option>
-                        <option>Chaina</option>
-                        <option>Japan</option>
-                        <option>India</option>
-                    </select>
-                </div>
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          geocoder
+            .geocode({
+              location: {
+                lat: parseFloat(position.coords.latitude),
+                lng: parseFloat(position.coords.longitude),
+              },
+            })
+            .then((rs) => {
+              setMarkerPosition({ lat: 0, lng: 0 });
+              setMarkerPosition({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              });
+              setAddress(rs.results[0].formatted_address);
+            })
+            .catch((err) => {
+              alert(err);
+            });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-12 col-md-12">
-                    <label>Complete Address</label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="329 Queensberry Street, North Melbourne VIC 3051, Australia."
-                        required
-                    />
-                </div>
+      console.log(markerPosition);
+    } catch (err) {
+      alert("Geolocation is not support your browser");
+      console.log(err);
+    }
+  };
+  const handleClick = (event) => {
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: event.latLng }, (results, status) => {
+      if (status === "OK") {
+        if (results[0]) {
+          setMarkerPosition({
+            lat: event.latLng.lat(),
+            lng: event.latLng.lng(),
+          });
+          setAddress(results[0].formatted_address);
+        } else {
+          console.log("No results found");
+        }
+      } else {
+        console.log(`Geocoder failed due to: ${status}`);
+      }
+    });
+    console.log(markerPosition);
+  };
+  const handleGetLocation = (e) => {
+    e.preventDefault();
+    getCurrentLocation();
+  };
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-6 col-md-12">
-                    <label>Find On Map</label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="329 Queensberry Street, North Melbourne VIC 3051, Australia."
-                        required
-                    />
-                </div>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await updateDoc(userRef, {
+      profile: {
+        location: {
+          country: "Laos",
+          city: city,
+          address: address,
+          latitude: markerPosition?.lat,
+          longtitude: markerPosition?.lng,
+        },
+      },
+    });
+  };
+  return (
+    <form className="default-form" onSubmit={handleSubmit}>
+      <div className="row">
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Country</label>
+          <select className="chosen-single form-select" disabled>
+            <option>Laos</option>
+          </select>
+        </div>
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-3 col-md-12">
-                    <label>Latitude</label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Melbourne"
-                        required
-                    />
-                </div>
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-6 col-md-12">
+          <label>City</label>
+          <select
+            className="chosen-single form-select"
+            onChange={(e) => setCity(e.target.value)}
+          >
+            <option>Vientiane Prefecture</option>
+            <option>Attapeu</option>
+            <option>Bokeo</option>
+            <option>Bolikhamxai</option>
+            <option>Champasak</option>
+            <option>Houaphanh</option>
+            <option>Khammouane</option>
+            <option>Luang Namtha</option>
+            <option>Luang Prabang </option>
+            <option>Oudomxay</option>
+            <option>Phongsaly</option>
+            <option>Salavan</option>
+            <option>Savannakhet</option>
+            <option>Vientiane</option>
+            <option>Sainyabuli </option>
+            <option>Sekong</option>
+            <option>Xaisomboun</option>
+            <option>Xiangkhouang</option>
+          </select>
+        </div>
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Address</label>
+          <input
+            type="text"
+            name="name"
+            // placeholder="329 Queensberry Street, North Melbourne VIC 3051, Australia."
+            value={address || ""}
+            disabled
+            readOnly
+          />
+        </div>
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-3 col-md-12">
-                    <label>Longitude</label>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Melbourne"
-                        required
-                    />
-                </div>
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-3 col-md-12">
+          <label>Latitude</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Melbourne"
+            value={markerPosition?.lat}
+            readOnly
+          />
+        </div>
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-12 col-md-12">
-                    <button className="theme-btn btn-style-three">
-                        Search Location
-                    </button>
-                </div>
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-3 col-md-12">
+          <label>Longitude</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Melbourne"
+            value={markerPosition?.lng}
+            readOnly
+          />
+        </div>
 
-                <div className="form-group col-lg-12 col-md-12">
-                    <div className="map-outer">
-                        <div style={{ height: "420px", width: "100%" }}>
-                            <Map />
-                        </div>
-                    </div>
-                </div>
-                {/* End MapBox */}
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-12 col-md-12">
+          <button
+            className="theme-btn btn-style-three"
+            style={{ marginLeft: "20px" }}
+            onClick={handleGetLocation}
+          >
+            Get Your Currently Location
+          </button>
+        </div>
 
-                {/* <!-- Input --> */}
-                <div className="form-group col-lg-12 col-md-12">
-                    <button type="submit" className="theme-btn btn-style-one">
-                        Save
-                    </button>
-                </div>
+        <div className="form-group col-lg-12 col-md-12">
+          <div className="map-outer">
+            <div
+              style={{ height: "420px", width: "100%", position: "relative" }}
+            >
+              <Map location={markerPosition} handleClick={handleClick} />
             </div>
-        </form>
-    );
+          </div>
+        </div>
+        {/* End MapBox */}
+
+        {/* <!-- Input --> */}
+        <div className="form-group col-lg-12 col-md-12">
+          <button type="submit" className="theme-btn btn-style-one">
+            Save
+          </button>
+        </div>
+      </div>
+    </form>
+  );
 };
 
 export default ContactInfoBox;

@@ -1,10 +1,15 @@
 import Map from "../../../Map";
 import Select from "react-select";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { db, storage } from "../../../../../firebase/clientApp";
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
+import { app, db, storage } from "../../../../../firebase/clientApp";
 import { useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
 const PostBoxForm = () => {
   const specialisms = [
     { value: "Banking", label: "Banking" },
@@ -33,6 +38,9 @@ const PostBoxForm = () => {
   const [city, setCity] = useState("");
   const [logoImg, setLogoImg] = useState("");
   const [percent, setPercent] = useState(0);
+  const [data, setData] = useState([]);
+  const [keylist, setKeylist] = useState([{ keyList: "" }]);
+  const [skill, setSkill] = useState([{ skillList: "" }]);
 
   const jobID = doc(db, "Job-Featured", "eA0qbWcY3XzWWQmd8QFD");
   const jobtype = [
@@ -41,8 +49,37 @@ const PostBoxForm = () => {
     { value: "Private", label: "Private" },
     { value: "Urgent", label: "Urgent" },
   ];
-  const logoHandler = (file) => {
-    setLogoImg(file);
+  const handleKeyChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...keylist];
+    list[index][name] = value;
+    setKeylist(list);
+  };
+
+  const handleKeyRemove = (index) => {
+    const list = [...keylist];
+    list.splice(index, 1);
+    setKeylist(list);
+  };
+
+  const handleKeyAdd = () => {
+    setKeylist([...keylist, { keyList: "" }]);
+  };
+  const handleSkillChange = (e, index) => {
+    const { name, value } = e.target;
+    const list = [...skill];
+    list[index][name] = value;
+    setSkill(list);
+  };
+
+  const handleSkillRemove = (index) => {
+    const list = [...skill];
+    list.splice(index, 1);
+    setSkill(list);
+  };
+
+  const handleSkillAdd = () => {
+    setSkill([...skill, { skillList: "" }]);
   };
 
   let jobtypes = [];
@@ -135,36 +172,46 @@ const PostBoxForm = () => {
     const file = event.target.files[0];
     setLogoImg(file);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!logoImg) {
-      alert("choose image first");
-      return;
-    } else {
-      const imageName = `${Date.now()}_${logoImg.name}`;
-      const storageRef = ref(storage, `/files/${imageName}`);
-      const uploadTask = uploadBytesResumable(storageRef, logoImg);
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const percent = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
+    console.log(keylist);
+    console.log(skill);
+    // if (!logoImg) {
+    //   alert("choose image first");
+    //   return;
+    // } else {
+    //   const imageName = `${Date.now()}_${logoImg.name}`;
+    //   const storageRef = ref(storage, `/files/${imageName}`);
+    //   const uploadTask = uploadBytesResumable(storageRef, logoImg);
+    //   uploadTask.on(
+    //     "state_changed",
+    //     (snapshot) => {
+    //       const percent = Math.round(
+    //         (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+    //       );
 
-          // update progress
-          setPercent(percent);
-        },
-        (err) => console.log(err),
-        () => {
-          // download url
-          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            console.log(url);
-          });
-        }
-      );
-    }
+    //       // update progress
+    //       setPercent(percent);
+    //     },
+    //     (err) => console.log(err),
+    //     () => {
+    //       // download url
+    //       getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+    //         console.log(url);
+    //       });
+    //     }
+    //   );
+    // }
+    // const querySnapshot = await getDocs(collection(db, "users"));
 
-    console.log(logoImg.name);
+    // querySnapshot.forEach((doc) => {
+    //   // doc.data() is never undefined for query doc snapshots
+    //   console.log(doc.data().user);
+    //   data.push(doc.data().user)
+
+    // });
+    // console.log(data)
+    // console.log(logoImg.name);
   };
 
   return (
@@ -191,6 +238,65 @@ const PostBoxForm = () => {
           ></textarea>
         </div>
         <div className="form-group col-lg-12 col-md-12">
+          <label>Job Key Responsibilities</label>
+          {keylist.map((singleKey, index) => (
+            <div className="add-key" key={index}>
+              <div className="add-key_btn">
+                <input
+                  type="text"
+                  name="keyList"
+                  placeholder="Key Responsibilities"
+                  value={singleKey.name}
+                  onChange={(e) => handleKeyChange(e, index)}
+                />
+                {keylist.length - 1 === index && (
+                  <button onClick={handleKeyAdd} type="button">
+                    Add a Key
+                  </button>
+                )}
+              </div>
+              <div className="remove-key_btn">
+                {keylist.length !== 1 && (
+                  <button onClick={() => handleKeyRemove(index)} type="button">
+                    Remove
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="form-group col-lg-12 col-md-12">
+          <label>Job Skills</label>
+          {skill.map((singleKey, index) => (
+            <div className="add-key" key={index}>
+              <div className="add-key_btn">
+                <input
+                  type="text"
+                  name="skillList"
+                  placeholder="Key Responsibilities"
+                  value={singleKey.name}
+                  onChange={(e) => handleSkillChange(e, index)}
+                />
+                {skill.length - 1 === index && (
+                  <button onClick={handleSkillAdd} type="button">
+                    Add a Key
+                  </button>
+                )}
+              </div>
+              <div className="remove-key_btn">
+                {skill.length !== 1 && (
+                  <button
+                    onClick={() => handleSkillRemove(index)}
+                    type="button"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="form-group col-lg-12 col-md-12">
           <label>Job Logo</label>
           <div className="uploading-outer">
             <div
@@ -211,11 +317,12 @@ const PostBoxForm = () => {
                 onChange={handleFileUpload}
               />
               <label
-                className="uploadButton-button ripple-effect"
+                className="uploadButton-button ripple-effect upload-image-btn"
                 htmlFor="upload"
               >
                 {logoImg ? (
                   <img
+                    className="upload-img"
                     src={URL.createObjectURL(logoImg)}
                     alt="uploaded image"
                   />
@@ -229,10 +336,9 @@ const PostBoxForm = () => {
             <div className="text">
               Image should be png, jpg, jpeg
               {/* <p>{percent} "% done"</p> */}
-              <p>{logoImg?logoImg.name:""}</p>
+              <p>{logoImg ? logoImg.name : ""}</p>
             </div>
           </div>
-          
         </div>
 
         {/* <!-- Search Select --> */}

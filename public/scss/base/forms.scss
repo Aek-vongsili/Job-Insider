@@ -354,6 +354,7 @@ input:checked + .slider:before {
 .default-form .form-group input[type="number"],
 .default-form .form-group input[type="email"],
 .default-form .form-group input[type="url"],
+.default-form .form-group input[type="date"],
 .default-form .form-group textarea,
 .default-form .form-group select {
   position: relative;
@@ -377,6 +378,7 @@ input:checked + .slider:before {
 .default-form .form-group input[type="email"]:focus,
 .default-form .form-group input[type="password"]:focus,
 .default-form .form-group input[type="url"]:focus,
+.default-form .form-group input[type="date"],
 .default-form .form-group select:focus,
 .default-form .form-group textarea:focus {
   border-color: var(--primary-color);
@@ -546,4 +548,43 @@ input:checked + .slider:before {
 .register-dual ul li.react-tabs__tab--selected .btn-style-four {
   background: #34a853;
   color: #fff;
+}
+.add-key {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  button {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    width: 120px;
+    justify-content: center;
+    border-radius: 12px;
+    color: white;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+  }
+  .add-key_btn {
+    width: 100%;
+    input{
+      margin-bottom:20px;
+    }
+    button {
+      margin-top: 20px;
+      background-color: var(--primary-color);
+      &:hover,
+      :focus {
+        background-color: var(--primary-hover-bg-color);
+      }
+    }
+  }
+  .remove-key_btn {
+    button {
+      background-color: red;
+      &:hover,
+      :focus {
+        background-color: rgb(209, 3, 3);
+      }
+    }
+  }
 }
