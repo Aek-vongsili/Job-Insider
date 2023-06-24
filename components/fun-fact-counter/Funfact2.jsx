@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CountUp from "react-countup";
+
 import { InView } from "react-intersection-observer";
 
 const Funfact2 = () => {
@@ -47,11 +47,7 @@ const Funfact2 = () => {
         >
           <div className="count-box">
             <span className="count-text">
-              <CountUp
-                start={focus ? val.startCount : null}
-                end={val.endCount}
-                duration={2}
-              >
+            
                 {({ countUpRef }) => (
                   <InView
                     as="span"
@@ -64,7 +60,7 @@ const Funfact2 = () => {
                     <span ref={countUpRef} />
                   </InView>
                 )}
-              </CountUp>
+             
             </span>
           </div>
           <h4 className="counter-title">{val.meta}</h4>

@@ -11,10 +11,10 @@ import userSlice from "../features/user/userSlice";
 import { persistReducer } from "redux-persist";
 // import storage from 'redux-persist/lib/storage'
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-import { WebStorage } from 'redux-persist/lib/types';
+import { WebStorage } from "redux-persist/lib/types";
 
-function createPersistStorage(): WebStorage {
-  const isServer = typeof window === 'undefined';
+function createPersistStorage() {
+  const isServer = typeof window === "undefined";
 
   // Returns noop (dummy) storage.
   if (isServer) {
@@ -31,7 +31,7 @@ function createPersistStorage(): WebStorage {
     };
   }
 
-  return createWebStorage('local');
+  return createWebStorage("local");
 }
 const storage =
   typeof window !== "undefined"

@@ -4,6 +4,7 @@ const nextConfig = {
   reactStrictMode: false,
   experimental: {
     appDir: true,
+    esmExternals: false,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {
@@ -11,6 +12,6 @@ const nextConfig = {
     }
     return config;
   },
-}
+};
 
 module.exports = nextConfig;
