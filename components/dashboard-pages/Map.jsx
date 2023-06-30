@@ -133,7 +133,7 @@ const Map = ({ location, handleClick }) => {
 
   // Use the center prop if it's provided, otherwise use the default center
   const checkAllValuesZero = () => {
-    return Object.values(location).every((value) => value === 0);
+    return Object.values(location||{}).every((value) => value === 0);
   };
   return (
     <GoogleMap

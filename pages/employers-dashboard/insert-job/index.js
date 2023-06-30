@@ -4,30 +4,35 @@ import InsertJob from "../../../components/dashboard-pages/employers-dashboard/i
 import Layout from "../../../components/Layout";
 import { verifyFirebaseJwt } from "../../../services/jwt_verify";
 import { getAuth } from "firebase/auth";
+import axios from "axios";
 const index = () => {
   return (
     <>
-        <Seo pageTitle="Insert Jobs" />
-        <Layout authPage={true}>
-          <InsertJob/>
-        </Layout>
+      <Seo pageTitle="Insert Jobs" />
+      <Layout authPage={true}>
+        <InsertJob />
+      </Layout>
     </>
   );
 };
 export async function getServerSideProps({ req }) {
   const { token } = req.cookies || null;
-  const auth = getAuth()
+  const auth = getAuth();
   if (token) {
     try {
       const rs = await verifyFirebaseJwt(token);
       const currentTime = new Date().getTime() / 1000;
-      const expireOrnot = rs.exp < currentTime
+      const expireOrnot = rs.exp < currentTime;
       if (!rs || expireOrnot) {
-        auth.signOut().then((rs)=>{
-          console.log("you are not have Token or your Token is expired");
-        }).catch(err=>{
-          console.log(err.message);
-        })
+        await axios.get("/api/logout");
+        auth
+          .signOut()
+          .then((rs) => {
+            console.log("you are not have Token or your Token is expired");
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
         return {
           redirect: {
             destination: "/login",
@@ -51,4 +56,4 @@ export async function getServerSideProps({ req }) {
   };
 }
 
-export default (dynamic(() => Promise.resolve(index), { ssr: false }));
+export default dynamic(() => Promise.resolve(index), { ssr: false });

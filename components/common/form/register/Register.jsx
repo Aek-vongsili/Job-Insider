@@ -5,12 +5,17 @@ import { useState } from "react";
 import Link from "next/link";
 
 const Register = () => {
-  const [userType,setUserType] = useState("Candidate")
+  const [userType, setUserType] = useState("Candidate");
   return (
     <div className="form-inner">
       <h3>Create a Job Insider Account</h3>
 
-      <Tabs defaultIndex={0} onSelect={(index) =>(index===0?setUserType("Candidate"):setUserType("Employer"))}>
+      <Tabs
+        defaultIndex={0}
+        onSelect={(index) =>
+          index === 0 ? setUserType("Candidate") : setUserType("Employer")
+        }
+      >
         <div className="form-group register-dual">
           <TabList className="btn-box row">
             <Tab className="col-lg-6 col-md-12">
@@ -29,12 +34,12 @@ const Register = () => {
         {/* End .form-group */}
 
         <TabPanel>
-          <Form userType={userType}/>
+          <Form userType={userType} />
         </TabPanel>
         {/* End cadidates Form */}
 
         <TabPanel>
-          <Form userType={userType}/>
+          <Form userType={userType} />
         </TabPanel>
         {/* End Employer Form */}
       </Tabs>

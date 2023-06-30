@@ -4,6 +4,7 @@ import PostJob from "../../../components/dashboard-pages/employers-dashboard/pos
 import Layout from "../../../components/Layout";
 import { verifyFirebaseJwt } from "../../../services/jwt_verify";
 import { getAuth } from "firebase/auth";
+import axios from "axios";
 const index = () => {
   return (
     <>
@@ -23,6 +24,7 @@ export async function getServerSideProps({ req }) {
       const currentTime = new Date().getTime() / 1000;
       const expireOrnot = rs.exp < currentTime
       if (!rs || expireOrnot) {
+        await axios.get("/api/logout")
         auth.signOut().then((rs)=>{
           console.log("you are not have Token or your Token is expired");
         }).catch(err=>{

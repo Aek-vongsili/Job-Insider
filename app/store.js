@@ -13,7 +13,7 @@ import { persistReducer } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import { WebStorage } from "redux-persist/lib/types";
 
-function createPersistStorage() {
+function createPersistStorage(){
   const isServer = typeof window === "undefined";
 
   // Returns noop (dummy) storage.

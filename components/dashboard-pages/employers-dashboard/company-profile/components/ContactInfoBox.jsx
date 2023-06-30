@@ -11,9 +11,9 @@ const ContactInfoBox = () => {
   });
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("Vientiane Prefecture");
-  console.log(city)
+  console.log(city);
   const userUid = useSelector((state) => state.user?.user?.uid);
-  const userRef = doc(db, "users", userUid);
+  
   const getCurrentLocation = () => {
     const geocoder = new google.maps.Geocoder();
 
@@ -76,15 +76,14 @@ const ContactInfoBox = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userRef = doc(db, "users", userUid);
     await updateDoc(userRef, {
-      profile: {
-        location: {
-          country: "Laos",
-          city: city,
-          address: address,
-          latitude: markerPosition?.lat,
-          longtitude: markerPosition?.lng,
-        },
+      "profile.location": {
+        country: "Laos",
+        city: city,
+        address: address,
+        latitude: markerPosition?.lat,
+        longtitude: markerPosition?.lng,
       },
     });
   };
