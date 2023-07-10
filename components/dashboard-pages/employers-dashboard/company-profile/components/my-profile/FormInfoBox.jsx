@@ -217,18 +217,14 @@ const FormInfoBox = () => {
           />
           <label className="uploadButton-button ripple-effect" htmlFor="upload">
             {logoImg || logoUrl ? (
-              <div className="image-loading">
-                {loading && <Skeleton width="100%" height="100%" count={4}/>}
-                <Image
-                  className=""
-                  src={logoImg || logoUrl}
-                  alt="uploaded image"
-                  priority
-                  width={500}
-                  height={500}
-                  onLoadingComplete={()=>setLoading(prev => !prev)}
-                />
-              </div>
+              <Image
+                className=""
+                src={logoImg || logoUrl}
+                alt="uploaded image"
+                loading="lazy"
+                width={500}
+                height={500}
+              />
             ) : (
               <p>Drag and drop your image here or click to upload</p>
             )}
@@ -261,7 +257,7 @@ const FormInfoBox = () => {
                 className=""
                 src={coverImg || coverUrl}
                 alt="uploaded image"
-                // loading="lazy"
+                loading="lazy"             
                 width={500}
                 height={500}
               />

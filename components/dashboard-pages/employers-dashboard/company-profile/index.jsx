@@ -18,20 +18,20 @@ const index = () => {
   const userUid = useSelector((state) => state.user?.user?.uid);
   
   const dispatch = useDispatch();
-  useEffect(() => {
-    const userRef = doc(db, "users", userUid);
-    const getData = async () => {
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        if (docSnap.data()?.profile) {
-          dispatch(setCompanyData(docSnap.data()?.profile));
-        }
-      } else {
-        console.log("No such document!");
-      }
-    };
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   const userRef = doc(db, "users", userUid);
+  //   const getData = async () => {
+  //     const docSnap = await getDoc(userRef);
+  //     if (docSnap.exists()) {
+  //       if (docSnap.data()?.profile) {
+  //         dispatch(setCompanyData(docSnap.data()?.profile));
+  //       }
+  //     } else {
+  //       console.log("No such document!");
+  //     }
+  //   };
+  //   getData();
+  // }, []);
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>
