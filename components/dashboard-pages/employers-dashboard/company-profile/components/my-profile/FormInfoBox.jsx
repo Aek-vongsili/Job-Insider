@@ -1,10 +1,17 @@
-import { getDownloadURL, ref, uploadBytesResumable, uploadString } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+  uploadString,
+} from "firebase/storage";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import { db, storage } from "../../../../../../firebase/clientApp";
 import { useSelector } from "react-redux";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { v4 as uuidv4 } from 'uuid';
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
+import Skeleton from "react-loading-skeleton";
 const FormInfoBox = () => {
   const catOptions = [
     { value: "Banking", label: "Banking" },
@@ -27,9 +34,16 @@ const FormInfoBox = () => {
   const [formData, setFormData] = useState(new FormData());
   const [selectedValue, setSelectedValue] = useState([]);
   const [percent, setPercent] = useState(0);
+  const [loading, setLoading] = useState(true);
   const userUid = useSelector((state) => state.user?.user?.uid);
 
-  // const [logoUrl, setLogoUrl] = useState("");
+  // get state
+  const company_profile = useSelector(
+    (state) => state.employerProfile.company_info
+  );
+  console.log(company_profile);
+
+  // const [logoUrl, setLogoUrl] = useSxtate("");
   // const [coverUrl, setCoverUrl] = useState("");
   const handleLogoDragOver = (event) => {
     event.preventDefault();
@@ -62,7 +76,7 @@ const FormInfoBox = () => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      console.log(reader.result)
+      console.log(reader.result);
       setLogoImg(reader.result);
     };
   };
@@ -76,6 +90,7 @@ const FormInfoBox = () => {
   };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+    console.log(typeof event.target.value);
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
@@ -89,85 +104,100 @@ const FormInfoBox = () => {
 
   const uploadImage = async (img) => {
     return new Promise((resolve, reject) => {
-      if (!logoImg) {
-        alert("choose image first");
-        return;
-      } else {
-        const imageName = `${Date.now()}_${uuidv4()}`;
-        const storageRef = ref(storage, `/Image_upload/${imageName}`);
-        // const uploadTask = uploadBytesResumable(storageRef, img);
-        // uploadTask.on(
-        //   "state_changed",
-        //   (snapshot) => {
-        //     const percent = Math.round(
-        //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        //     );
+      const imageName = `${Date.now()}_${uuidv4()}`;
+      const storageRef = ref(storage, `/Image_upload/${imageName}`);
+      // const uploadTask = uploadBytesResumable(storageRef, img);
+      // uploadTask.on(
+      //   "state_changed",
+      //   (snapshot) => {
+      //     const percent = Math.round(
+      //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      //     );
 
-        //     // update progress
-        //     setPercent(percent);
-        //   },
-        //   (err) => reject(err),
-        //   async () => {
-        //     // download url
-        //     const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-        //     resolve(imageUrl);
-        //   }
-        // );
-        uploadString(storageRef, img, "data_url")
-          .then((snapshot) => {
-            console.log("Uploaded a data_url string!");
-            getDownloadURL(snapshot.ref).then((url) => {
-              resolve(url);
-            });
-          })
-          .catch((err) => {
-            reject(err);
+      //     // update progress
+      //     setPercent(percent);
+      //   },
+      //   (err) => reject(err),
+      //   async () => {
+      //     // download url
+      //     const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+      //     resolve(imageUrl);
+      //   }
+      // );
+      uploadString(storageRef, img, "data_url")
+        .then((snapshot) => {
+          console.log("Uploaded a data_url string!");
+          getDownloadURL(snapshot.ref).then((url) => {
+            resolve(url);
           });
-      }
+        })
+        .catch((err) => {
+          reject(err);
+        });
     });
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userRef = doc(db, "users", userUid);
     console.log(formData);
-    const logoUrl = await uploadImage(logoImg);
-    const coverUrl = await uploadImage(coverImg);
-    await updateDoc(userRef, {
-      "profile.company_info": {
-        ...formData,
-        logoImage: logoUrl,
-        coverImage: coverUrl,
+
+    // await updateDoc(userRef, {
+    //   "profile.company_info":formData,
+    // });
+
+    if (logoImg) {
+      const logoImgUrl = await uploadImage(logoImg);
+      await updateDoc(userRef, {
+        "profile.company_info.logoImage": logoImgUrl,
+      });
+    }
+    if (coverImg) {
+      const coverImgUrl = await uploadImage(coverImg);
+      await updateDoc(userRef, {
+        "profile.company_info.coverImage": coverImgUrl,
+      });
+    }
+    await setDoc(
+      userRef,
+      {
+        profile: {
+          company_info: formData,
+        },
       },
-    });
+      { merge: true }
+    );
   };
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const userRef = doc(db, "users", userUid);
+  //     const docSnap = await getDoc(userRef);
+  //     if (docSnap.exists()) {
+  //       if (docSnap.data()?.profile?.company_info) {
+
+  //         const { logoImage, coverImage, ...data } =
+  //           docSnap.data()?.profile?.company_info;
+  //         setFormData(data);
+  //         setLogoUrl(logoImage);
+  //         setCoverUrl(coverImage);
+  //       }
+  //     } else {
+
+  //       console.log("No such document!");
+  //     }
+  //   };
+
+  //   getData();
+  // }, []);
+
   useEffect(() => {
-    const getData = async () => {
-      const userRef = doc(db, "users", userUid);
-      const docSnap = await getDoc(userRef);
-      if (docSnap.exists()) {
-        if (docSnap.data()?.profile?.company_info) {
-          // setLogoImg(docSnap.data()?.profile?.company_info.logoImage)
-          // setCoverImg(docSnap.data()?.profile?.company_info.coverImage)
-
-          // console.log("Document data:", docSnap.data()?.profile?.company_info);
-          // console.log(data);
-          const { logoImage, coverImage, ...data } =
-            docSnap.data()?.profile?.company_info;
-          setFormData(data);
-          setLogoImg(logoImage);
-          setCoverImg(coverImage);
-        }
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    };
-
-    // return () => {
-    //   getData()
-    // };
-    getData();
-  }, []);
+    if (company_profile) {
+      const { logoImage, coverImage, ...info } = company_profile;
+      console.log(info);
+      setFormData(info);
+      setLogoUrl(logoImage);
+      setCoverUrl(coverImage);
+    }
+  }, [company_profile]);
 
   return (
     <form className="default-form" onSubmit={handleSubmit}>
@@ -186,8 +216,19 @@ const FormInfoBox = () => {
             onChange={handleLogoUpload}
           />
           <label className="uploadButton-button ripple-effect" htmlFor="upload">
-            {logoImg ? (
-              <img className="upload-img" src={logoImg} alt="uploaded image" />
+            {logoImg || logoUrl ? (
+              <div className="image-loading">
+                {loading && <Skeleton width="100%" height="100%" count={4}/>}
+                <Image
+                  className=""
+                  src={logoImg || logoUrl}
+                  alt="uploaded image"
+                  priority
+                  width={500}
+                  height={500}
+                  onLoadingComplete={()=>setLoading(prev => !prev)}
+                />
+              </div>
             ) : (
               <p>Drag and drop your image here or click to upload</p>
             )}
@@ -215,8 +256,15 @@ const FormInfoBox = () => {
             className="uploadButton-button ripple-effect"
             htmlFor="upload_cover"
           >
-            {coverImg ? (
-              <img className="upload-img" src={coverImg} alt="uploaded image" />
+            {coverImg || coverUrl ? (
+              <Image
+                className=""
+                src={coverImg || coverUrl}
+                alt="uploaded image"
+                // loading="lazy"
+                width={500}
+                height={500}
+              />
             ) : (
               <p>Drag and drop your image here or click to upload</p>
             )}
@@ -310,11 +358,11 @@ const FormInfoBox = () => {
 
         {/* <!-- Search Select --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>Multiple Select boxes </label>
+          <label>Company Type </label>
           <Select
             defaultValue={[catOptions[2]]}
             isMulti
-            name="company_cat"
+            name="company_type"
             options={catOptions}
             className="basic-multi-select"
             classNamePrefix="select"

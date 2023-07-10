@@ -3,6 +3,7 @@ import jobSlice from "../features/job/jobSlice";
 import toggleSlice from "../features/toggle/toggleSlice";
 import filterSlice from "../features/filter/filterSlice";
 import employerSlice from "../features/employer/employerSlice";
+import employerProfile from "../features/employer/employerProfile";
 import employerFilterSlice from "../features/filter/employerFilterSlice";
 import candidateSlice from "../features/candidate/candidateSlice";
 import candidateFilterSlice from "../features/filter/candidateFilterSlice";
@@ -48,6 +49,7 @@ const reducer = combineReducers({
   filter: filterSlice,
   employer: employerSlice,
   employerFilter: employerFilterSlice,
+  employerProfile:employerProfile,
   candidate: candidateSlice,
   candidateFilter: candidateFilterSlice,
   shop: shopSlice,

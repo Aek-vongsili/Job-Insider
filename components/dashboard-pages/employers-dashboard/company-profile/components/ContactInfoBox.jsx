@@ -14,6 +14,7 @@ const ContactInfoBox = () => {
   console.log(city);
   const userUid = useSelector((state) => state.user?.user?.uid);
   
+  const location_info = useSelector(state => state.employerProfile.location)
   const getCurrentLocation = () => {
     const geocoder = new google.maps.Geocoder();
 
@@ -87,6 +88,15 @@ const ContactInfoBox = () => {
       },
     });
   };
+  useEffect(()=>{
+    if(location_info){
+      setMarkerPosition({
+        lat: location_info.latitude,
+        lng: location_info.longtitude,
+      })
+      setAddress(location_info.address)
+    }
+  },[location_info])
   return (
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="row">
