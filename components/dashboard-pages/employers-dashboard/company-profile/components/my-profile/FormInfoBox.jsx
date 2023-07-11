@@ -12,7 +12,11 @@ import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import Skeleton from "react-loading-skeleton";
+import { useRouter } from "next/router";
+import Swal from "sweetalert2";
+import Loading from "../../../../../Loading/Loading";
 const FormInfoBox = () => {
+  const router = useRouter();
   const catOptions = [
     { value: "Banking", label: "Banking" },
     { value: "Digital & Creative", label: "Digital & Creative" },
@@ -34,7 +38,7 @@ const FormInfoBox = () => {
   const [formData, setFormData] = useState(new FormData());
   const [selectedValue, setSelectedValue] = useState([]);
   const [percent, setPercent] = useState(0);
-  const [loading, setLoading] = useState(Boolean);
+  const [loading, setLoading] = useState(false);
   const userUid = useSelector((state) => state.user?.user?.uid);
 
   // get state
@@ -138,6 +142,7 @@ const FormInfoBox = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     const userRef = doc(db, "users", userUid);
     console.log(formData);
 
@@ -157,7 +162,7 @@ const FormInfoBox = () => {
         "profile.company_info.coverImage": coverImgUrl,
       });
     }
-    await setDoc(
+    setDoc(
       userRef,
       {
         profile: {
@@ -165,7 +170,23 @@ const FormInfoBox = () => {
         },
       },
       { merge: true }
-    );
+    ).then((rs) => {
+      setLoading(false)
+      Swal.fire({
+        title: "Update Success",
+        text: "Update Your Information Success",
+        icon: "success",
+        confirmButtonText: "Accept",
+        timer: 2000,
+        timerProgressBar: true,
+      }).then((rs) => {
+        if (rs.isConfirmed) {
+          router.reload();
+        } else if (rs.isDismissed) {
+          router.reload();
+        }
+      });
+    });
   };
   // useEffect(() => {
   //   const getData = async () => {
@@ -197,7 +218,6 @@ const FormInfoBox = () => {
       setLogoUrl(logoImage);
       setCoverUrl(coverImage);
     }
-    
   }, [company_profile]);
 
   return (
@@ -217,7 +237,6 @@ const FormInfoBox = () => {
             onChange={handleLogoUpload}
           />
           <label className="uploadButton-button ripple-effect" htmlFor="upload">
-            {loading && <Skeleton count={4} width="100%" height="100%"/>}
             {logoImg || logoUrl ? (
               <Image
                 className=""
@@ -226,8 +245,6 @@ const FormInfoBox = () => {
                 priority
                 width={500}
                 height={500}
-                onLoad={() => setLoading(true)}
-                onLoadingComplete={() => setLoading(false)}
               />
             ) : (
               <p>Drag and drop your image here or click to upload</p>
@@ -256,7 +273,6 @@ const FormInfoBox = () => {
             className="uploadButton-button ripple-effect"
             htmlFor="upload_cover"
           >
-            {loading && <Skeleton count={4} width="100%" height="100%"/>}
             {coverImg || coverUrl ? (
               <Image
                 className=""
@@ -397,7 +413,7 @@ const FormInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <button className="theme-btn btn-style-one">Save</button>
+          <button className="theme-btn btn-style-one"> {loading ? <Loading /> : "Save"}</button>
         </div>
       </div>
     </form>
