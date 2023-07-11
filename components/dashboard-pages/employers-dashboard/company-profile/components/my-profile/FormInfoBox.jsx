@@ -34,7 +34,7 @@ const FormInfoBox = () => {
   const [formData, setFormData] = useState(new FormData());
   const [selectedValue, setSelectedValue] = useState([]);
   const [percent, setPercent] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean);
   const userUid = useSelector((state) => state.user?.user?.uid);
 
   // get state
@@ -197,6 +197,7 @@ const FormInfoBox = () => {
       setLogoUrl(logoImage);
       setCoverUrl(coverImage);
     }
+    
   }, [company_profile]);
 
   return (
@@ -216,14 +217,17 @@ const FormInfoBox = () => {
             onChange={handleLogoUpload}
           />
           <label className="uploadButton-button ripple-effect" htmlFor="upload">
+            {loading && <Skeleton count={4} width="100%" height="100%"/>}
             {logoImg || logoUrl ? (
               <Image
                 className=""
                 src={logoImg || logoUrl}
                 alt="uploaded image"
-                loading="lazy"
+                priority
                 width={500}
                 height={500}
+                onLoad={() => setLoading(true)}
+                onLoadingComplete={() => setLoading(false)}
               />
             ) : (
               <p>Drag and drop your image here or click to upload</p>
@@ -252,12 +256,13 @@ const FormInfoBox = () => {
             className="uploadButton-button ripple-effect"
             htmlFor="upload_cover"
           >
+            {loading && <Skeleton count={4} width="100%" height="100%"/>}
             {coverImg || coverUrl ? (
               <Image
                 className=""
                 src={coverImg || coverUrl}
                 alt="uploaded image"
-                loading="lazy"             
+                priority
                 width={500}
                 height={500}
               />
