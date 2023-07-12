@@ -2,10 +2,14 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";
 import { db } from "../../../../../firebase/clientApp";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import Loading from "../../../../Loading/Loading";
+import { useRouter } from "next/router";
 const SocialNetworkBox = () => {
   const userUid = useSelector((state) => state.user?.user?.uid);
- 
+  const [loading, setLoading] = useState(false);
   const [socialData, setSocialData] = useState(new FormData());
+  const router = useRouter()
   const handleInput = (e) => {
     const { name, value } = e.target;
     setSocialData((prevFormData) => ({ ...prevFormData, [name]: value }));
@@ -20,7 +24,8 @@ const SocialNetworkBox = () => {
   const handleSaveData = async (e) => {
     e.preventDefault();
     const userRef = doc(db, "users", userUid);
-    await setDoc(
+    setLoading(true);
+    setDoc(
       userRef,
       {
         profile: {
@@ -28,7 +33,23 @@ const SocialNetworkBox = () => {
         },
       },
       { merge: true }
-    );
+    ).then((rs) => {
+      setLoading(false);
+      Swal.fire({
+        title: "Update Success",
+        text: "Update Your Social Information Success",
+        icon: "success",
+        confirmButtonText: "Accept",
+        timer: 3500,
+        timerProgressBar: true,
+      }).then((rs) => {
+        if (rs.isConfirmed) {
+          router.reload();
+        } else if (rs.isDismissed) {
+          router.reload();
+        }
+      });
+    });
   };
   return (
     <form className="default-form" onSubmit={handleSaveData}>
@@ -84,7 +105,7 @@ const SocialNetworkBox = () => {
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
           <button type="submit" className="theme-btn btn-style-one">
-            Save
+            {loading ? <Loading /> : "Save"}
           </button>
         </div>
       </div>

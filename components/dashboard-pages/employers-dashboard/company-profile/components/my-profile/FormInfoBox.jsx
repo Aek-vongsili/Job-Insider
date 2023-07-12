@@ -45,7 +45,6 @@ const FormInfoBox = () => {
   const company_profile = useSelector(
     (state) => state.employerProfile.company_info
   );
-  console.log(company_profile);
 
   // const [logoUrl, setLogoUrl] = useSxtate("");
   // const [coverUrl, setCoverUrl] = useState("");
@@ -177,7 +176,7 @@ const FormInfoBox = () => {
         text: "Update Your Information Success",
         icon: "success",
         confirmButtonText: "Accept",
-        timer: 2000,
+        timer: 3500,
         timerProgressBar: true,
       }).then((rs) => {
         if (rs.isConfirmed) {
@@ -186,6 +185,15 @@ const FormInfoBox = () => {
           router.reload();
         }
       });
+    }).catch(err=>{
+      Swal.fire({
+        title: "Error",
+        text: "Something went wrong!",
+        icon: "error",
+        confirmButtonText: "Accept",
+        timer: 3500,
+        timerProgressBar: true,
+      })
     });
   };
   // useEffect(() => {

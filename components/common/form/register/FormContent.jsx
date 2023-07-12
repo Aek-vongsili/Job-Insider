@@ -9,7 +9,11 @@ const FormContent = ({ userType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [err,setErr] = useState("")
+  const [showpass, setShowPass] = useState(false);
+
   const router = useRouter();
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -31,6 +35,8 @@ const FormContent = ({ userType }) => {
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
+        setErr(err.message)
       });
   };
   return (
@@ -48,15 +54,28 @@ const FormContent = ({ userType }) => {
       {/* name */}
 
       <div className="form-group">
-        <label>Password</label>
-        <input
-          id="password-field"
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
+          <label>Password</label>
+          <input
+            type={showpass ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {showpass ? (
+            <i
+              class="fa fa-eye eye-open"
+              aria-hidden="true"
+              onClick={() => setShowPass((prev) => !prev)}
+            ></i>
+          ) : (
+            <i
+              class="fa fa-eye-slash eye-close"
+              aria-hidden="true"
+              onClick={() => setShowPass((prev) => !prev)}
+            ></i>
+          )}
+          <p className="err-message">{err ? err : ""}</p>
+        </div>
       {/* password */}
 
       <div className="form-group">

@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const SidebarHeader = () => {
   return (
     <div className="pro-header">
       <Link href="/">
-        <img src="/images/logo.svg" alt="brand" />
+        <Image src="/images/jisd.png" alt="brand" width={120} height={120} priority/>
       </Link>
       {/* End logo */}
 

@@ -16,6 +16,7 @@ import {
     isActiveParentChaild,
 } from "../../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
+import mobileMenuData2 from "../../../data/mobileMenuData2";
 
 const Index = () => {
     const router = useRouter();
@@ -33,20 +34,24 @@ const Index = () => {
             <ProSidebarProvider>
                 <Sidebar>
                     <Menu>
-                        {mobileMenuData.map((item) => (
-                            <SubMenu
+                        {mobileMenuData2.map((item) => (
+                            <MenuItem
                                 className={
-                                    isActiveParentChaild(
-                                        item.items,
+                                    isActiveLink(
+                                        item.routePath,
                                         router.asPath
                                     )
                                         ? "menu-active"
                                         : ""
                                 }
-                                label={item.label}
+                                
                                 key={item.id}
+                                routerLink={
+                                    <Link href={item.routePath} />
+                                }
                             >
-                                {item.items.map((menuItem, i) => (
+                                {item.label}
+                                {/* {item.items.map((menuItem, i) => (
                                     <MenuItem
                                         className={
                                             isActiveLink(
@@ -63,8 +68,8 @@ const Index = () => {
                                     >
                                         {menuItem.name}
                                     </MenuItem>
-                                ))}
-                            </SubMenu>
+                                ))} */}
+                            </MenuItem>
                         ))}
                     </Menu>
                 </Sidebar>

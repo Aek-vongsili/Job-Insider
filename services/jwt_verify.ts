@@ -2,7 +2,7 @@ import { importX509, jwtVerify } from "jose";
 
 let publicKeys: any;
 const firebaseProjectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
-const api: string = process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_API!;
+const api: string = process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_API;
 const getKey = async () => {
   if (publicKeys) {
     return publicKeys;
