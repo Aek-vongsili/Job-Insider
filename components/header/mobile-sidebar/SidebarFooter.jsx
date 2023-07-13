@@ -24,7 +24,7 @@ const SidebarFooter = () => {
             Laos
           </span>
           <a href="mailto:support@superio.com" className="email">
-            64bitdevelopment@gmail.com
+            Hubjob@gmail.com
           </a>
         </div>
         {/* End .contact-info */}

@@ -142,6 +142,16 @@
     background-repeat: no-repeat;
     background-position: center;
   }
+  .login-box {
+    .login-btn{
+      @include media-below(md) {
+        // background-color: #202124;
+        font-size: 11px;
+        padding: 11px;
+      }
+    }
+    
+  }
 }
 .offcanvas {
   width: 320px !important;

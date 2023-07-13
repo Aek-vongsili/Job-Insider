@@ -24,7 +24,7 @@ const Footer = () => {
                   Phaxay, Sixattanak, Vientiane
                   <br /> Laos <br />
                   <a href="mailto:kettakoun8899@gmail.com" className="email">
-                   kettakoun8899@gmail.com
+                   Hubjob@gmail.com
                   </a>
                 </p>
               </div>

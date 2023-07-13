@@ -39,7 +39,7 @@ const MobileMenu = () => {
               ) : (
                 <Link
                   href="/login"
-                  className="theme-btn btn-style-three call-modal"
+                  className="theme-btn btn-style-three call-modal login-btn"
                   // data-bs-toggle="modal"
                   // data-bs-target="#loginPopupModal"
                 >

@@ -1,7 +1,7 @@
 module.exports = [
     {
         id: 1,
-        avatar: "/images/resource/candidate-1.png",
+        avatar: "/images/01-01.png",
         name: "Darlene Robertson",
         designation: "UI Designer",
         location: "London, UK",
@@ -19,7 +19,7 @@ module.exports = [
     },
     {
         id: 2,
-        avatar: "/images/resource/candidate-2.png",
+        avatar: "/images/02-01.png",
         name: "Wade Warren",
         designation: "Developer",
         location: "London, UK",
@@ -37,7 +37,7 @@ module.exports = [
     },
     {
         id: 3,
-        avatar: "/images/resource/candidate-3.png",
+        avatar: "/images/03-01.png",
         name: "Leslie Alexander",
         designation: "Marketing Expert",
         location: "London, UK",
@@ -55,7 +55,7 @@ module.exports = [
     },
     {
         id: 4,
-        avatar: "/images/resource/candidate-4.png",
+        avatar: "/images/02-01.png",
         name: "Floyd Miles",
         designation: "Charted Accountant",
         location: "London, UK",
@@ -73,7 +73,7 @@ module.exports = [
     },
     {
         id: 5,
-        avatar: "/images/resource/candidate-1.png",
+        avatar: "/images/03-01.png",
         name: "Darlene Robertson",
         designation: "UI Designer",
         location: "London, UK",
@@ -91,7 +91,7 @@ module.exports = [
     },
     {
         id: 6,
-        avatar: "/images/resource/candidate-2.png",
+        avatar: "/images/01-01.png",
         name: "Wade Warren",
         designation: "Developer",
         location: "London, UK",
@@ -109,7 +109,7 @@ module.exports = [
     },
     {
         id: 7,
-        avatar: "/images/resource/candidate-3.png",
+        avatar: "/images/02-01.png",
         name: "Leslie Alexander",
         designation: "Marketing Expert",
         location: "London, UK",
@@ -127,7 +127,7 @@ module.exports = [
     },
     {
         id: 8,
-        avatar: "/images/resource/candidate-4.png",
+        avatar: "/images/01-01.png",
         name: "Floyd Miles",
         designation: "Charted Accountant",
         location: "London, UK",
@@ -145,7 +145,7 @@ module.exports = [
     },
     {
         id: 9,
-        avatar: "/images/resource/candidate-1.png",
+        avatar: "/images/01-01.png",
         name: "Darlene Robertson",
         designation: "UI Designer",
         location: "London, UK",
@@ -163,7 +163,7 @@ module.exports = [
     },
     {
         id: 10,
-        avatar: "/images/resource/candidate-2.png",
+        avatar: "/images/02-01.png",
         name: "Wade Warren",
         designation: "Developer",
         location: "London, UK",
@@ -181,7 +181,7 @@ module.exports = [
     },
     {
         id: 11,
-        avatar: "/images/resource/candidate-3.png",
+        avatar: "/images/03-01.png",
         name: "Leslie Alexander",
         designation: "Marketing Expert",
         location: "London, UK",
@@ -199,7 +199,7 @@ module.exports = [
     },
     {
         id: 12,
-        avatar: "/images/resource/candidate-4.png",
+        avatar: "/images/02-01.png",
         name: "Floyd Miles",
         designation: "Charted Accountant",
         location: "London, UK",
