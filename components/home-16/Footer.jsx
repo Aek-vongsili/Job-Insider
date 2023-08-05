@@ -2,7 +2,7 @@ import Link from "next/link";
 import CopyrightFooter from "../footer/common-footer/CopyrightFooter";
 import FooterApps2 from "../footer/FooterApps2";
 import FooterContent3 from "../footer/FooterContent3";
-
+import Image from 'next/image'
 const Footer = () => {
   return (
     <footer className="main-footer style-five">
@@ -13,7 +13,7 @@ const Footer = () => {
               <div className="footer-column about-widget">
                 <div className="logo">
                   <Link href="/">
-                    <img src="/images/jisd.png" alt="brand" />
+                    <Image src="/images/Artboard 6.svg" alt="brand" width={120} height={120}/>
                   </Link>
                 </div>
                 <p className="phone-num">

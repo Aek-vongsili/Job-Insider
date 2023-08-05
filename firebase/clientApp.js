@@ -1,7 +1,8 @@
-import { initializeApp } from "firebase/app";
+import { getApps, initializeApp } from "firebase/app";
+import firebase from "firebase/app"
 import { getAnalytics } from "firebase/analytics";
 import { getFirestore } from "firebase/firestore";
-import { FacebookAuthProvider, getAuth, GoogleAuthProvider } from "firebase/auth"
+import { FacebookAuthProvider, getAuth, GoogleAuthProvider, setPersistence } from "firebase/auth"
 import { getStorage } from "firebase/storage";
 
 
@@ -17,7 +18,7 @@ const firebaseConfig = {
   };
   
   // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+let app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 // const analytics = getAnalytics(app);
 export const db = getFirestore(app);
 export const auth = getAuth(app)

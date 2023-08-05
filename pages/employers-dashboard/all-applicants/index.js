@@ -5,6 +5,7 @@ import Layout from "../../../components/Layout";
 import { verifyFirebaseJwt } from "../../../services/jwt_verify";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
+// import firebaseAdmin from "../../../firebaseAdmin";
 
 const index = () => {
   return (
@@ -13,7 +14,6 @@ const index = () => {
       <Layout authPage={true}>
         <AllApplicants />
       </Layout>
-      
     </>
   );
 };
@@ -55,4 +55,4 @@ const index = () => {
 //   };
 // }
 
-export default (dynamic(() => Promise.resolve(index), { ssr: false }));
+export default dynamic(() => Promise.resolve(index), { ssr: false });

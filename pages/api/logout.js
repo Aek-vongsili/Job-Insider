@@ -9,7 +9,7 @@ export default async function (req,res){
         const serialized = serialize("token", null, {
             httpOnly: true,
             secure: process.env.NODE_ENV !== "development",
-            samSite: "strict",
+            sameSite: "strict",
             maxAge: -1 ,
             path: "/"
         })

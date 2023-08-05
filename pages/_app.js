@@ -9,6 +9,8 @@ import { ToastContainer } from "react-toastify";
 import { PersistGate } from "redux-persist/integration/react";
 import { store } from "../app/store";
 import { persistStore } from "redux-persist";
+import App from "next/app";
+import csrf from "../csrf"
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
 }
@@ -52,4 +54,12 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
+// MyApp.getInitialProps = async (appContext) => {
+//   const pageProps = App.getInitialProps(appContext)
+//   const { req ,res} = appContext.ctx; 
+//   // await csrf(req,res)
+//   return { 
+//     ...pageProps, 
+// }; 
+// }
 export default MyApp;

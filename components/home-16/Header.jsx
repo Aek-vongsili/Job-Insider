@@ -9,8 +9,9 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setUser, setRole } from "../../features/user/userSlice";
-
+import Cookies from "js-cookie";
 import axios from "axios";
+import { getCsrfToken } from "next-auth/react";
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
   const router = useRouter();
@@ -40,13 +41,15 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
 
-    onAuthStateChanged(auth, (user) => {
+    auth.onAuthStateChanged((user) => {
+      // const csrfToken = Cookies.get("_csrf");
+      // console.log(csrfToken);
       if (user) {
         user
           .getIdToken(true)
           .then((token) => {
             axios
-              .post("/api/jwt", { token: token })
+              .post("/api/jwt", { token: token }) //,{headers:{'CSRF-Token': csrfToken}}
               .then((rs) => {
                 console.log(rs);
               })
@@ -93,9 +96,9 @@ const Header = () => {
               <div className="logo">
                 <Link href="/">
                   <img
-                    src="/images/Job_Insider_JI3.png"
+                    src="/images/Artboard 6 white.svg"
                     alt="brand"
-                    style={{ width: "10rem" }}
+                    style={{ width: "9rem" }}
                   />
                 </Link>
               </div>

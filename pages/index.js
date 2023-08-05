@@ -31,15 +31,15 @@ const index = () => {
 };
 
 
-export async function getServerSideProps({ req }) {
-  const { cookies } = req;
-  const token = cookies.token || null;
-  if(token === null){
-    await signOut(auth);
-  }
-  return {
-    props: { token },
-  };
-}
+// export async function getServerSideProps({ req }) {
+//   const { cookies } = req;
+//   const token = cookies.token || null;
+//   if(token === null){
+//     await signOut(auth);
+//   }
+//   return {
+//     props: { token },
+//   };
+// }
 
 export default dynamic(() => Promise.resolve(index), { ssr: false });
