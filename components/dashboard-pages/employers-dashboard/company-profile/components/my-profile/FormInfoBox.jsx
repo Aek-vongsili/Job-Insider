@@ -93,7 +93,7 @@ const FormInfoBox = () => {
   };
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(typeof event.target.value);
+    // console.log(typeof event.target.value);
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
@@ -141,8 +141,8 @@ const FormInfoBox = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
-    const userRef = doc(db, "users", userUid);
+    setLoading(true);
+    const userRef = doc(db, "employers", userUid);
     console.log(formData);
 
     // await updateDoc(userRef, {
@@ -169,32 +169,28 @@ const FormInfoBox = () => {
         },
       },
       { merge: true }
-    ).then((rs) => {
-      setLoading(false)
-      Swal.fire({
-        title: "Update Success",
-        text: "Update Your Information Success",
-        icon: "success",
-        confirmButtonText: "Accept",
-        timer: 3500,
-        timerProgressBar: true,
-      }).then((rs) => {
-        if (rs.isConfirmed) {
-          router.reload();
-        } else if (rs.isDismissed) {
-          router.reload();
-        }
-      });
-    }).catch(err=>{
-      Swal.fire({
-        title: "Error",
-        text: "Something went wrong!",
-        icon: "error",
-        confirmButtonText: "Accept",
-        timer: 3500,
-        timerProgressBar: true,
+    )
+      .then((rs) => {
+        setLoading(false);
+        Swal.fire({
+          title: "Update Success",
+          text: "Update Your Information Success",
+          icon: "success",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
       })
-    });
+      .catch((err) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong!",
+          icon: "error",
+          confirmButtonText: "Accept",
+          timer: 3500,
+          timerProgressBar: true,
+        });
+      });
   };
   // useEffect(() => {
   //   const getData = async () => {
@@ -225,6 +221,15 @@ const FormInfoBox = () => {
       setFormData(info);
       setLogoUrl(logoImage);
       setCoverUrl(coverImage);
+      // const loadingTimer = setTimeout(() => {
+      //   setLoading(false);
+      // }, 2000);
+
+      // // Clear the timer when the component is unmounted
+      // return () => {
+      //   clearTimeout(loadingTimer);
+      //   // clearTimeout(imageTimer);
+      // };
     }
   }, [company_profile]);
 
@@ -281,6 +286,7 @@ const FormInfoBox = () => {
             className="uploadButton-button ripple-effect"
             htmlFor="upload_cover"
           >
+            {/* {loading && <Loading />} */}
             {coverImg || coverUrl ? (
               <Image
                 className=""
@@ -421,7 +427,10 @@ const FormInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <button className="theme-btn btn-style-one"> {loading ? <Loading /> : "Save"}</button>
+          <button className="theme-btn btn-style-one">
+            {" "}
+            {!!loading ? <Loading /> : "Save"}
+          </button>
         </div>
       </div>
     </form>

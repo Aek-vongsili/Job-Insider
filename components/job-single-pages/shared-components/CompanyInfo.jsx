@@ -1,6 +1,6 @@
 import Social from "../social/Social";
 
-const CompanyInfo = () => {
+const CompanyInfo = ({ company }) => {
   return (
     <ul className="company-info">
       <li>
@@ -10,16 +10,16 @@ const CompanyInfo = () => {
         Company size: <span>501-1,000</span>
       </li>
       <li>
-        Founded in: <span>2011</span>
+        Founded in: <span>{company?.company_info?.company_est}</span>
       </li>
       <li>
-        Phone: <span>123 456 7890</span>
+        Phone: <span>{company?.company_info?.company_phone}</span>
       </li>
       <li>
-        Email: <span>info@joio.com</span>
+        Email: <span>{company?.company_info?.company_email}</span>
       </li>
       <li>
-        Location: <span>London, UK</span>
+        Location: <span>{company?.location?.address}</span>
       </li>
       <li>
         Social media:

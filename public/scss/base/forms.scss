@@ -554,10 +554,10 @@ input:checked + .slider:before {
   justify-content: space-between;
   gap: 10px;
   button {
-    height: 60px;
+    height: 55px;
     display: flex;
     align-items: center;
-    width: 120px;
+    width: 110px;
     justify-content: center;
     border-radius: 12px;
     color: white;
@@ -580,11 +580,15 @@ input:checked + .slider:before {
   }
   .remove-key_btn {
     button {
-      background-color: red;
+      background-color: rgb(255, 46, 46);
       &:hover,
       :focus {
         background-color: rgb(209, 3, 3);
       }
     }
   }
+}
+
+.error-field{
+  border: 1px solid red;
 }

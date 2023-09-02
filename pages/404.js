@@ -17,7 +17,7 @@ const index = () => {
         <div className="content">
           <div className="logo">
             <Link href="/">
-              <Image src="/images/jisd.png" alt="brand" width={200} height={200}/>
+              <Image src="/images/Artboard 6.svg" alt="brand" width={200} height={200}/>
             </Link>
           </div>
           {/* End logo */}

@@ -3,18 +3,20 @@ import Map from "../../../Map";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../../../firebase/clientApp";
 import { useSelector } from "react-redux";
-
+import Swal from "sweetalert2";
+import Loading from "../../../../Loading/Loading";
 const ContactInfoBox = () => {
   const [markerPosition, setMarkerPosition] = useState({
     lat: 0,
     lng: 0,
   });
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
   const [city, setCity] = useState("Vientiane Prefecture");
   console.log(city);
   const userUid = useSelector((state) => state.user?.user?.uid);
-  
-  const location_info = useSelector(state => state.employerProfile.location)
+
+  const location_info = useSelector((state) => state.employerProfile.location);
   const getCurrentLocation = () => {
     const geocoder = new google.maps.Geocoder();
 
@@ -77,7 +79,8 @@ const ContactInfoBox = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const userRef = doc(db, "users", userUid);
+    setLoading(true);
+    const userRef = doc(db, "employers", userUid);
     await updateDoc(userRef, {
       "profile.location": {
         country: "Laos",
@@ -86,17 +89,38 @@ const ContactInfoBox = () => {
         latitude: markerPosition?.lat,
         longtitude: markerPosition?.lng,
       },
-    });
+    })
+      .then(() => {
+        setLoading(false);
+        Swal.fire({
+          title: "Update Success",
+          text: "Update Your Location Success",
+          icon: "success",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong!",
+          icon: "error",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      });
   };
-  useEffect(()=>{
-    if(location_info){
+  useEffect(() => {
+    if (location_info) {
       setMarkerPosition({
         lat: location_info.latitude,
         lng: location_info.longtitude,
-      })
-      setAddress(location_info.address)
+      });
+      setAddress(location_info.address);
     }
-  },[location_info])
+  }, [location_info]);
   return (
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="row">
@@ -197,7 +221,7 @@ const ContactInfoBox = () => {
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
           <button type="submit" className="theme-btn btn-style-one">
-            Save
+            {loading ? <Loading /> : "Save"}
           </button>
         </div>
       </div>

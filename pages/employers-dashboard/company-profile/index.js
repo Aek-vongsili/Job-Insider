@@ -35,7 +35,7 @@ export async function getServerSideProps({ req }) {
     try {
       const rs = await firebaseAdmin.auth().verifyIdToken(token);
       console.log(rs)
-      const collectionRef = doc(db, "users", rs.user_id);
+      const collectionRef = doc(db, "employers", rs.user_id);
       const docSnap = await getDoc(collectionRef);
       if (docSnap.exists()) {
         dataDoc = { ...docSnap.data().profile };

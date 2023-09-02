@@ -1,5 +1,4 @@
 import { serialize } from "cookie";
-import csrf from "../../csrf";
 
 import firebaseAdmin from "../../firebaseAdmin";
 import { getAuth } from "firebase/auth";
@@ -16,18 +15,15 @@ export default async function (req, res) {
       path: "/",
     });
     res.setHeader("Set-Cookie", serialized);
-    res.status(200).json({ message: "Success Login" });
+    res.status(200).json({ message: "Login Success" });
   } catch (err) {
     res.status(500).json({ err });
   }
-
 }
 
 // export default async function(req,res){
-   
+
 //     auth.signOut().then(rs=>{
 //         console.log("log out");
 //     })
 // }
-
-

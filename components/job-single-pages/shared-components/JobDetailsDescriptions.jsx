@@ -1,19 +1,14 @@
-const JobDetailsDescriptions = () => {
+const JobDetailsDescriptions = ({ jobData }) => {
   return (
     <div className="job-detail">
       <h4>Job Description</h4>
-      <p>
-        As a Product Designer, you will work within a Product Delivery Team
-        fused with UX, engineering, product and data talent. You will help the
-        team design beautiful interfaces that solve business challenges for our
-        clients. We work with a number of Tier 1 banks on building web-based
-        applications for AML, KYC and Sanctions List management workflows. This
-        role is ideal if you are looking to segue your career into the FinTech
-        or Big Data arenas.
-      </p>
+      <p style={{wordWrap:"break-word",overflowWrap:"break-word"}}>{jobData?.jobDescription}</p>
       <h4>Key Responsibilities</h4>
       <ul className="list-style-three">
-        <li>
+        {jobData?.keylist?.map((i, index) => (
+          <li key={index}>{i.keyList}</li>
+        ))}
+        {/* <li>
           Be involved in every step of the product design cycle from discovery
           to developer handoff and user acceptance testing.
         </li>
@@ -44,19 +39,13 @@ const JobDetailsDescriptions = () => {
         </li>
         <li>
           Present your work to the wider business at Show & Tell sessions.
-        </li>
+        </li> */}
       </ul>
       <h4>Skill & Experience</h4>
       <ul className="list-style-three">
-        <li>
-          You have at least 3 years’ experience working as a Product Designer.
-        </li>
-        <li>You have experience using Sketch and InVision or Framer X</li>
-        <li>
-          You have some previous experience working in an agile environment –
-          Think two-week sprints.
-        </li>
-        <li>You are familiar using Jira and Confluence in your workflow</li>
+        {jobData?.skill?.map((i, index) => (
+          <li key={index}>{i.skillList}</li>
+        ))}
       </ul>
     </div>
   );

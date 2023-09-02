@@ -17,19 +17,98 @@ import Contact from "../../components/job-single-pages/shared-components/Contact
 import JobDetailsDescriptions from "../../components/job-single-pages/shared-components/JobDetailsDescriptions";
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
 import Layout from "../../components/Layout";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase/clientApp";
+import { format, compareAsc, parseISO } from "date-fns";
+import { useSelector } from "react-redux";
+import { selectJobById } from "../../features/job/jobSlice";
 
-const JobSingleDynamicV1 = () => {
+const JobSingleDynamicV1 = ({ job }) => {
   const router = useRouter();
-  const [company, setCompany] = useState({});
-  const id = router.query.id;
+  // const [jobData, setJobData] = useState({});
+  // const id = router.query.id;
+  // console.log(id);
+  // const jobs = useSelector((state) => selectJobById(state, id));
 
-  useEffect(() => {
-    if (!id) <h1>Loading...</h1>;
-    else setCompany(jobs.find((item) => item.id == id));
+  const jobData = JSON.parse(job);
+  // useEffect(() => {
+  //   // if (!id) <h1>Loading...</h1>;
+  //   const getData = async () => {
+  //     try {
+  //       const docRef = doc(db, "job_features", `${id}`);
+  //       const docSnap = await getDoc(docRef);
 
-    return () => {};
-  }, [id]);
+  //       if (docSnap.exists()) {
+  //         console.log("Document data:", docSnap.data());
 
+  //         const companyRef = doc(db, "users", docSnap.data().company);
+  //         const companySnap = await getDoc(companyRef);
+  //         if (companySnap.exists()) {
+  //           console.log("Company data:", companySnap.data());
+  //           const { profile, ...data } = companySnap.data();
+  //           setJobData({ ...docSnap.data(), ...profile });
+  //         } else {
+  //           console.log("No company document!");
+  //         }
+  //       } else {
+  //         console.log("No job document!");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error getting document:", error);
+  //     }
+  //   };
+  //   getData();
+  //   // else setCompany(jobs.find((item) => item.id == id));
+  //   return () => {};
+  // }, [id]);
+  const convertTimestampToDateTime = (timestampInSeconds) => {
+    const timestampInMilliseconds = timestampInSeconds * 1000; // Convert to milliseconds
+    const date = new Date(timestampInMilliseconds);
+
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+  // console.log(jobData?.createdAt?.seconds);
+  const calculateTimeDistanceFromNow = (timestampInSeconds) => {
+    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+    const timeDifferenceInSeconds = currentTimeInSeconds - timestampInSeconds;
+
+    const secondsInMinute = 60;
+    const secondsInHour = 60 * secondsInMinute;
+    const secondsInDay = 24 * secondsInHour;
+    const secondsInMonth = 30 * secondsInDay;
+    const secondsInYear = 365 * secondsInDay;
+
+    if (timeDifferenceInSeconds < secondsInMinute) {
+      return `${timeDifferenceInSeconds} seconds ago`;
+    } else if (timeDifferenceInSeconds < secondsInHour) {
+      const minutes = Math.floor(timeDifferenceInSeconds / secondsInMinute);
+      return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+    } else if (timeDifferenceInSeconds < secondsInDay) {
+      const hours = Math.floor(timeDifferenceInSeconds / secondsInHour);
+      return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+    } else if (timeDifferenceInSeconds < secondsInMonth) {
+      const days = Math.floor(timeDifferenceInSeconds / secondsInDay);
+      return `${days} ${days === 1 ? "day" : "days"} ago`;
+    } else if (timeDifferenceInSeconds < secondsInYear) {
+      const months = Math.floor(timeDifferenceInSeconds / secondsInMonth);
+      return `${months} ${months === 1 ? "month" : "months"} ago`;
+    } else {
+      const years = Math.floor(timeDifferenceInSeconds / secondsInYear);
+      return `${years} ${years === 1 ? "year" : "years"} ago`;
+    }
+  };
+
+  // const timestampInSeconds = 1661683200; // Replace with your timestamp in seconds
+  // const timeDistance = calculateTimeDistanceFromNow(
+  //   jobData?.createdAt?.seconds
+  // );
+  // console.log(timeDistance);
+  // const data = format(new Date(jobData?.createdAt), 'MM/dd/yyyy')
+  // console.log(convertTimestampToDateTime(jobData?.createdAt?.seconds));
   return (
     <>
       <Layout>
@@ -55,38 +134,40 @@ const JobSingleDynamicV1 = () => {
                     <div className="job-block-seven style-two">
                       <div className="inner-box">
                         <div className="content">
-                          <h4>{company?.jobTitle}</h4>
+                          <h4>{jobData?.jobTitle}</h4>
 
                           <ul className="job-info">
                             <li>
                               <span className="icon flaticon-briefcase"></span>
-                              {company?.company}
+                              {jobData?.company_info?.company_name}
                             </li>
                             {/* compnay info */}
                             <li>
                               <span className="icon flaticon-map-locator"></span>
-                              {company?.location}
+                              {jobData?.location?.address}
                             </li>
                             {/* location info */}
                             <li>
                               <span className="icon flaticon-clock-3"></span>{" "}
-                              {company?.time}
+                              {calculateTimeDistanceFromNow(
+                                jobData?.createdAt?.seconds
+                              )}
                             </li>
                             {/* time info */}
                             <li>
                               <span className="icon flaticon-money"></span>{" "}
-                              {company?.salary}
+                              {jobData?.salary}
                             </li>
                             {/* salary info */}
                           </ul>
                           {/* End .job-info */}
 
                           <ul className="job-other-info">
-                            {company?.jobType?.map((val, i) => (
+                            {/* {company?.jobType?.map((val, i) => (
                               <li key={i} className={`${val.styleClass}`}>
                                 {val.type}
                               </li>
-                            ))}
+                            ))} */}
                           </ul>
                           {/* End .job-other-info */}
                         </div>
@@ -99,11 +180,11 @@ const JobSingleDynamicV1 = () => {
 
                   <figure className="image">
                     <img
-                      src="/images/resource/job-post-img.jpg"
+                      src={jobData?.company_info?.logoImage}
                       alt="resource"
                     />
                   </figure>
-                  <JobDetailsDescriptions />
+                  <JobDetailsDescriptions jobData={jobData} />
                   {/* End jobdetails content */}
 
                   <div className="other-options">
@@ -177,14 +258,19 @@ const JobSingleDynamicV1 = () => {
                     <div className="sidebar-widget">
                       {/* <!-- Job Overview --> */}
                       <h4 className="widget-title">Job Overview</h4>
-                      <JobOverView />
+                      <JobOverView
+                        jobData={jobData}
+                        timeDistance={calculateTimeDistanceFromNow(
+                          jobData?.createdAt?.seconds
+                        )}
+                      />
 
                       {/* <!-- Map Widget --> */}
                       <h4 className="widget-title">Job Location</h4>
                       <div className="widget-content">
                         <div className="map-outer">
                           <div style={{ height: "300px", width: "100%" }}>
-                            <MapJobFinder />
+                            <MapJobFinder location={jobData?.location} />
                           </div>
                         </div>
                       </div>
@@ -202,25 +288,30 @@ const JobSingleDynamicV1 = () => {
                       <div className="widget-content">
                         <div className="company-title">
                           <div className="company-logo">
-                            <img src={company.logo} alt="resource" />
+                            <img
+                              src={jobData?.company_info?.logoImage}
+                              alt="resource"
+                            />
                           </div>
-                          <h5 className="company-name">{company.company}</h5>
+                          <h5 className="company-name">
+                            {jobData?.company_info?.company_name}
+                          </h5>
                           <a href="#" className="profile-link">
                             View company profile
                           </a>
                         </div>
                         {/* End company title */}
 
-                        <CompanyInfo />
+                        <CompanyInfo company={jobData} />
 
                         <div className="btn-box">
                           <a
-                            href={company?.link}
+                            // href={company?.link}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="theme-btn btn-style-three"
                           >
-                            {company?.link}
+                            {/* {company?.link} */}
                           </a>
                         </div>
                         {/* End btn-box */}
@@ -257,7 +348,44 @@ const JobSingleDynamicV1 = () => {
     </>
   );
 };
+export async function getServerSideProps(context) {
+  const { params } = context;
+  // console.log(params);
 
+  let job = {};
+  try {
+    const docRef = doc(db, "job_features", `${params.id}`);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // console.log("Document data:", docSnap.data());
+
+      const companyRef = doc(db, "employers", docSnap.data().company);
+      const companySnap = await getDoc(companyRef);
+      if (companySnap.exists()) {
+        // console.log("Company data:", companySnap.data());
+        const { profile, ...data } = companySnap.data();
+        // setJobData({ ...docSnap.data(), ...profile });
+        job = { ...docSnap.data(), ...profile };
+      } else {
+        console.log("No company document!");
+      }
+    } else {
+      console.log("No job document!");
+      return {
+        notFound: true,
+      };
+    }
+  } catch (error) {
+    throw err;
+  }
+  const jobData = JSON.stringify(job);
+  // console.log(jobData);
+  return {
+    props: {
+      job: jobData,
+    },
+  };
+}
 export default dynamic(() => Promise.resolve(JobSingleDynamicV1), {
   ssr: false,
 });

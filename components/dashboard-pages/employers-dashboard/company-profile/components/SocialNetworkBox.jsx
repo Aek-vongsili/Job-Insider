@@ -23,7 +23,7 @@ const SocialNetworkBox = () => {
 
   const handleSaveData = async (e) => {
     e.preventDefault();
-    const userRef = doc(db, "users", userUid);
+    const userRef = doc(db, "employers", userUid);
     setLoading(true);
     setDoc(
       userRef,

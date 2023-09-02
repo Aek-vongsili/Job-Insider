@@ -12,7 +12,11 @@
     "deploy": "yarn build && firebase deploy --only functions,hosting"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@faker-js/faker": "^7.6.0",
+    "@mui/material": "^5.14.5",
+    "@mui/x-date-pickers": "^6.11.2",
     "@popperjs/core": "^2.11.6",
     "@react-google-maps/api": "^2.18.1",
     "@reduxjs/toolkit": "^1.9.1",
@@ -26,6 +30,8 @@
     "cookie": "^0.5.0",
     "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
+    "date-fns": "^2.30.0",
+    "dayjs": "^1.11.9",
     "edge-csrf": "^1.0.4",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",

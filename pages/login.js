@@ -13,21 +13,21 @@ const index = () => {
   );
 };
 
-export async function getServerSideProps({req}){
-  const {cookies} = req
-  const token = cookies?.token || null
-  if(token && token !== null){
-    return{
-      redirect:{
-        destination:"/",
-        permanent:false
-      }
-    }
-  }
-  return{
-    props:{}
-  }
-}
+// export async function getServerSideProps({req}){
+//   const {cookies} = req
+//   const token = cookies?.token || null
+//   if(token && token !== null){
+//     return{
+//       redirect:{
+//         destination:"/",
+//         permanent:false
+//       }
+//     }
+//   }
+//   return{
+//     props:{}
+//   }
+// }
 
 export default dynamic(() => Promise.resolve(index), { ssr: false });
 
