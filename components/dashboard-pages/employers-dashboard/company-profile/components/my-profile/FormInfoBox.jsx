@@ -18,23 +18,34 @@ import Loading from "../../../../../Loading/Loading";
 const FormInfoBox = () => {
   const router = useRouter();
   const catOptions = [
-    { value: "Banking", label: "Banking" },
-    { value: "Digital & Creative", label: "Digital & Creative" },
+    { value: "Manufacturing", label: "Manufacturing" },
+    { value: "Service", label: "Service" },
     { value: "Retail", label: "Retail" },
-    { value: "Human Resources", label: "Human Resources" },
-    { value: "Managemnet", label: "Managemnet" },
-    { value: "Accounting & Finance", label: "Accounting & Finance" },
-    { value: "Digital", label: "Digital" },
-    { value: "Creative Art", label: "Creative Art" },
+    { value: "Technology", label: "Technology" },
+    { value: "Financial Institutions", label: "Financial Institutions" },
+    { value: "Healthcare", label: "Healthcare" },
+    { value: "Energy", label: "Energy" },
+    { value: "Transportation", label: "Transportation" },
+    { value: "Construction", label: "Construction" },
+    { value: "Agriculture and Farming", label: "Agriculture and Farming" },
+    { value: "Entertainment and Media", label: "Entertainment and Media" },
+    { value: "Real Estate", label: "Real Estate" },
+    { value: "Food and Beverage", label: "Food and Beverage" },
+    { value: "Pharmaceutical", label: "Pharmaceutical" },
+    { value: "Aerospace and Defense", label: "Aerospace and Defense" },
+    { value: "Hospitality and Tourism", label: "Hospitality and Tourism" },
+    { value: "Education and Training", label: "Education and Training" },
+    {
+      value: "Environmental and Sustainability",
+      label: "Environmental and Sustainability",
+    },
+    { value: "Telecommunications", label: "Telecommunications" },
+    { value: "Nonprofit Organizations", label: "Nonprofit Organizations" },
   ];
   const [logoImg, setLogoImg] = useState("");
   const [coverImg, setCoverImg] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [coverUrl, setCoverUrl] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companyEmail, setCompanyEmail] = useState("");
-  const [companyPhone, setCompanyPhone] = useState("");
-  const [companyWebsite, setCompanyWebsite] = useState("");
   const [formData, setFormData] = useState(new FormData());
   const [selectedValue, setSelectedValue] = useState([]);
   const [percent, setPercent] = useState(0);

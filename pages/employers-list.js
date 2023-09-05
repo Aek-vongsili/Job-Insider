@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import Seo from "../components/common/Seo";
 import EmployersList from "../components/employers-listing-pages/employers-list";
 import Layout from "../components/Layout";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase/clientApp";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -23,22 +23,38 @@ const index = ({ employerList }) => {
   );
 };
 export async function getServerSideProps({ req }) {
-  const querySnapshot = await getDocs(collection(db, "employers"));
-  let employerList = [];
   try {
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data().profile);
-      employerList.push(doc.data().profile);
-    });
+    const querySnapshot = await getDocs(collection(db, 'employers'));
+    const employerList = [];
+
+    await Promise.all(querySnapshot.docs.map(async (doc) => {
+      const q = query(collection(db, 'job_features'), where('company', '==', doc.id));
+      const jobQuerySnapshot = await getDocs(q);
+      const jobCount = jobQuerySnapshot.size;
+
+      const employerData = {
+        emp_id: doc.id,
+        openJobs: jobCount,
+        ...doc.data().profile,
+      };
+
+      employerList.push(employerData);
+    }));
+
+    const employerJson = JSON.stringify(employerList);
+    // console.log(employerList)
+    return {
+      props: {
+        employerList: employerJson,
+      },
+    };
   } catch (err) {
-    throw err;
+    console.error('Error fetching data:', err);
+    return {
+      props: {
+        employerList: '[]', // Return an empty array in case of an error
+      },
+    };
   }
-  const employerJson = JSON.stringify(employerList);
-  return {
-    props: {
-      employerList: employerJson,
-    },
-  };
 }
 export default dynamic(() => Promise.resolve(index), { ssr: false });
