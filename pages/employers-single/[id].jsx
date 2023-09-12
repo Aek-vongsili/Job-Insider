@@ -28,6 +28,14 @@ const EmployersSingleV1 = ({ employerData , openJobs}) => {
   const [employer, setEmployersInfo] = useState({});
   const id = router.query.id;
   console.log(employerData);
+  const formatDate = (date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+  const dateObj = new Date(employerData?.company_info?.company_est)
+  const companyEst =formatDate(dateObj)
   // useEffect(() => {
   //   if (!id) <h1>Loading...</h1>;
   //   else setEmployersInfo(employersInfo.find((item) => item.id == id));
@@ -193,7 +201,7 @@ const EmployersSingleV1 = ({ employerData , openJobs}) => {
                             Company size: <span>501-1,000</span>
                           </li>
                           <li>
-                            Founded in: <span>2011</span>
+                            Founded in: <span>{companyEst}</span>
                           </li>
                           <li>
                             Phone:{" "}

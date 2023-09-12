@@ -10,6 +10,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store } from "../app/store";
 import { persistStore } from "redux-persist";
 import App from "next/app";
+import LoadingLayout from "../components/layouts/LoadingLayout";
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
 }
@@ -30,7 +31,9 @@ function MyApp({ Component, pageProps }) {
     <Provider store={store}>
       <PersistGate persistor={persitor} loading={null}>
         <div className="page-wrapper">
-          <Component {...pageProps} />
+          <LoadingLayout>
+            <Component {...pageProps} />
+          </LoadingLayout>
 
           {/* Toastify */}
           <ToastContainer
@@ -55,10 +58,10 @@ function MyApp({ Component, pageProps }) {
 
 // MyApp.getInitialProps = async (appContext) => {
 //   const pageProps = App.getInitialProps(appContext)
-//   const { req ,res} = appContext.ctx; 
+//   const { req ,res} = appContext.ctx;
 //   // await csrf(req,res)
-//   return { 
-//     ...pageProps, 
-// }; 
+//   return {
+//     ...pageProps,
+// };
 // }
 export default MyApp;

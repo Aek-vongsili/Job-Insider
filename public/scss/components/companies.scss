@@ -413,6 +413,8 @@ Top Companies
 .company-block-four .company-logo img{
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: scale-down;
 }
 
 .company-block-four h4{

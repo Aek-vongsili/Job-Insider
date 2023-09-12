@@ -20,7 +20,7 @@ const PostBoxForm = () => {
   const [keylist, setKeylist] = useState([{ keyList: "" }]);
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
-  const [loading,setLoading]= useState(false)
+  const [loading, setLoading] = useState(false);
   const userUid = useSelector((state) => state.user?.user?.uid);
 
   const specialisms = [
@@ -129,7 +129,7 @@ const PostBoxForm = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
     if (validate(formData)) {
       try {
         console.log(formData);
@@ -140,7 +140,7 @@ const PostBoxForm = () => {
           company: userUid,
           createdAt: serverTimestamp(),
         }).then((rs) => {
-          setLoading(false)
+          setLoading(false);
           Swal.fire({
             title: "Success",
             text: "Your Job has been posted",
@@ -151,8 +151,11 @@ const PostBoxForm = () => {
           });
         });
       } catch (err) {
+        setLoading(false);
         console.log(err);
       }
+    } else {
+      setLoading(false);
     }
   };
   // useEffect(() => {
@@ -351,7 +354,10 @@ const PostBoxForm = () => {
         </div>
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12 text-right">
-          <button className="theme-btn btn-style-one"> {!!loading ? <Loading /> : "Post"}</button>
+          <button className="theme-btn btn-style-one" disabled={loading}>
+            {" "}
+            {!!loading ? <Loading /> : "Post"}
+          </button>
         </div>
       </div>
     </form>

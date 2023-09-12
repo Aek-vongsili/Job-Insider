@@ -4,6 +4,7 @@ import { auth, db } from "../../../../firebase/clientApp";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Loading from "../../../Loading/Loading";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 const FormContent = ({ userType }) => {
   const [email, setEmail] = useState("");
@@ -28,7 +29,16 @@ const FormContent = ({ userType }) => {
             createAt: serverTimestamp(),
           },
         });
-        router.push("/");
+
+        return result.user.getIdToken();
+      })
+      .then((idToken) => {
+        axios
+          .post("/api/customClaims", { idToken: idToken, role: type })
+          .then((rs) => {
+            console.log(rs);
+            router.push("/");
+          });
       })
       .catch((err) => {
         console.log(err);
@@ -88,7 +98,11 @@ const FormContent = ({ userType }) => {
       {/* password */}
 
       <div className="form-group">
-        <button className="theme-btn btn-style-one" type="submit">
+        <button
+          className="theme-btn btn-style-one"
+          type="submit"
+          disabled={!!loading}
+        >
           {loading ? <Loading /> : "Register"}
         </button>
       </div>

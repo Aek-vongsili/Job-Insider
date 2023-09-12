@@ -28,8 +28,8 @@ const userSlice = createSlice({
       state.user = null;
       state.isLoggedIn = false;
     },
-    setRole(state, action) {
-      state.role = action.payload;
+    setRole(state, { payload }) {
+      state.role = payload;
     },
   },
 });

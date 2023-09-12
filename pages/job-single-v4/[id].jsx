@@ -22,6 +22,7 @@ import { db } from "../../firebase/clientApp";
 import { format, compareAsc, parseISO } from "date-fns";
 import { useSelector } from "react-redux";
 import { selectJobById } from "../../features/job/jobSlice";
+import Link from "next/link";
 
 const JobSingleDynamicV1 = ({ job }) => {
   const router = useRouter();
@@ -31,6 +32,7 @@ const JobSingleDynamicV1 = ({ job }) => {
   // const jobs = useSelector((state) => selectJobById(state, id));
 
   const jobData = JSON.parse(job);
+  console.log(jobData);
   // useEffect(() => {
   //   // if (!id) <h1>Loading...</h1>;
   //   const getData = async () => {
@@ -296,9 +298,13 @@ const JobSingleDynamicV1 = ({ job }) => {
                           <h5 className="company-name">
                             {jobData?.company_info?.company_name}
                           </h5>
-                          <a href="#" className="profile-link">
+                          <Link
+                            href={`/employers-single/${jobData.company}`}
+                            className="profile-link"
+                            target="_blank"
+                          >
                             View company profile
-                          </a>
+                          </Link>
                         </div>
                         {/* End company title */}
 
@@ -306,12 +312,12 @@ const JobSingleDynamicV1 = ({ job }) => {
 
                         <div className="btn-box">
                           <a
-                            // href={company?.link}
+                            href={`https://${jobData?.company_info?.company_website}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="theme-btn btn-style-three"
                           >
-                            {/* {company?.link} */}
+                            {jobData?.company_info?.company_website}
                           </a>
                         </div>
                         {/* End btn-box */}

@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { setCompanyData } from "../../../features/employer/employerProfile";
 import firebaseAdmin from "../../../firebaseAdmin";
+import { withAuth } from "../../../utils/withAuth";
 const index = ({ dataDoc }) => {
   const dispatch = useDispatch();
   // console.log(dataDoc);
@@ -28,45 +29,25 @@ const index = ({ dataDoc }) => {
     </>
   );
 };
-export async function getServerSideProps({ req }) {
+export const getServerSideProps = withAuth(async ({ req }) => {
   const { token } = req.cookies || null;
   let dataDoc = {};
   if (token) {
     try {
       const rs = await firebaseAdmin.auth().verifyIdToken(token);
-      console.log(rs)
+      // console.log(rs);
       const collectionRef = doc(db, "employers", rs.user_id);
       const docSnap = await getDoc(collectionRef);
       if (docSnap.exists()) {
         dataDoc = { ...docSnap.data().profile };
       }
-      console.log(new Date().getTime() / 1000 - rs.auth_time < 5 * 60)      
-      // const currentTime = new Date().getTime() / 1000;
-      // const expireOrnot = rs.exp < currentTime;
-      // if (!rs || expireOrnot) {
-      //   await axios.get("/api/logout");
-      //   auth
-      //     .signOut()
-      //     .then((rs) => {
-      //       console.log("you are not have Token or your Token is expired");
-      //     })
-      //     .catch((err) => {
-      //       console.log(err.message);
-      //     });
-      //   return {
-      //     redirect: {
-      //       destination: "/login",
-      //       permanent: false,
-      //     },
-      //   };
-      // }
     } catch (err) {
       console.log(err);
       return {
         props: {
           isLoggedIn: false,
-        }
-      }
+        },
+      };
     }
   } else {
     return {
@@ -81,5 +62,5 @@ export async function getServerSideProps({ req }) {
       dataDoc: dataDoc,
     },
   };
-}
+});
 export default dynamic(() => Promise.resolve(index), { ssr: false });

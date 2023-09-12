@@ -3,19 +3,21 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import employerMenuData from "../../data/employerMenuData";
+import candidatesMenuData from "../../data/candidatesMenuData";
 import { isActiveLink } from "../../utils/linkActiveChecker";
 import HeaderNavContent from "../header/HeaderNavContent";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setUser, setRole } from "../../features/user/userSlice";
-import Cookies from "js-cookie";
+
 import axios from "axios";
-import { getCsrfToken } from "next-auth/react";
+
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
   const router = useRouter();
   const isLogin = useSelector((state) => state.user.isLoggedIn);
+  const role = useSelector((state) => state.user.role);
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -38,18 +40,27 @@ const Header = () => {
     // const rs = await axios.get("/api/logout");
     // console.log(rs);
   };
+  const checkRole = (role) => {
+    switch (role) {
+      case "Candidate":
+        return candidatesMenuData;
+      case "Employer":
+        return employerMenuData;
+      default:
+        return candidatesMenuData;
+    }
+  };
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
 
     auth.onAuthStateChanged((user) => {
-      // const csrfToken = Cookies.get("_csrf");
-      // console.log(csrfToken);
       if (user) {
+        console.log(user);
         user
           .getIdToken(true)
           .then((token) => {
             axios
-              .post("/api/jwt", { token: token }) //,{headers:{'CSRF-Token': csrfToken}}
+              .post("/api/jwt", { token: token })
               .then((rs) => {
                 console.log(rs);
               })
@@ -73,7 +84,7 @@ const Header = () => {
         dispatch(setLogout());
       }
     });
-  }, []);
+  }, [router]);
 
   return (
     // <!-- Main Header-->
@@ -136,7 +147,7 @@ const Header = () => {
                 </a>
 
                 <ul className="dropdown-menu">
-                  {employerMenuData.map((item) => (
+                  {checkRole(role)?.map((item) => (
                     <li
                       className={`${
                         isActiveLink(item.routePath, router.asPath)

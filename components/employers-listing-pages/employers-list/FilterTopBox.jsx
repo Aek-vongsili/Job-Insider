@@ -24,6 +24,7 @@ const FilterTopBox = () => {
     perPage,
   } = useSelector((state) => state.employerFilter) || {};
   const dispatch = useDispatch();
+  const companyDataFilter = (item) => item.company_info != null;
 
   // keyword filter
   const keywordFilter = (item) =>
@@ -64,7 +65,9 @@ const FilterTopBox = () => {
     // ?.filter(destinationFilter)
     // ?.filter(categoryFilter)
     // ?.filter(foundationDataFilter)
+    ?.filter(companyDataFilter)
     // ?.sort(sortFilter)
+
     ?.map((company, index) => (
       <div
         className="company-block-four col-xl-3 col-lg-6 col-md-6 col-sm-12"

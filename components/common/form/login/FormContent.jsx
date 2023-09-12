@@ -25,14 +25,23 @@ const FormContent = () => {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
 
       if (user) {
+        user.getIdToken().then((token) => {
+          axios
+            .post("/api/jwt", { token: token })
+            .then((rs) => {
+              console.log(rs);
+              router.push("/");
+            })
+            .catch((err) => {
+              alert(err);
+            });
+        });
         // const token = await user.getIdToken(true)
         // console.log(token);
         // const in30Minutes = 1/48;
         // Cookies.set('token',token,{
         //   expires: in30Minutes
         // })
-
-        router.push("/");
 
         // setLoading(false)
       }
@@ -83,7 +92,7 @@ const FormContent = () => {
           )}
           <p className="err-message">{err ? err : ""}</p>
         </div>
-        
+
         {/* password */}
 
         <div className="form-group">
@@ -106,6 +115,7 @@ const FormContent = () => {
             className="theme-btn btn-style-one"
             type="submit"
             name="log-in"
+            disabled={!!loading}
           >
             {loading ? <Loading /> : "Log in"}
           </button>
