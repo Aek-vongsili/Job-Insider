@@ -1,3 +1,5 @@
+import { auth } from "../firebase/clientApp";
+
 export default [
     {
         id: 1,

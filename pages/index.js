@@ -43,16 +43,15 @@ export async function getServerSideProps({ req, res }) {
     if (err.code === "auth/id-token-expired") {
       console.error("Token has expired. Please re-authenticate.");
       // await axios.get("/api/logout");
-      // const logoutCookie = serialize("token", null, {
-      //   httpOnly: true,
-      //   secure: process.env.NODE_ENV !== "development",
-      //   sameSite: "strict",
-      //   maxAge: -1,
-      //   path: "/",
-      // });
-      // await auth.signOut()
+      const logoutCookie = serialize("token", null, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV !== "development",
+        sameSite: "strict",
+        maxAge: -1,
+        path: "/",
+      });
 
-      // res.setHeader("Set-Cookie", logoutCookie);
+      res.setHeader("Set-Cookie", logoutCookie);
       return {
         redirect: {
           destination: "/", // Redirect to login page or handle as appropriate

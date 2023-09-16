@@ -220,7 +220,7 @@ const ContactInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <button type="submit" className="theme-btn btn-style-one">
+          <button type="submit" className="theme-btn btn-style-one" disabled={!!loading}>
             {loading ? <Loading /> : "Save"}
           </button>
         </div>

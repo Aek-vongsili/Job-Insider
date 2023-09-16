@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  company_info: null,
+  candidate_info: null,
   location: null,
   social: null,
 };
@@ -11,16 +11,13 @@ const employerProfile = createSlice({
   initialState,
   reducers: {
     setCompanyData: (state, { payload }) => {
-      state.company_info = payload.company_info;
+      state.company_info = payload.candidate_info;
       state.location = payload.location;
       state.social = payload.social;
-    },
-    setCompanySignOut: (state, { payload }) => {
-      return initialState;
     },
   },
 });
 
-export const { setCompanyData, setCompanySignOut } = employerProfile.actions;
+export const { setCompanyData } = employerProfile.actions;
 
 export default employerProfile.reducer;

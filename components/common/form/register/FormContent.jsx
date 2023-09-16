@@ -14,37 +14,50 @@ const FormContent = ({ userType }) => {
   const [showpass, setShowPass] = useState(false);
 
   const router = useRouter();
-  const createAccount = (type, colName) => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((result) => {
-        console.log(result);
-        setDoc(doc(db, colName, result.user.uid), {
-          user: {
-            displayName:
-              result.user.displayName === null
-                ? result.user.email.substring(0, result.user.email.indexOf("@"))
-                : result.user.displayName,
-            role: type,
-            email: result.user.email,
-            createAt: serverTimestamp(),
-          },
-        });
+  const createAccount = async (type, colName) => {
+    try {
+      // Step 1: Create user
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log(result);
 
-        return result.user.getIdToken();
-      })
-      .then((idToken) => {
-        axios
-          .post("/api/customClaims", { idToken: idToken, role: type })
-          .then((rs) => {
-            console.log(rs);
-            router.push("/");
-          });
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-        setErr(err.message);
+      // Step 2: Set user document
+      const userData = {
+        user: {
+          displayName:
+            result.user.displayName === null
+              ? result.user.email.substring(0, result.user.email.indexOf("@"))
+              : result.user.displayName,
+          role: type,
+          email: result.user.email,
+          createAt: serverTimestamp(),
+        },
+      };
+      const userDocRef = doc(db, colName, result.user.uid);
+      await setDoc(userDocRef, userData);
+
+      // Step 3: Get ID token
+      const idToken = await result.user.getIdToken();
+
+      // Step 4: Call API to set custom claims
+      const customClaimsResponse = await axios.post("/api/customClaims", {
+        idToken: idToken,
+        role: type,
       });
+      console.log(customClaimsResponse);
+
+      // Step 5: Call API to get JWT
+      const jwtResponse = await axios.post("/api/jwt", { token: idToken });
+ 
+      // Step 6: Redirect to home page
+      router.push("/");
+    } catch (error) {
+      console.error("An error occurred:", error);
+      // Handle errors here
+    }
   };
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -2,24 +2,15 @@ import dynamic from "next/dynamic";
 import Seo from "../../../components/common/Seo";
 import CompanyProfile from "../../../components/dashboard-pages/employers-dashboard/company-profile";
 import Layout from "../../../components/Layout";
-import { verifyFirebaseJwt } from "../../../services/jwt_verify";
-import { getAuth } from "firebase/auth";
-import axios from "axios";
-import { collection, doc, getDoc } from "firebase/firestore";
-import { db } from "../../../firebase/clientApp";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { setCompanyData } from "../../../features/employer/employerProfile";
-import firebaseAdmin from "../../../firebaseAdmin";
 import { withAuth } from "../../../utils/withAuth";
 const index = ({ dataDoc }) => {
-  const dispatch = useDispatch();
-  // console.log(dataDoc);
-  useEffect(() => {
-    if (dataDoc) {
-      dispatch(setCompanyData(dataDoc));
-    }
-  }, [dataDoc]);
+  // const dispatch = useDispatch();
+  // // console.log(dataDoc);
+  // useEffect(() => {
+  //   if (dataDoc) {
+  //     dispatch(setCompanyData(dataDoc));
+  //   }
+  // }, [dataDoc]);
   return (
     <>
       <Seo pageTitle="Company Profile" />
@@ -30,37 +21,8 @@ const index = ({ dataDoc }) => {
   );
 };
 export const getServerSideProps = withAuth(async ({ req }) => {
-  const { token } = req.cookies || null;
-  let dataDoc = {};
-  if (token) {
-    try {
-      const rs = await firebaseAdmin.auth().verifyIdToken(token);
-      // console.log(rs);
-      const collectionRef = doc(db, "employers", rs.user_id);
-      const docSnap = await getDoc(collectionRef);
-      if (docSnap.exists()) {
-        dataDoc = { ...docSnap.data().profile };
-      }
-    } catch (err) {
-      console.log(err);
-      return {
-        props: {
-          isLoggedIn: false,
-        },
-      };
-    }
-  } else {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
   return {
-    props: {
-      dataDoc: dataDoc,
-    },
+    props: {},
   };
 });
 export default dynamic(() => Promise.resolve(index), { ssr: false });

@@ -120,24 +120,7 @@ const FormInfoBox = () => {
     return new Promise((resolve, reject) => {
       const imageName = `${Date.now()}_${uuidv4()}`;
       const storageRef = ref(storage, `/Image_upload/${imageName}`);
-      // const uploadTask = uploadBytesResumable(storageRef, img);
-      // uploadTask.on(
-      //   "state_changed",
-      //   (snapshot) => {
-      //     const percent = Math.round(
-      //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      //     );
 
-      //     // update progress
-      //     setPercent(percent);
-      //   },
-      //   (err) => reject(err),
-      //   async () => {
-      //     // download url
-      //     const imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-      //     resolve(imageUrl);
-      //   }
-      // );
       uploadString(storageRef, img, "data_url")
         .then((snapshot) => {
           console.log("Uploaded a data_url string!");
@@ -190,6 +173,8 @@ const FormInfoBox = () => {
           confirmButtonText: "Accept",
           timer: 3000,
           timerProgressBar: true,
+        }).then(() => {
+          window.location.reload();
         });
       })
       .catch((err) => {
@@ -203,28 +188,6 @@ const FormInfoBox = () => {
         });
       });
   };
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const userRef = doc(db, "users", userUid);
-  //     const docSnap = await getDoc(userRef);
-  //     if (docSnap.exists()) {
-  //       if (docSnap.data()?.profile?.company_info) {
-
-  //         const { logoImage, coverImage, ...data } =
-  //           docSnap.data()?.profile?.company_info;
-  //         setFormData(data);
-  //         setLogoUrl(logoImage);
-  //         setCoverUrl(coverImage);
-  //       }
-  //     } else {
-
-  //       console.log("No such document!");
-  //     }
-  //   };
-
-  //   getData();
-  // }, []);
-
   useEffect(() => {
     if (company_profile) {
       const { logoImage, coverImage, ...info } = company_profile;
@@ -232,15 +195,6 @@ const FormInfoBox = () => {
       setFormData(info);
       setLogoUrl(logoImage);
       setCoverUrl(coverImage);
-      // const loadingTimer = setTimeout(() => {
-      //   setLoading(false);
-      // }, 2000);
-
-      // // Clear the timer when the component is unmounted
-      // return () => {
-      //   clearTimeout(loadingTimer);
-      //   // clearTimeout(imageTimer);
-      // };
     }
   }, [company_profile]);
 
@@ -438,7 +392,7 @@ const FormInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <button className="theme-btn btn-style-one">
+          <button className="theme-btn btn-style-one" disabled={!!loading}>
             {" "}
             {!!loading ? <Loading /> : "Save"}
           </button>

@@ -7,8 +7,31 @@ import CopyrightFooter from "../../CopyrightFooter";
 import PostJobSteps from "./components/PostJobSteps";
 import PostBoxForm from "./components/PostBoxForm";
 import MenuToggler from "../../MenuToggler";
+import { useEffect } from "react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../../../firebase/clientApp";
+import { useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import { useRouter } from "next/router";
 
 const index = () => {
+  const employerImg = useSelector(
+    (state) => state.employerProfile?.company_info
+  );
+  const router = useRouter();
+  useEffect(() => {
+    if (employerImg === undefined || employerImg === null) {
+      Swal.fire({
+        icon: "warning",
+        title: "Can't access this page",
+        text: "Fill infomation in Company profile!",
+        footer: '<a href="">Why do I have this issue?</a>',
+        confirmButtonText: "Access",
+      }).then(() => {
+        router.back();
+      });
+    }
+  }, []);
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>

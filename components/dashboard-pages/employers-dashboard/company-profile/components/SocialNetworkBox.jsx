@@ -9,7 +9,7 @@ const SocialNetworkBox = () => {
   const userUid = useSelector((state) => state.user?.user?.uid);
   const [loading, setLoading] = useState(false);
   const [socialData, setSocialData] = useState(new FormData());
-  const router = useRouter()
+  const router = useRouter();
   const handleInput = (e) => {
     const { name, value } = e.target;
     setSocialData((prevFormData) => ({ ...prevFormData, [name]: value }));
@@ -104,7 +104,11 @@ const SocialNetworkBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <button type="submit" className="theme-btn btn-style-one">
+          <button
+            type="submit"
+            className="theme-btn btn-style-one"
+            disabled={!!loading}
+          >
             {loading ? <Loading /> : "Save"}
           </button>
         </div>

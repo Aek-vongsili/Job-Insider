@@ -69,13 +69,13 @@ module.exports = [
     routePath: "/employers-dashboard/change-password",
     active: "",
   },
-  {
-    id: 11,
-    name: "Logout",
-    icon: "la-sign-out",
-    routePath: "",
-    active: "",
-  },
+  // {
+  //   id: 11,
+  //   name: "Logout",
+  //   icon: "la-sign-out",
+  //   routePath: "",
+  //   active: "",
+  // },
   // {
   //   id: 12,
   //   name: "Delete Profile",
@@ -83,11 +83,5 @@ module.exports = [
   //   routePath: "/",
   //   active: "",
   // },
-  {
-    id: 13,
-    name: "Insert Job",
-    icon: "la-paper-plane",
-    routePath: "/employers-dashboard/insert-job",
-    active: "",
-  },
+
 ];

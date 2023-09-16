@@ -25,8 +25,7 @@ const userSlice = createSlice({
       state.loading = false;
     },
     setLogout(state, action) {
-      state.user = null;
-      state.isLoggedIn = false;
+      return initialState;
     },
     setRole(state, { payload }) {
       state.role = payload;

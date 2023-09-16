@@ -52,12 +52,11 @@ const FilterJobBox = () => {
   } = jobList || {};
 
   const { sort, perPage } = jobSort;
-  //   const [jobData, setJobData] = useState(new Array());
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   console.log(jobData);
   const dispatch = useDispatch();
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     if (jobs) {
       setLoading(false);
     }

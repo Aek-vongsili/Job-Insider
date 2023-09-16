@@ -46,9 +46,9 @@ const FormContent = () => {
         // setLoading(false)
       }
     } catch (err) {
-      console.log(err);
       setErr(err.message);
       setLoading(false);
+      throw new Error(err);
     }
   };
   return (

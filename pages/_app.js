@@ -56,12 +56,5 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-// MyApp.getInitialProps = async (appContext) => {
-//   const pageProps = App.getInitialProps(appContext)
-//   const { req ,res} = appContext.ctx;
-//   // await csrf(req,res)
-//   return {
-//     ...pageProps,
-// };
-// }
+
 export default MyApp;

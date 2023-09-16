@@ -4,6 +4,17 @@ import { useSelector } from "react-redux";
 
 const MobileMenu = () => {
   const isLogin = useSelector((state) => state.user.isLoggedIn);
+  const role = useSelector(state =>state.user.role)
+  const RolePath = ()=>{
+    switch(role){
+      case "Employer":
+        return "/employers-dashboard/dashboard"
+      case "Candidate":
+        return "/candidates-dashboard/dashboard"
+      default:
+        return "/"
+    }
+  }
   return (
     // <!-- Main Header-->
     <header className="main-header main-header-mobile">
@@ -28,14 +39,14 @@ const MobileMenu = () => {
           <div className="outer-box">
             <div className="login-box">
               {isLogin ? (
-                <a
-                  href="/employers-dashboard/dashboard"
+                <Link
+                  href={RolePath()}
                   className="call-modal"
                 //   data-bs-toggle="modal"
                 //   data-bs-target="#loginPopupModal"
                 >
                   <span className="icon icon-user"></span>
-                </a>
+                </Link>
               ) : (
                 <Link
                   href="/login"
