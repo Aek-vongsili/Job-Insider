@@ -7,7 +7,6 @@ const nextConfig = {
     esmExternals: false,
   },
   webpack: (config, { isServer }) => {
-    config.infrastructureLogging = { debug: /PackFileCache/ }
     if (!isServer) {
       config.resolve.fallback.modulePath = false;
     }
