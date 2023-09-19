@@ -50,15 +50,70 @@ const FormInfoBox = () => {
   const [selectedValue, setSelectedValue] = useState([]);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const userUid = useSelector((state) => state.user?.user?.uid);
 
   // get state
   const company_profile = useSelector(
     (state) => state.employerProfile.company_info
   );
-
+  const borderStyle = "1px solid red";
   // const [logoUrl, setLogoUrl] = useSxtate("");
   // const [coverUrl, setCoverUrl] = useState("");
+  const findIndices = (arr, searchArray) => {
+    const indices = [];
+
+    for (let i = 0; i < searchArray?.length; i++) {
+      for (let j = 0; j < arr.length; j++) {
+        if (arr[j]["value"] === searchArray[i]) {
+          indices.push(j);
+        }
+      }
+    }
+
+    return indices;
+  };
+  const defaultValues = findIndices(catOptions, formData?.company_cat).map(
+    (index) => {
+      return { value: catOptions[index].value, label: catOptions[index].label };
+    }
+  );
+  console.log(defaultValues);
+  const validate = (values) => {
+    const errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!values.company_name) {
+      errors.company_name = "Company name is required!";
+    }
+    if (!values.company_email) {
+      errors.company_email = "Company email is required!";
+    } else if (!regex.test(values.company_email)) {
+      errors.company_email = "Invalid email address!";
+    }
+   
+    if (!values.company_phone) {
+      errors.company_phone = "Numberphone is required";
+    }
+    if (!values.company_website) {
+      errors.company_website = "Company website is required";
+    }
+
+    if (!values.company_est) {
+      errors.company_est = "Company Est is required";
+    }
+
+    if (!values.company_cat || values.company_cat.length === 0) {
+      errors.company_cat = "Company Type is required";
+    }
+    if (!values.company_about) {
+      errors.company_about = "Company about is required";
+    } else if (values.company_about.length < 150) {
+      errors.company_about = "Company about must be at least 150 words";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
   const handleLogoDragOver = (event) => {
     event.preventDefault();
   };
@@ -133,6 +188,7 @@ const FormInfoBox = () => {
         });
     });
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -142,51 +198,55 @@ const FormInfoBox = () => {
     // await updateDoc(userRef, {
     //   "profile.company_info":formData,
     // });
-
-    if (logoImg) {
-      const logoImgUrl = await uploadImage(logoImg);
-      await updateDoc(userRef, {
-        "profile.company_info.logoImage": logoImgUrl,
-      });
-    }
-    if (coverImg) {
-      const coverImgUrl = await uploadImage(coverImg);
-      await updateDoc(userRef, {
-        "profile.company_info.coverImage": coverImgUrl,
-      });
-    }
-    setDoc(
-      userRef,
-      {
-        profile: {
-          company_info: formData,
+    if (validate(formData)) {
+      if (logoImg) {
+        const logoImgUrl = await uploadImage(logoImg);
+        await updateDoc(userRef, {
+          "profile.company_info.logoImage": logoImgUrl,
+        });
+      }
+      if (coverImg) {
+        const coverImgUrl = await uploadImage(coverImg);
+        await updateDoc(userRef, {
+          "profile.company_info.coverImage": coverImgUrl,
+        });
+      }
+      setDoc(
+        userRef,
+        {
+          profile: {
+            company_info: formData,
+          },
         },
-      },
-      { merge: true }
-    )
-      .then((rs) => {
-        setLoading(false);
-        Swal.fire({
-          title: "Update Success",
-          text: "Update Your Information Success",
-          icon: "success",
-          confirmButtonText: "Accept",
-          timer: 3000,
-          timerProgressBar: true,
-        }).then(() => {
-          window.location.reload();
+        { merge: true }
+      )
+        .then((rs) => {
+          setLoading(false);
+          Swal.fire({
+            title: "Update Success",
+            text: "Update Your Information Success",
+            icon: "success",
+            confirmButtonText: "Accept",
+            timer: 3000,
+            timerProgressBar: true,
+          }).then(() => {
+            window.location.reload();
+          });
+        })
+        .catch((err) => {
+          Swal.fire({
+            title: "Error",
+            text: "Something went wrong!",
+            icon: "error",
+            confirmButtonText: "Accept",
+            timer: 3500,
+            timerProgressBar: true,
+          });
         });
-      })
-      .catch((err) => {
-        Swal.fire({
-          title: "Error",
-          text: "Something went wrong!",
-          icon: "error",
-          confirmButtonText: "Accept",
-          timer: 3500,
-          timerProgressBar: true,
-        });
-      });
+    } else {
+      setLoading(false);
+      console.log(errors);
+    }
   };
   useEffect(() => {
     if (company_profile) {
@@ -277,10 +337,13 @@ const FormInfoBox = () => {
             type="text"
             name="company_name"
             placeholder="Invisionn"
-            required
             value={formData.company_name || ""}
             onChange={handleInputChange}
+            style={{ border: `${errors?.company_name ? borderStyle : ""}` }}
           />
+          {errors?.company_name && (
+            <p className="err-message">{errors?.company_name}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -290,10 +353,13 @@ const FormInfoBox = () => {
             type="text"
             name="company_email"
             placeholder="example@example.com"
-            required
             value={formData.company_email || ""}
             onChange={handleInputChange}
+            style={{ border: `${errors?.company_email ? borderStyle : ""}` }}
           />
+          {errors?.company_email && (
+            <p className="err-message">{errors?.company_email}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -303,10 +369,13 @@ const FormInfoBox = () => {
             type="text"
             name="company_phone"
             placeholder="020 96218527"
-            required
             onChange={handleInputChange}
             value={formData.company_phone || ""}
+            style={{ border: `${errors?.company_phone ? borderStyle : ""}` }}
           />
+          {errors?.company_phone && (
+            <p className="err-message">{errors?.company_phone}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -316,10 +385,13 @@ const FormInfoBox = () => {
             type="text"
             name="company_website"
             placeholder="www.invision.com"
-            required
             onChange={handleInputChange}
             value={formData.company_website || ""}
+            style={{ border: `${errors?.company_website ? borderStyle : ""}` }}
           />
+          {errors?.company_website && (
+            <p className="err-message">{errors?.company_website}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -329,10 +401,13 @@ const FormInfoBox = () => {
             type="date"
             name="company_est"
             placeholder="06.04.2020"
-            required
             onChange={handleInputChange}
             value={formData.company_est || ""}
+            style={{ border: `${errors?.company_est ? borderStyle : ""}` }}
           />
+          {errors?.company_est && (
+            <p className="err-message">{errors?.company_est}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -356,7 +431,8 @@ const FormInfoBox = () => {
         <div className="form-group col-lg-6 col-md-12">
           <label>Company Type </label>
           <Select
-            defaultValue={[catOptions[2]]}
+            // defaultValue={[catOptions[2]]}
+            value={defaultValues}
             isMulti
             name="company_type"
             options={catOptions}
@@ -364,6 +440,9 @@ const FormInfoBox = () => {
             classNamePrefix="select"
             onChange={handleMultipleSelect}
           />
+          {errors?.company_cat && (
+            <p className="err-message">{errors?.company_cat}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -387,7 +466,11 @@ const FormInfoBox = () => {
             name="company_about"
             onChange={handleInputChange}
             value={formData.company_about || ""}
+            style={{ border: `${errors?.company_about ? borderStyle : ""}` }}
           ></textarea>
+          {errors?.company_about && (
+            <p className="err-message">{errors?.company_about}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}

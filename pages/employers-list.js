@@ -24,22 +24,30 @@ const index = ({ employerList }) => {
 };
 export async function getServerSideProps({ req }) {
   try {
-    const querySnapshot = await getDocs(collection(db, 'employers'));
+    const querySnapshot = await getDocs(
+      query(collection(db, "employers"), where("profile", "!=", null))
+    );
     const employerList = [];
 
-    await Promise.all(querySnapshot.docs.map(async (doc) => {
-      const q = query(collection(db, 'job_features'), where('company', '==', doc.id));
-      const jobQuerySnapshot = await getDocs(q);
-      const jobCount = jobQuerySnapshot.size;
+    await Promise.all(
+      querySnapshot.docs.map(async (doc) => {
+        console.log(doc.data().profile);
+        const q = query(
+          collection(db, "job_features"),
+          where("company", "==", doc.id)
+        );
+        const jobQuerySnapshot = await getDocs(q);
+        const jobCount = jobQuerySnapshot.size;
 
-      const employerData = {
-        emp_id: doc.id,
-        openJobs: jobCount,
-        ...doc.data().profile,
-      };
+        const employerData = {
+          emp_id: doc.id,
+          openJobs: jobCount,
+          ...doc.data().profile,
+        };
 
-      employerList.push(employerData);
-    }));
+        employerList.push(employerData);
+      })
+    );
 
     const employerJson = JSON.stringify(employerList);
     // console.log(employerList)
@@ -49,10 +57,10 @@ export async function getServerSideProps({ req }) {
       },
     };
   } catch (err) {
-    console.error('Error fetching data:', err);
+    console.error("Error fetching data:", err);
     return {
       props: {
-        employerList: '[]', // Return an empty array in case of an error
+        employerList: "[]", // Return an empty array in case of an error
       },
     };
   }

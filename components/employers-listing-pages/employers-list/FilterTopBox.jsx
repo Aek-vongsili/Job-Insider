@@ -65,7 +65,7 @@ const FilterTopBox = () => {
     // ?.filter(destinationFilter)
     // ?.filter(categoryFilter)
     // ?.filter(foundationDataFilter)
-    ?.filter(companyDataFilter)
+    // ?.filter(companyDataFilter)
     // ?.sort(sortFilter)
 
     ?.map((company, index) => (

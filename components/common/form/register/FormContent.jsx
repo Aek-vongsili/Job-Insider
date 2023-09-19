@@ -51,10 +51,12 @@ const FormContent = ({ userType }) => {
 
       // Step 5: Call API to get JWT
       const jwtResponse = await axios.post("/api/jwt", { token: idToken });
- 
+
       // Step 6: Redirect to home page
       router.push("/");
     } catch (error) {
+      setLoading(false);
+      setErr(error.message);
       console.error("An error occurred:", error);
       // Handle errors here
     }
