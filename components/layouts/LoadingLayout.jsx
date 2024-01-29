@@ -15,10 +15,12 @@ const LoadingLayout = ({ children }) => {
   useEffect(() => {
     const handleStart = () => {
       setLoading(true);
+      document.body.style.overflow = 'hidden';
     };
 
     const handleComplete = () => {
       setLoading(false);
+      document.body.style.overflow = 'auto';
     };
 
     router.events.on("routeChangeStart", handleStart);

@@ -29,7 +29,7 @@ const Header = () => {
             <div className="logo-box">
               <div className="logo">
                 <Link href="/" className="noSticky">
-                  <img src="/images/Job_Insider_JI3.png" alt="logo" title="brand" style={{ width: "11rem" }}/>
+                  <img src="/images/Artboard 6 white.svg" alt="logo" title="brand" style={{ width: "11rem" }}/>
                 </Link>
                 <Link href="/" className="isSticky">
                   <img src="images/logo.svg" alt="logo" title="brand" />

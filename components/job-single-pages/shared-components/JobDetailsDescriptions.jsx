@@ -2,7 +2,7 @@ const JobDetailsDescriptions = ({ jobData }) => {
   return (
     <div className="job-detail">
       <h4>Job Description</h4>
-      <p style={{wordWrap:"break-word",overflowWrap:"break-word"}}>{jobData?.jobDescription}</p>
+      <p style={{wordWrap:"break-word",overflowWrap:"break-word",textAlign:"justify"}}>{jobData?.jobDescription}</p>
       <h4>Key Responsibilities</h4>
       <ul className="list-style-three">
         {jobData?.keylist?.map((i, index) => (

@@ -27,7 +27,6 @@ const Header = () => {
   const employerImg = useSelector(
     (state) => state.employerProfile?.company_info
   );
-  console.log(employerImg);
   const userImage = () => {
     switch (role) {
       case "Employer":
@@ -47,7 +46,6 @@ const Header = () => {
     try {
       await signOut(auth);
       await axios.get("/api/logout");
-      // console.log("You are Log out");
       router.push("/");
     } catch (err) {
       console.log(err);
@@ -66,7 +64,7 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
 
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // console.log(user);
         user
@@ -98,6 +96,7 @@ const Header = () => {
         dispatch(setCompanySignOut());
       }
     });
+    return () => unsubscribe();
   }, [router]);
   useEffect(() => {
     const companyProfile = async () => {
@@ -112,11 +111,12 @@ const Header = () => {
           }
         }
       } catch (err) {
+        console.error(err);
         throw new Error(err);
       }
     };
     companyProfile();
-  }, [dispatch]);
+  }, [router]);
   return (
     // <!-- Main Header-->
     <header
@@ -199,9 +199,9 @@ const Header = () => {
                       isActiveLink("", router.asPath) ? "active" : ""
                     } mb-1`}
                   >
-                    <Link href="" onClick={Logout}>
+                    <a onClick={Logout}>
                       <i className={`la la-sign-out`}></i> Log out
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               </div>

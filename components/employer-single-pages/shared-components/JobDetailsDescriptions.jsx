@@ -39,7 +39,7 @@ const JobDetailsDescriptions = ({ employerDescription }) => {
         divisions, Moody’s Investors Service, the rating agency, and Moody’s
         Analytics, with all of its other products.
       </p> */}
-      <p style={{ wordWrap: "break-word", overflowWrap: "break-word" }}>
+      <p style={{ wordWrap: "break-word", overflowWrap: "break-word" ,textAlign:"justify"}}>
         {employerDescription}
       </p>
       <div className="row images-outer">

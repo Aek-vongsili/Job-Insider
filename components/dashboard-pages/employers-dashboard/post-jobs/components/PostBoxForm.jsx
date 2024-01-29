@@ -139,6 +139,7 @@ const PostBoxForm = () => {
           ...data,
           company: userUid,
           createdAt: serverTimestamp(),
+          status:"active"
         }).then((rs) => {
           setLoading(false);
           Swal.fire({

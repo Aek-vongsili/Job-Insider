@@ -7,7 +7,7 @@ const AddPortfolio = () => {
           type="file"
           name="attachments[]"
           accept="image/*, application/pdf"
-          id="upload"
+          id="upload2"
           multiple
         />
         <label className="uploadButton-button ripple-effect" htmlFor="upload">

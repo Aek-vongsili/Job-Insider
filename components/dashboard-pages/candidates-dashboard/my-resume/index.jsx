@@ -1,12 +1,11 @@
 import MobileMenu from "../../../header/MobileMenu";
 import LoginPopup from "../../../common/form/login/LoginPopup";
 import DashboardCandidatesSidebar from "../../../header/DashboardCandidatesSidebar";
-import BreadCrumb from "../../BreadCrumb";
-import CopyrightFooter from "../../CopyrightFooter";
-import Resume from "./components";
-import DashboardCandidatesHeader from "../../../header/DashboardCandidatesHeader";
-import MenuToggler from "../../MenuToggler";
 
+import CopyrightFooter from "../../CopyrightFooter";
+import MenuToggler from "../../MenuToggler";
+import Resume from "./components";
+import CvUploader from "./components/CvUploader";
 const index = () => {
   return (
     <div className="page-wrapper dashboard">
@@ -28,7 +27,6 @@ const index = () => {
       {/* <!-- Dashboard --> */}
       <section className="user-dashboard">
         <div className="dashboard-outer">
-          <BreadCrumb title="My Resume!" />
           {/* breadCrumb */}
 
           <MenuToggler />
@@ -36,20 +34,34 @@ const index = () => {
 
           <div className="row">
             <div className="col-lg-12">
+              {/* <!-- Ls widget --> */}
+
+              {/* <!-- Ls widget --> */}
+
+              {/* <div className="ls-widget">
+                <div className="tabs-box">
+                  <div className="widget-title">
+                    <h4>Contact Information</h4>
+                  </div>
+              
+                  <div className="widget-content">
+                    <ContactInfoBox />
+                  </div>
+                </div>
+              </div> */}
+              {/* <!-- Ls widget --> */}
+
               <div className="ls-widget">
                 <div className="tabs-box">
                   <div className="widget-title">
-                    <h4>My Profile</h4>
+                    <h4>My Resume</h4>
                   </div>
                   {/* End widget-title */}
-
                   <div className="widget-content">
                     <Resume />
                   </div>
-                  {/* End widget-content */}
                 </div>
               </div>
-              {/* End ls-widget */}
             </div>
           </div>
           {/* End .row */}

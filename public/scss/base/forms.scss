@@ -364,7 +364,6 @@ input:checked + .slider:before {
   line-height: 30px;
   padding: 15px 20px;
   font-size: 15px;
-  color: #696969;
   background-color: #f0f5f7;
   border: 1px solid #f0f5f7;
   -webkit-box-sizing: border-box;
@@ -373,6 +372,17 @@ input:checked + .slider:before {
   -webkit-transition: all 300ms ease;
   -o-transition: all 300ms ease;
   transition: all 300ms ease;
+}
+.default-form .form-group input[type="text"]::placeholder,
+.default-form .form-group input[type="password"]::placeholder,
+.default-form .form-group input[type="number"]::placeholder,
+.default-form .form-group input[type="email"]::placeholder,
+.default-form .form-group input[type="url"]::placeholder,
+.default-form .form-group input[type="date"]::placeholder,
+.default-form .form-group textarea::placeholder,
+.default-form .form-group select::placeholder{
+  color: #8b8b8b;
+  
 }
 .default-form .form-group input[type="text"]:focus,
 .default-form .form-group input[type="email"]:focus,
@@ -566,8 +576,8 @@ input:checked + .slider:before {
   }
   .add-key_btn {
     width: 100%;
-    input{
-      margin-bottom:20px;
+    input {
+      margin-bottom: 20px;
     }
     button {
       margin-top: 20px;
@@ -589,6 +599,13 @@ input:checked + .slider:before {
   }
 }
 
-.error-field{
+.error-field {
   border: 1px solid red;
+}
+
+.select-group {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
 }

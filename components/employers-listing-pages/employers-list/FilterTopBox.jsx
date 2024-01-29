@@ -11,6 +11,7 @@ import {
   addPerPage,
   addSort,
 } from "../../../features/filter/employerFilterSlice";
+import { useRouter } from "next/router";
 
 const FilterTopBox = () => {
   const companyData = useSelector((state) => state.employer.employersList);
@@ -25,7 +26,6 @@ const FilterTopBox = () => {
   } = useSelector((state) => state.employerFilter) || {};
   const dispatch = useDispatch();
   const companyDataFilter = (item) => item.company_info != null;
-
   // keyword filter
   const keywordFilter = (item) =>
     keyword !== ""
@@ -84,7 +84,12 @@ const FilterTopBox = () => {
               <img src={company?.company_info?.logoImage} alt="company brand" />
             </span>
             <h4>
-              <Link href={`employers-single/${company.emp_id}`}>
+              <Link
+                href={{
+                  pathname: "/employers-single/[id]/",
+                  query: { id: company?.emp_id },
+                }}
+              >
                 {company?.company_info?.company_name}
               </Link>
             </h4>

@@ -1,10 +1,11 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { useState } from "react";
 import { auth, db } from "../../../../firebase/clientApp";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Loading from "../../../Loading/Loading";
 import { useRouter } from "next/router";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const FormContent = ({ userType }) => {
   const [email, setEmail] = useState("");
@@ -43,17 +44,24 @@ const FormContent = ({ userType }) => {
       const idToken = await result.user.getIdToken();
 
       // Step 4: Call API to set custom claims
-      const customClaimsResponse = await axios.post("/api/customClaims", {
+      await axios.post("/api/customClaims", {
         idToken: idToken,
         role: type,
       });
-      console.log(customClaimsResponse);
-
+      Swal.fire({
+        title: "Success",
+        text: "Register Success",
+        icon: "success",
+        confirmButtonText: "Accept",
+        timer: 2000,
+        timerProgressBar: true,
+      }).then(() => {
+        router.push("/login");
+      });
       // Step 5: Call API to get JWT
-      const jwtResponse = await axios.post("/api/jwt", { token: idToken });
+      // const jwtResponse = await axios.post("/api/jwt", { token: idToken });
 
       // Step 6: Redirect to home page
-      router.push("/");
     } catch (error) {
       setLoading(false);
       setErr(error.message);

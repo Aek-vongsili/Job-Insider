@@ -5,7 +5,7 @@ import { auth } from "../../../../firebase/clientApp";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-const LoginPopup = () => {
+const LoginPopup = ({data}) => {
   const router = useRouter()
   const [isLoginSuccess,setIsLoginSuccess] = useState(true)
   const handleSignIn = (email,password)=>{
@@ -37,6 +37,7 @@ const LoginPopup = () => {
 
             <div className="modal-body">
               {/* <!-- Login modal --> */}
+              
               <div id="login-modal">
                 {/* <!-- Login Form --> */}
                 <div className="login-form default-form">

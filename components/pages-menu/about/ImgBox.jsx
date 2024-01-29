@@ -32,6 +32,7 @@ const ImgBox = () => {
                   alt="about image"
                   width={300}
                   height={200}
+                  loading="lazy"
                 />
               </figure>
             ))}

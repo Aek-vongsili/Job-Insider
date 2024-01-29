@@ -45,6 +45,7 @@ export async function getServerSideProps({ req }) {
   } catch (err) {
     throw err;
   }
+  
 
   const jobData = JSON.stringify(jobList);
   // console.log(jobData);

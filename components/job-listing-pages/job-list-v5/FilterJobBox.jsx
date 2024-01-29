@@ -17,12 +17,18 @@ import {
 import { useEffect, useState } from "react";
 import {
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
   onSnapshot,
+  query,
+  setDoc,
+  where,
 } from "firebase/firestore";
 import { db } from "../../../firebase/clientApp";
+import { useRouter } from "next/router";
+import { setLoading } from "../../../features/user/userSlice";
 // import Loading from "../../Loading/Loading";
 const Loading = () => {
   return (
@@ -34,8 +40,68 @@ const Loading = () => {
     </div>
   );
 };
+const BookmarkIcon = ({ jobId }) => {
+  const useruid = useSelector((state) => state.user.user?.uid);
+  const newFavoriteJobRef = doc(collection(db, `users/${useruid}/favoriteJob`));
+  const [like, setLike] = useState(false);
 
+  useEffect(() => {
+    const checkIfLiked = async () => {
+      try {
+        const dateRef = query(
+          collection(db, `users/${useruid}/favoriteJob`),
+          where("jobId", "==", jobId)
+        );
+        const snapshot = await getDocs(dateRef);
+        if (!snapshot.empty) {
+          setLike(true);
+        }
+      } catch (error) {
+        console.error("Error checking if liked:", error);
+      }
+    };
+    if (useruid) {
+      checkIfLiked();
+    }
+  }, [useruid, jobId, setLoading]);
+  const saveShow = async () => {
+    if (!useruid) {
+      return alert("not login");
+    }
+    try {
+      if (like) {
+        const dateRef = query(
+          collection(db, `users/${useruid}/favoriteJob`),
+          where("jobId", "==", jobId)
+        );
+        const snapshot = await getDocs(dateRef);
+        snapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, docSnap.id));
+          setLike(false);
+        });
+      } else {
+        await setDoc(newFavoriteJobRef, {
+          jobId: jobId,
+          createdAt: new Date(),
+        });
+        setLike(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <button className="bookmark-btn" onClick={saveShow}>
+      <span
+        className="flaticon-bookmark"
+        style={{ color: like ? "gold" : "" }}
+      ></span>
+    </button>
+  );
+};
 const FilterJobBox = () => {
+  const router = useRouter();
   const { jobList, jobSort } = useSelector((state) => state.filter);
   const jobData = useSelector((state) => state.job.jobList);
   console.log(jobs);
@@ -53,34 +119,16 @@ const FilterJobBox = () => {
 
   const { sort, perPage } = jobSort;
   const [loading, setLoading] = useState(true);
-  console.log(jobData);
+  const role = useSelector((state) => state.user.role);
   const dispatch = useDispatch();
   useEffect(() => {
-    // setLoading(true);
-    if (jobs) {
+    if (jobData) {
       setLoading(false);
     }
-    //   const querySnapshot = await getDocs(collection(db, "job_features"));
-    //   const jobList = [];
-
-    //   await Promise.all(
-    //     querySnapshot.docs.map(async (docData) => {
-    //       const docRef = doc(db, "users", docData.data().company);
-
-    //       const companyInfo = await getDoc(docRef);
-    //       if (companyInfo.exists()) {
-    //         const { profile, ...user } = companyInfo.data();
-    //         const job = { id: docData.id, ...docData.data(), ...profile };
-    //         jobList.push(job);
-    //         console.log("Document data:", companyInfo.data());
-    //       } else {
-    //         console.log("No such document!");
-    //       }
-    //     })
-    //   );
-
-    //   setJobData(jobList);
-  }, []);
+    if (role === "Employer") {
+      router.push("/");
+    }
+  }, [role, router]);
 
   // keyword filter on title
   const keywordFilter = (item) =>
@@ -181,6 +229,7 @@ const FilterJobBox = () => {
         return "required";
     }
   };
+
   let content = jobData
     ?.filter(keywordFilter)
     // ?.filter(locationFilter)
@@ -200,7 +249,14 @@ const FilterJobBox = () => {
               <img src={item?.company_info?.logoImage} alt="item brand" />
             </span>
             <h4>
-              <Link href={`/job-single-v4/${item?.id}`}>{item?.jobTitle}</Link>
+              <Link
+                href={{
+                  pathname: "/job-single/[id]",
+                  query: { id: item?.id },
+                }}
+              >
+                {item?.jobTitle}
+              </Link>
             </h4>
 
             <ul className="job-info">
@@ -230,10 +286,7 @@ const FilterJobBox = () => {
               <li className={`${styleClass(item.jobType)}`}>{item.jobType}</li>
             </ul>
             {/* End .job-other-info */}
-
-            <button className="bookmark-btn">
-              <span className="flaticon-bookmark"></span>
-            </button>
+            <BookmarkIcon jobId={item?.id} setLoading={setLoading} />
           </div>
         </div>
       </div>
@@ -346,9 +399,9 @@ const FilterJobBox = () => {
       {/* <!-- ls Switcher --> */}
 
       <div className="row">
-        {!!loading && <Loading />}
+        {/* {!!loading && <Loading />} */}
 
-        {content}
+        {!!loading ? <Loading /> : content}
       </div>
       {/* End .row with jobs */}
 

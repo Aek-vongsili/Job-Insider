@@ -58,7 +58,7 @@ const index = () => {
 
           <div className="testimonial-right">
             <img
-              src="images/resource/testimonial-right.png"
+              src="/images/resource/testimonial-right.png"
               alt="testimonial"
             />
           </div>

@@ -31,7 +31,6 @@ export async function getServerSideProps({ req }) {
 
     await Promise.all(
       querySnapshot.docs.map(async (doc) => {
-        console.log(doc.data().profile);
         const q = query(
           collection(db, "job_features"),
           where("company", "==", doc.id)

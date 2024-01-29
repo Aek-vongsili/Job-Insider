@@ -153,7 +153,7 @@ const CandidateSingleDynamicV1 = () => {
                               <div className="title-box">
                                 <div className="info-box">
                                   <h3>{item.name}</h3>
-                                  <span>{item.industry}</span>
+                                  <span>{item.industry}l</span>
                                 </div>
                                 <div className="edit-box">
                                   <span className="year">{item.year}</span>

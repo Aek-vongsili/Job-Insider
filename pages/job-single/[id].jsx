@@ -26,43 +26,13 @@ import Link from "next/link";
 
 const JobSingleDynamicV1 = ({ job }) => {
   const router = useRouter();
-  // const [jobData, setJobData] = useState({});
-  // const id = router.query.id;
-  // console.log(id);
-  // const jobs = useSelector((state) => selectJobById(state, id));
-
+  const { id } = router.query;
+  if (!id) {
+    return <div>Loading...</div>; // Or display a different component if id is not present
+  }
   const jobData = JSON.parse(job);
   console.log(jobData);
-  // useEffect(() => {
-  //   // if (!id) <h1>Loading...</h1>;
-  //   const getData = async () => {
-  //     try {
-  //       const docRef = doc(db, "job_features", `${id}`);
-  //       const docSnap = await getDoc(docRef);
 
-  //       if (docSnap.exists()) {
-  //         console.log("Document data:", docSnap.data());
-
-  //         const companyRef = doc(db, "users", docSnap.data().company);
-  //         const companySnap = await getDoc(companyRef);
-  //         if (companySnap.exists()) {
-  //           console.log("Company data:", companySnap.data());
-  //           const { profile, ...data } = companySnap.data();
-  //           setJobData({ ...docSnap.data(), ...profile });
-  //         } else {
-  //           console.log("No company document!");
-  //         }
-  //       } else {
-  //         console.log("No job document!");
-  //       }
-  //     } catch (error) {
-  //       console.error("Error getting document:", error);
-  //     }
-  //   };
-  //   getData();
-  //   // else setCompany(jobs.find((item) => item.id == id));
-  //   return () => {};
-  // }, [id]);
   const convertTimestampToDateTime = (timestampInSeconds) => {
     const timestampInMilliseconds = timestampInSeconds * 1000; // Convert to milliseconds
     const date = new Date(timestampInMilliseconds);
@@ -104,13 +74,6 @@ const JobSingleDynamicV1 = ({ job }) => {
     }
   };
 
-  // const timestampInSeconds = 1661683200; // Replace with your timestamp in seconds
-  // const timeDistance = calculateTimeDistanceFromNow(
-  //   jobData?.createdAt?.seconds
-  // );
-  // console.log(timeDistance);
-  // const data = format(new Date(jobData?.createdAt), 'MM/dd/yyyy')
-  // console.log(convertTimestampToDateTime(jobData?.createdAt?.seconds));
   return (
     <>
       <Layout>

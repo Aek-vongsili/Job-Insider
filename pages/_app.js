@@ -9,7 +9,7 @@ import { ToastContainer } from "react-toastify";
 import { PersistGate } from "redux-persist/integration/react";
 import { store } from "../app/store";
 import { persistStore } from "redux-persist";
-import App from "next/app";
+
 import LoadingLayout from "../components/layouts/LoadingLayout";
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
