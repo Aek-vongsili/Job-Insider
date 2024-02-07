@@ -11,10 +11,18 @@ import MenuToggler from "../../MenuToggler";
 import { useEffect } from "react";
 // import { db } from "../../../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
+import { employersProfileData } from "../../../../features/employer/actionCreator";
 
 const index = () => {
   const dispatch = useDispatch();
-
+  const isAuthenticate = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  useEffect(() => {
+    if (isAuthenticate) {
+      dispatch(employersProfileData(isAuthenticate));
+    }
+  }, [dispatch, isAuthenticate]);
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>

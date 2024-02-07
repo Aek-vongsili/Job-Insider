@@ -2,21 +2,27 @@ import { useEffect, useState } from "react";
 import Map from "../../../Map";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 // import { db } from "../../../../../firebase/clientApp";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
+import { employerLocationSubmit } from "../../../../../features/employer/actionCreator";
 const ContactInfoBox = () => {
   const [markerPosition, setMarkerPosition] = useState({
     lat: 0,
     lng: 0,
   });
   const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
   const [city, setCity] = useState("Vientiane Prefecture");
   console.log(city);
-  const userUid = useSelector((state) => state.user?.user?.uid);
 
-  const location_info = useSelector((state) => state.employerProfile?.location);
+  const location_info = useSelector((state) => {
+    return state.employerSingle.data?.location;
+  });
+  const loading = useSelector((state) => {
+    return state.employerSingle.locationLoading;
+  });
   const getCurrentLocation = () => {
     const geocoder = new google.maps.Geocoder();
 
@@ -79,7 +85,35 @@ const ContactInfoBox = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(
+      employerLocationSubmit({
+        country: "Laos",
+        city: city,
+        address: address,
+        latitude: markerPosition?.lat,
+        longtitude: markerPosition?.lng,
+      })
+    )
+      .then(() => {
+        Swal.fire({
+          title: "Update Success",
+          text: "Update Your Location Success",
+          icon: "success",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong!",
+          icon: "error",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      });
     // const userRef = doc(db, "employers", userUid);
     // await updateDoc(userRef, {
     //   "profile.location": {
@@ -220,7 +254,11 @@ const ContactInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12">
-          <button type="submit" className="theme-btn btn-style-one" disabled={!!loading}>
+          <button
+            type="submit"
+            className="theme-btn btn-style-one"
+            disabled={!!loading}
+          >
             {loading ? <Loading /> : "Save"}
           </button>
         </div>

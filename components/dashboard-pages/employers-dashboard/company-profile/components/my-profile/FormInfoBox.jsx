@@ -57,13 +57,9 @@ const FormInfoBox = () => {
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const isAuthenticate = useSelector((state) => {
-    return state.firebase.auth.uid;
-  });
-  console.log(isAuthenticate);
   // get state
   const company_profile = useSelector((state) => {
-    return state.employerSingle.data;
+    return state.employerSingle.data?.profile;
   });
   const borderStyle = "1px solid red";
   const findIndices = (arr, searchArray) => {
@@ -266,17 +262,12 @@ const FormInfoBox = () => {
   useEffect(() => {
     if (company_profile) {
       const { logoImage, coverImage, ...info } = company_profile;
-      console.log(info);
       setFormData(info);
       setLogoUrl(logoImage);
       setCoverUrl(coverImage);
     }
   }, [company_profile]);
-  useEffect(() => {
-    if (isAuthenticate) {
-      dispatch(employersProfileData(isAuthenticate));
-    }
-  }, [dispatch, isAuthenticate]);
+
 
   return (
     <form className="default-form" onSubmit={handleSubmit}>

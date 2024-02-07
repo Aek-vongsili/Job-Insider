@@ -1,15 +1,14 @@
-const { https } = require("firebase-functions");
-const { default: next } = require("next");
+const { https } = require('firebase-functions');
+const { default: next } = require('next');
 
-const isDev = process.env.NODE_ENV !== "production";
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const server = next({
-  dev: isDev,
-  //location of .next generated after running -> yarn build
-  conf: { distDir: ".next" },
+  dev: isDevelopment,
+  conf: { distDir: '.next' },
 });
 
 const nextjsHandle = server.getRequestHandler();
-exports.nextServer = https.onRequest((req, res) => {
-  return server.prepare().then(() => nextjsHandle(req, res));
+exports.nextServer = https.onRequest((request, response) => {
+  return server.prepare().then(() => nextjsHandle(request, response));
 });

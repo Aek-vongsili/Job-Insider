@@ -16,6 +16,14 @@ const {
   employerUploadBegin,
   employerUploadSuccess,
   employerUploadErr,
+
+  employerLocationBegin,
+  employerLocationSuccess,
+  employerLocationErr,
+
+  employerLocationReadBegin,
+  employerLocationReadSuccess,
+  employerLocationReadErr,
 } = actions;
 
 const employerUploadFile = (imageAsString, path) => {
@@ -83,9 +91,9 @@ const employersProfileData = (uid) => {
       dispatch(employerSingleBegin());
       const companyData = await db.collection("employers").doc(uid).get();
       console.log(companyData.data());
-      if (companyData.exists && companyData.data().profile) {
+      if (companyData.exists) {
         // If the document exists and profile field is not empty
-        dispatch(employerSingleSuccess(companyData.data().profile)); // Example dispatch to handle the data
+        dispatch(employerSingleSuccess(companyData.data())); // Example dispatch to handle the data
       } else {
         console.log("Company profile is empty or does not exist.");
         dispatch(employerSingleSuccess(null));
@@ -115,10 +123,40 @@ const employersUpdateData = (data) => {
           },
           { merge: true }
         );
+      dispatch(employerUpdateSuccess());
     } catch (err) {
       dispatch(employerUpdateErr(err));
     }
   };
 };
+const employerLocationSubmit = (data) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const fb = getFirebase();
+    const db = getFirestore();
+    try {
+      const uid = fb.auth().currentUser.uid;
+      dispatch(employerLocationBegin());
+      await db
+        .collection("employers")
+        .doc(uid)
+        .set(
+          {
+            location: {
+              ...data,
+            },
+          },
+          { merge: true }
+        );
+      dispatch(employerLocationSuccess());
+    } catch (err) {
+      dispatch(employerLocationErr(err));
+    }
+  };
+};
 
-export { employerUploadFile, employersUpdateData, employersProfileData };
+export {
+  employerUploadFile,
+  employersUpdateData,
+  employersProfileData,
+  employerLocationSubmit,
+};

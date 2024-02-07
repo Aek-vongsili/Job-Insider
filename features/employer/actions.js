@@ -1,23 +1,27 @@
 const actions = {
   EMPLOYER_UPDATE_BEGIN: "EMPLOYER_INSERT_BEGIN",
-  EMPLOYER_UPDATE_SUCESS: "EMPLOYER_INSERT_SUCESS",
+  EMPLOYER_UPDATE_SUCCESS: "EMPLOYER_INSERT_SUCCESS",
   EMPLOYER_UPDATE_ERR: "EMPLOYER_INSERT_ERR",
 
   EMPLOYER_READ_BEGIN: "EMPLOYER_READ_BEGIN",
-  EMPLOYER_READ_SUCESS: "EMPLOYER_READ_SUCESS",
+  EMPLOYER_READ_SUCCESS: "EMPLOYER_READ_SUCCESS",
   EMPLOYER_READ_ERR: "EMPLOYER_READ_ERR",
 
   EMPLOYER_SINGLE_BEGIN: "EMPLOYER_SINGLE_BEGIN",
-  EMPLOYER_SINGLE_SUCESS: "EMPLOYER_SINGLE_SUCESS",
+  EMPLOYER_SINGLE_SUCCESS: "EMPLOYER_SINGLE_SUCCESS",
   EMPLOYER_SINGLE_ERR: "EMPLOYER_SINGLE_ERR",
 
   EMPLOYER_UPLOAD_BEGIN: "EMPLOYER_UPLOAD_BEGIN",
-  EMPLOYER_UPLOAD_SUCESS: "EMPLOYER_UPLOAD_SUCESS",
+  EMPLOYER_UPLOAD_SUCCESS: "EMPLOYER_UPLOAD_SUCCESS",
   EMPLOYER_UPLOAD_ERR: "EMPLOYER_UPLOAD_ERR",
 
   EMPLOYER_LOCATION_BEGIN: "EMPLOYER_LOCATION_BEGIN",
-  EMPLOYER_LOCATION_SUCESS: "EMPLOYER_LOCATION_SUCESS",
+  EMPLOYER_LOCATION_SUCCESS: "EMPLOYER_LOCATION_SUCCESS",
   EMPLOYER_LOCATION_ERR: "EMPLOYER_LOCATION_ERR",
+
+  EMPLOYER_LOCATION_READ_BEGIN: "EMPLOYER_LOCATION_READ_BEGIN",
+  EMPLOYER_LOCATION_READ_SUCCESS: "EMPLOYER_LOCATION_READ_SUCCESS",
+  EMPLOYER_LOCATION_READ_ERR: "EMPLOYER_LOCATION_READ_ERR",
 
   employerUpdateBegin: () => {
     return {
@@ -26,7 +30,7 @@ const actions = {
   },
   employerUpdateSuccess: (data) => {
     return {
-      type: actions.EMPLOYER_UPDATE_SUCESS,
+      type: actions.EMPLOYER_UPDATE_SUCCESS,
       data,
     };
   },
@@ -45,7 +49,7 @@ const actions = {
   },
   employerReadSuccess: (data) => {
     return {
-      type: actions.EMPLOYER_READ_SUCESS,
+      type: actions.EMPLOYER_READ_SUCCESS,
       data,
     };
   },
@@ -64,7 +68,7 @@ const actions = {
   },
   employerUploadSuccess: (data) => {
     return {
-      type: actions.EMPLOYER_UPLOAD_SUCESS,
+      type: actions.EMPLOYER_UPLOAD_SUCCESS,
       data,
     };
   },
@@ -83,7 +87,7 @@ const actions = {
   },
   employerSingleSuccess: (data) => {
     return {
-      type: actions.EMPLOYER_SINGLE_SUCESS,
+      type: actions.EMPLOYER_SINGLE_SUCCESS,
       data,
     };
   },
@@ -101,7 +105,7 @@ const actions = {
   },
   employerLocationSuccess: (data) => {
     return {
-      type: actions.EMPLOYER_LOCATION_SUCESS,
+      type: actions.EMPLOYER_LOCATION_SUCCESS,
       data,
     };
   },
@@ -109,6 +113,24 @@ const actions = {
   employerLocationErr: (err) => {
     return {
       type: actions.EMPLOYER_LOCATION_ERR,
+      err,
+    };
+  },
+  employerLocationReadBegin: () => {
+    return {
+      type: actions.EMPLOYER_LOCATION_READ_BEGIN,
+    };
+  },
+  employerLocationReadSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_LOCATION_READ_SUCCESS,
+      data,
+    };
+  },
+
+  employerLocationReadErr: (err) => {
+    return {
+      type: actions.EMPLOYER_LOCATION_READ_ERR,
       err,
     };
   },

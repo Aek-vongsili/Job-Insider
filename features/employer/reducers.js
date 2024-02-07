@@ -2,24 +2,28 @@ import actions from "./actions";
 
 const {
   EMPLOYER_READ_BEGIN,
-  EMPLOYER_READ_SUCESS,
+  EMPLOYER_READ_SUCCESS,
   EMPLOYER_READ_ERR,
 
   EMPLOYER_SINGLE_BEGIN,
-  EMPLOYER_SINGLE_SUCESS,
+  EMPLOYER_SINGLE_SUCCESS,
   EMPLOYER_SINGLE_ERR,
 
   EMPLOYER_UPDATE_BEGIN,
-  EMPLOYER_UPDATE_SUCESS,
+  EMPLOYER_UPDATE_SUCCESS,
   EMPLOYER_UPDATE_ERR,
 
   EMPLOYER_UPLOAD_BEGIN,
-  EMPLOYER_UPLOAD_SUCESS,
+  EMPLOYER_UPLOAD_SUCCESS,
   EMPLOYER_UPLOAD_ERR,
 
   EMPLOYER_LOCATION_BEGIN,
-  EMPLOYER_LOCATION_SUCESS,
+  EMPLOYER_LOCATION_SUCCESS,
   EMPLOYER_LOCATION_ERR,
+
+  EMPLOYER_LOCATION_READ_BEGIN,
+  EMPLOYER_LOCATION_READ_SUCCESS,
+  EMPLOYER_LOCATION_READ_ERR,
 } = actions;
 
 const initialState = {
@@ -35,6 +39,7 @@ const initialSingleState = {
   fileLoading: false,
   error: null,
   locationData: null,
+  locationLoading: false,
 };
 
 const employerReducer = (state = initialState, action) => {
@@ -45,7 +50,7 @@ const employerReducer = (state = initialState, action) => {
         ...state,
         loading: true,
       };
-    case EMPLOYER_READ_SUCESS:
+    case EMPLOYER_READ_SUCCESS:
       return {
         ...state,
         data,
@@ -70,7 +75,7 @@ const employerSingle = (state = initialSingleState, action) => {
         ...state,
         loading: true,
       };
-    case EMPLOYER_SINGLE_SUCESS:
+    case EMPLOYER_SINGLE_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -87,7 +92,7 @@ const employerSingle = (state = initialSingleState, action) => {
         ...state,
         fileLoading: true,
       };
-    case EMPLOYER_UPLOAD_SUCESS:
+    case EMPLOYER_UPLOAD_SUCCESS:
       return {
         ...state,
         fileLoading: false,
@@ -104,7 +109,7 @@ const employerSingle = (state = initialSingleState, action) => {
         ...state,
         loading: true,
       };
-    case EMPLOYER_UPDATE_SUCESS:
+    case EMPLOYER_UPDATE_SUCCESS:
       return {
         ...state,
         loading: false,
@@ -119,18 +124,35 @@ const employerSingle = (state = initialSingleState, action) => {
     case EMPLOYER_LOCATION_BEGIN:
       return {
         ...state,
-        loading: true,
+        locationLoading: true,
       };
-    case EMPLOYER_LOCATION_SUCESS:
+    case EMPLOYER_LOCATION_SUCCESS:
       return {
         ...state,
         loading: false,
-        locationData: data,
+        locationLoading: data,
       };
     case EMPLOYER_LOCATION_ERR:
       return {
         ...state,
-        loading: false,
+        locationLoading: false,
+        error: err,
+      };
+    case EMPLOYER_LOCATION_READ_BEGIN:
+      return {
+        ...state,
+        locationLoading: true,
+      };
+    case EMPLOYER_LOCATION_READ_SUCCESS:
+      return {
+        ...state,
+        locationLoading: false,
+        locationData: data,
+      };
+    case EMPLOYER_LOCATION_READ_ERR:
+      return {
+        ...state,
+        locationLoading: false,
         error: err,
       };
     default:

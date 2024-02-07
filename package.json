@@ -5,16 +5,14 @@
   "main": "function.js",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run clean && next build && next export",
     "start": "next start",
-    "lint": "next lint",
-    "out": "next build && next export",
-    "deploy": "yarn build && firebase deploy --only functions,hosting"
+    "clean": "npx rimraf .next out"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@faker-js/faker": "^7.6.0",
+    "@faker-js/faker": "^8.4.0",
     "@mui/material": "^5.14.5",
     "@mui/x-date-pickers": "^6.11.2",
     "@popperjs/core": "^2.11.6",
