@@ -1,4 +1,4 @@
-import { auth } from "../firebase/clientApp";
+// import { auth } from "../firebase/clientApp";
 
 export default [
     {

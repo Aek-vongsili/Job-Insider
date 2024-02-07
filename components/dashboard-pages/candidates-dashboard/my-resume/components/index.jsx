@@ -8,7 +8,7 @@ import SkillsMultiple from "./SkillsMultiple";
 import { v4 as uuidv4 } from "uuid";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";
-import { db, storage } from "../../../../../firebase/clientApp";
+// import { db, storage } from "../../../../../firebase/clientApp";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
@@ -89,70 +89,70 @@ const index = () => {
   const handleSave = async (event) => {
     event.preventDefault();
     console.log(event);
-    try {
-      const userRef = doc(db, "users", userUid);
-      setLoading(true);
-      console.log(education);
-      console.log(experiences);
-      if (getManager) {
-        const fileUrl = await uploadFile(getManager);
-        setDoc(
-          userRef,
-          {
-            profile: {
-              resume: {
-                cv: fileUrl,
-              },
-            },
-          },
-          { merge: true }
-        );
-      }
-      if (education.length > 0) {
-        setDoc(
-          userRef,
-          {
-            profile: {
-              resume: {
-                education: education,
-              },
-            },
-          },
-          { merge: true }
-        );
-      }
-      if (experiences.length > 0) {
-        setDoc(
-          userRef,
-          {
-            profile: {
-              resume: {
-                experiences: experiences,
-              },
-            },
-          },
-          { merge: true }
-        );
-      }
-      setLoading(false);
-      Swal.fire({
-        title: "Update Success",
-        text: "Update Your Information Success",
-        icon: "success",
-        confirmButtonText: "Accept",
-        timer: 3000,
-        timerProgressBar: true,
-      });
-    } catch (err) {
-      Swal.fire({
-        title: "Error",
-        text: "Something went wrong!",
-        icon: "error",
-        confirmButtonText: "Accept",
-        timer: 3500,
-        timerProgressBar: true,
-      });
-    }
+    // try {
+    //   const userRef = doc(db, "users", userUid);
+    //   setLoading(true);
+    //   console.log(education);
+    //   console.log(experiences);
+    //   if (getManager) {
+    //     const fileUrl = await uploadFile(getManager);
+    //     setDoc(
+    //       userRef,
+    //       {
+    //         profile: {
+    //           resume: {
+    //             cv: fileUrl,
+    //           },
+    //         },
+    //       },
+    //       { merge: true }
+    //     );
+    //   }
+    //   if (education.length > 0) {
+    //     setDoc(
+    //       userRef,
+    //       {
+    //         profile: {
+    //           resume: {
+    //             education: education,
+    //           },
+    //         },
+    //       },
+    //       { merge: true }
+    //     );
+    //   }
+    //   if (experiences.length > 0) {
+    //     setDoc(
+    //       userRef,
+    //       {
+    //         profile: {
+    //           resume: {
+    //             experiences: experiences,
+    //           },
+    //         },
+    //       },
+    //       { merge: true }
+    //     );
+    //   }
+    //   setLoading(false);
+    //   Swal.fire({
+    //     title: "Update Success",
+    //     text: "Update Your Information Success",
+    //     icon: "success",
+    //     confirmButtonText: "Accept",
+    //     timer: 3000,
+    //     timerProgressBar: true,
+    //   });
+    // } catch (err) {
+    //   Swal.fire({
+    //     title: "Error",
+    //     text: "Something went wrong!",
+    //     icon: "error",
+    //     confirmButtonText: "Accept",
+    //     timer: 3500,
+    //     timerProgressBar: true,
+    //   });
+    // }
     // fetch(
     //   "https://firebasestorage.googleapis.com/v0/b/job-insider-b06ee.appspot.com/o/user_profile%2FPTePbaqum6cTI453aWH7qK40uCE2%2Fcv%2F49812cda-4bff-4d3c-adca-9853ce2cfc28_1699180119787.pdf?alt=media&token=91402147-a682-403d-86ff-f923fb393be7"
     // )
@@ -166,42 +166,42 @@ const index = () => {
     //   });
   };
   const getUserResume = async () => {
-    try {
-      const userRef = doc(db, "users", userUid);
-      const resumeData = await getDoc(userRef);
-      if (
-        resumeData.exists() &&
-        resumeData.data().profile &&
-        resumeData.data().profile.resume
-      ) {
-        console.log(resumeData.data()?.profile?.resume);
-        const { cv, education, experiences } = resumeData.data().profile.resume;
-        setEducation(education);
-        setExperiences(experiences);
-        const urlParts = cv.split("/");
-        const encodedFileName = urlParts[urlParts.length - 1].split("?")[0];
-        const decodedFileName = decodeURIComponent(encodedFileName);
-        const filename = decodedFileName.split("/").pop();
-        fetch(cv)
-          .then((response) => response.blob())
-          .then((blob) => {
-            const fetchedFile = new File([blob], filename, {
-              type: blob.type,
-            });
+    // try {
+    //   const userRef = doc(db, "users", userUid);
+    //   const resumeData = await getDoc(userRef);
+    //   if (
+    //     resumeData.exists() &&
+    //     resumeData.data().profile &&
+    //     resumeData.data().profile.resume
+    //   ) {
+    //     console.log(resumeData.data()?.profile?.resume);
+    //     const { cv, education, experiences } = resumeData.data().profile.resume;
+    //     setEducation(education);
+    //     setExperiences(experiences);
+    //     const urlParts = cv.split("/");
+    //     const encodedFileName = urlParts[urlParts.length - 1].split("?")[0];
+    //     const decodedFileName = decodeURIComponent(encodedFileName);
+    //     const filename = decodedFileName.split("/").pop();
+    //     fetch(cv)
+    //       .then((response) => response.blob())
+    //       .then((blob) => {
+    //         const fetchedFile = new File([blob], filename, {
+    //           type: blob.type,
+    //         });
 
-            setManager(fetchedFile);
-          });
-      }
-    } catch (err) {
-      Swal.fire({
-        title: "Error",
-        text: "Something went wrong!",
-        icon: "error",
-        confirmButtonText: "Accept",
-        timer: 3500,
-        timerProgressBar: true,
-      });
-    }
+    //         setManager(fetchedFile);
+    //       });
+    //   }
+    // } catch (err) {
+    //   Swal.fire({
+    //     title: "Error",
+    //     text: "Something went wrong!",
+    //     icon: "error",
+    //     confirmButtonText: "Accept",
+    //     timer: 3500,
+    //     timerProgressBar: true,
+    //   });
+    // }
   };
   useEffect(() => {
     getUserResume();

@@ -6,8 +6,8 @@ import {
 } from "firebase/storage";
 import { useEffect, useState } from "react";
 import Select from "react-select";
-import { db, storage } from "../../../../../../firebase/clientApp";
-import { useSelector } from "react-redux";
+// import { db, storage } from "../../../../../../firebase/clientApp";
+import { useDispatch, useSelector } from "react-redux";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
@@ -15,6 +15,11 @@ import Skeleton from "react-loading-skeleton";
 import { useRouter } from "next/router";
 import Swal from "sweetalert2";
 import Loading from "../../../../../Loading/Loading";
+import {
+  employerUploadFile,
+  employersProfileData,
+  employersUpdateData,
+} from "../../../../../../features/employer/actionCreator";
 const FormInfoBox = () => {
   const router = useRouter();
   const catOptions = [
@@ -42,6 +47,7 @@ const FormInfoBox = () => {
     { value: "Telecommunications", label: "Telecommunications" },
     { value: "Nonprofit Organizations", label: "Nonprofit Organizations" },
   ];
+  const dispatch = useDispatch();
   const [logoImg, setLogoImg] = useState("");
   const [coverImg, setCoverImg] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
@@ -51,15 +57,15 @@ const FormInfoBox = () => {
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  const userUid = useSelector((state) => state.user?.user?.uid);
-
+  const isAuthenticate = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  console.log(isAuthenticate);
   // get state
-  const company_profile = useSelector(
-    (state) => state.employerProfile.company_info
-  );
+  const company_profile = useSelector((state) => {
+    return state.employerSingle.data;
+  });
   const borderStyle = "1px solid red";
-  // const [logoUrl, setLogoUrl] = useSxtate("");
-  // const [coverUrl, setCoverUrl] = useState("");
   const findIndices = (arr, searchArray) => {
     const indices = [];
 
@@ -90,7 +96,7 @@ const FormInfoBox = () => {
     } else if (!regex.test(values.company_email)) {
       errors.company_email = "Invalid email address!";
     }
-   
+
     if (!values.company_phone) {
       errors.company_phone = "Numberphone is required";
     }
@@ -191,62 +197,71 @@ const FormInfoBox = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    const userRef = doc(db, "employers", userUid);
-    console.log(formData);
-
-    // await updateDoc(userRef, {
-    //   "profile.company_info":formData,
-    // });
     if (validate(formData)) {
       if (logoImg) {
-        const logoImgUrl = await uploadImage(logoImg);
-        await updateDoc(userRef, {
-          "profile.company_info.logoImage": logoImgUrl,
-        });
+        dispatch(employerUploadFile(logoImg, "profileImage"));
       }
       if (coverImg) {
-        const coverImgUrl = await uploadImage(coverImg);
-        await updateDoc(userRef, {
-          "profile.company_info.coverImage": coverImgUrl,
-        });
+        dispatch(employerUploadFile(coverImg, "coverImage"));
       }
-      setDoc(
-        userRef,
-        {
-          profile: {
-            company_info: formData,
-          },
-        },
-        { merge: true }
-      )
-        .then((rs) => {
-          setLoading(false);
-          Swal.fire({
-            title: "Update Success",
-            text: "Update Your Information Success",
-            icon: "success",
-            confirmButtonText: "Accept",
-            timer: 3000,
-            timerProgressBar: true,
-          }).then(() => {
-            window.location.reload();
-          });
-        })
-        .catch((err) => {
-          Swal.fire({
-            title: "Error",
-            text: "Something went wrong!",
-            icon: "error",
-            confirmButtonText: "Accept",
-            timer: 3500,
-            timerProgressBar: true,
-          });
-        });
-    } else {
-      setLoading(false);
-      console.log(errors);
+      dispatch(employersUpdateData(formData));
     }
+
+    // const userRef = doc(db, "employers", userUid);
+    // console.log(formData);
+
+    // // await updateDoc(userRef, {
+    // //   "profile.company_info":formData,
+    // // });
+    // if (validate(formData)) {
+    //   if (logoImg) {
+    //     const logoImgUrl = await uploadImage(logoImg);
+    //     await updateDoc(userRef, {
+    //       "profile.company_info.logoImage": logoImgUrl,
+    //     });
+    //   }
+    //   if (coverImg) {
+    //     const coverImgUrl = await uploadImage(coverImg);
+    //     await updateDoc(userRef, {
+    //       "profile.company_info.coverImage": coverImgUrl,
+    //     });
+    //   }
+    //   setDoc(
+    //     userRef,
+    //     {
+    //       profile: {
+    //         company_info: formData,
+    //       },
+    //     },
+    //     { merge: true }
+    //   )
+    //     .then((rs) => {
+    //       setLoading(false);
+    //       Swal.fire({
+    //         title: "Update Success",
+    //         text: "Update Your Information Success",
+    //         icon: "success",
+    //         confirmButtonText: "Accept",
+    //         timer: 3000,
+    //         timerProgressBar: true,
+    //       }).then(() => {
+    //         window.location.reload();
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       Swal.fire({
+    //         title: "Error",
+    //         text: "Something went wrong!",
+    //         icon: "error",
+    //         confirmButtonText: "Accept",
+    //         timer: 3500,
+    //         timerProgressBar: true,
+    //       });
+    //     });
+    // } else {
+    //   setLoading(false);
+    //   console.log(errors);
+    // }
   };
   useEffect(() => {
     if (company_profile) {
@@ -257,6 +272,11 @@ const FormInfoBox = () => {
       setCoverUrl(coverImage);
     }
   }, [company_profile]);
+  useEffect(() => {
+    if (isAuthenticate) {
+      dispatch(employersProfileData(isAuthenticate));
+    }
+  }, [dispatch, isAuthenticate]);
 
   return (
     <form className="default-form" onSubmit={handleSubmit}>

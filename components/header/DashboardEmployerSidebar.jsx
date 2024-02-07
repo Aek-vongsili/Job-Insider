@@ -4,7 +4,7 @@ import { isActiveLink } from "../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { menuToggle } from "../../features/toggle/toggleSlice";
-import { auth } from "../../firebase/clientApp";
+// import { auth } from "../../firebase/clientApp";
 import axios from "axios";
 import { signOut } from "firebase/auth";
 
@@ -18,14 +18,14 @@ const DashboardEmployerSidebar = () => {
     dispatch(menuToggle());
   };
   const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      await axios.get("/api/logout");
+    // try {
+    //   await signOut(auth);
+    //   await axios.get("/api/logout");
 
-      router.push("/");
-    } catch (err) {
-      console.log(err);
-    }
+    //   router.push("/");
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (

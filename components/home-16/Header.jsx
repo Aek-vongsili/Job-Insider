@@ -7,26 +7,26 @@ import candidatesMenuData from "../../data/candidatesMenuData";
 import { isActiveLink } from "../../utils/linkActiveChecker";
 import HeaderNavContent from "../header/HeaderNavContent";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, db } from "../../firebase/clientApp";
+// import { auth, db } from "../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
 import { setLogout, setUser, setRole } from "../../features/user/userSlice";
 
-import axios from "axios";
-import { doc, getDoc } from "firebase/firestore";
-import {
-  setCompanyData,
-  setCompanySignOut,
-} from "../../features/employer/employerProfile";
+import { fbAuthLogout, fbLoginCheck } from "../../features/auth/actionCreator";
+import { useFirebase } from "react-redux-firebase";
 
 const Header = () => {
   const [navbar, setNavbar] = useState(false);
   const router = useRouter();
-  const isLogin = useSelector((state) => state.user.isLoggedIn);
-  const role = useSelector((state) => state.user.role);
-  const userUid = useSelector((state) => state.user?.user?.uid);
+  const dispatch = useDispatch();
+  const firebase = useFirebase();
+  // const isLogin = useSelector((state) => state.user.isLoggedIn);
+  const role = useSelector((state) => state.auth.role);
   const employerImg = useSelector(
     (state) => state.employerProfile?.company_info
   );
+  const isLogin = useSelector((state) => {
+    return state.auth.login;
+  });
   const userImage = () => {
     switch (role) {
       case "Employer":
@@ -40,15 +40,24 @@ const Header = () => {
       setNavbar(false);
     }
   };
-  const dispatch = useDispatch();
-  // const ssrDispatch =  useAppDispatch()
+  useEffect(() => {
+    window.addEventListener("scroll", changeBackground);
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(fbLoginCheck());
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [dispatch]);
   const Logout = async () => {
     try {
-      await signOut(auth);
-      await axios.get("/api/logout");
-      router.push("/");
-    } catch (err) {
-      console.log(err);
+      await dispatch(fbAuthLogout(() => router.push("/")));
+    } catch (error) {
+      // Handle any errors here
+      console.error("Logout error:", error);
     }
   };
   const checkRole = (role) => {
@@ -61,62 +70,6 @@ const Header = () => {
         return candidatesMenuData;
     }
   };
-  useEffect(() => {
-    window.addEventListener("scroll", changeBackground);
-
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // console.log(user);
-        user
-          .getIdToken(true)
-          .then((token) => {
-            axios
-              .post("/api/jwt", { token: token })
-              .then((rs) => {
-                console.log(rs);
-              })
-              .catch((err) => {
-                alert(err);
-              });
-          })
-          .catch(async (err) => {
-            console.log(err);
-            await Logout();
-          });
-        // let {stsTokenManager,accessToken,auth,...newUser} = user
-        // delete user.stsTokenManager
-        let newUser = { ...user };
-        delete newUser.stsTokenManager;
-        delete newUser.auth;
-        delete newUser.accessToken;
-
-        dispatch(setUser(newUser));
-      } else {
-        dispatch(setLogout());
-        dispatch(setCompanySignOut());
-      }
-    });
-    return () => unsubscribe();
-  }, [router]);
-  useEffect(() => {
-    const companyProfile = async () => {
-      try {
-        if (userUid) {
-          const collectionRef = doc(db, "employers", userUid);
-          const docSnap = await getDoc(collectionRef);
-          if (docSnap.exists()) {
-            if (docSnap.data().profile) {
-              dispatch(setCompanyData(docSnap.data().profile));
-            }
-          }
-        }
-      } catch (err) {
-        console.error(err);
-        throw new Error(err);
-      }
-    };
-    companyProfile();
-  }, [router]);
   return (
     // <!-- Main Header-->
     <header
@@ -154,7 +107,7 @@ const Header = () => {
 
           <div className="outer-box">
             {/* <!-- Login/Register --> */}
-            {isLogin ? (
+            {!!isLogin ? (
               <div
                 className="dropdown dashboard-option"
                 style={{ width: "200px" }}

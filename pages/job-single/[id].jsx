@@ -18,7 +18,7 @@ import JobDetailsDescriptions from "../../components/job-single-pages/shared-com
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
 import Layout from "../../components/Layout";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebase/clientApp";
+// import { db } from "../../firebase/clientApp";
 import { format, compareAsc, parseISO } from "date-fns";
 import { useSelector } from "react-redux";
 import { selectJobById } from "../../features/job/jobSlice";
@@ -317,44 +317,44 @@ const JobSingleDynamicV1 = ({ job }) => {
     </>
   );
 };
-export async function getServerSideProps(context) {
-  const { params } = context;
-  // console.log(params);
+// export async function getServerSideProps(context) {
+//   const { params } = context;
+//   // console.log(params);
 
-  let job = {};
-  try {
-    const docRef = doc(db, "job_features", `${params.id}`);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      // console.log("Document data:", docSnap.data());
+//   let job = {};
+//   try {
+//     const docRef = doc(db, "job_features", `${params.id}`);
+//     const docSnap = await getDoc(docRef);
+//     if (docSnap.exists()) {
+//       // console.log("Document data:", docSnap.data());
 
-      const companyRef = doc(db, "employers", docSnap.data().company);
-      const companySnap = await getDoc(companyRef);
-      if (companySnap.exists()) {
-        // console.log("Company data:", companySnap.data());
-        const { profile, ...data } = companySnap.data();
-        // setJobData({ ...docSnap.data(), ...profile });
-        job = { ...docSnap.data(), ...profile };
-      } else {
-        console.log("No company document!");
-      }
-    } else {
-      console.log("No job document!");
-      return {
-        notFound: true,
-      };
-    }
-  } catch (error) {
-    throw err;
-  }
-  const jobData = JSON.stringify(job);
-  // console.log(jobData);
-  return {
-    props: {
-      job: jobData,
-    },
-  };
-}
+//       const companyRef = doc(db, "employers", docSnap.data().company);
+//       const companySnap = await getDoc(companyRef);
+//       if (companySnap.exists()) {
+//         // console.log("Company data:", companySnap.data());
+//         const { profile, ...data } = companySnap.data();
+//         // setJobData({ ...docSnap.data(), ...profile });
+//         job = { ...docSnap.data(), ...profile };
+//       } else {
+//         console.log("No company document!");
+//       }
+//     } else {
+//       console.log("No job document!");
+//       return {
+//         notFound: true,
+//       };
+//     }
+//   } catch (error) {
+//     throw err;
+//   }
+//   const jobData = JSON.stringify(job);
+//   // console.log(jobData);
+//   return {
+//     props: {
+//       job: jobData,
+//     },
+//   };
+// }
 export default dynamic(() => Promise.resolve(JobSingleDynamicV1), {
   ssr: false,
 });

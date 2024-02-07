@@ -26,7 +26,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { db } from "../../../firebase/clientApp";
+// import { db } from "../../../firebase/clientApp";
 import { useRouter } from "next/router";
 import { setLoading } from "../../../features/user/userSlice";
 // import Loading from "../../Loading/Loading";
@@ -42,23 +42,23 @@ const Loading = () => {
 };
 const BookmarkIcon = ({ jobId }) => {
   const useruid = useSelector((state) => state.user.user?.uid);
-  const newFavoriteJobRef = doc(collection(db, `users/${useruid}/favoriteJob`));
+  // const newFavoriteJobRef = doc(collection(db, `users/${useruid}/favoriteJob`));
   const [like, setLike] = useState(false);
 
   useEffect(() => {
     const checkIfLiked = async () => {
-      try {
-        const dateRef = query(
-          collection(db, `users/${useruid}/favoriteJob`),
-          where("jobId", "==", jobId)
-        );
-        const snapshot = await getDocs(dateRef);
-        if (!snapshot.empty) {
-          setLike(true);
-        }
-      } catch (error) {
-        console.error("Error checking if liked:", error);
-      }
+      // try {
+      //   const dateRef = query(
+      //     collection(db, `users/${useruid}/favoriteJob`),
+      //     where("jobId", "==", jobId)
+      //   );
+      //   const snapshot = await getDocs(dateRef);
+      //   if (!snapshot.empty) {
+      //     setLike(true);
+      //   }
+      // } catch (error) {
+      //   console.error("Error checking if liked:", error);
+      // }
     };
     if (useruid) {
       checkIfLiked();
@@ -68,27 +68,27 @@ const BookmarkIcon = ({ jobId }) => {
     if (!useruid) {
       return alert("not login");
     }
-    try {
-      if (like) {
-        const dateRef = query(
-          collection(db, `users/${useruid}/favoriteJob`),
-          where("jobId", "==", jobId)
-        );
-        const snapshot = await getDocs(dateRef);
-        snapshot.forEach(async (docSnap) => {
-          await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, docSnap.id));
-          setLike(false);
-        });
-      } else {
-        await setDoc(newFavoriteJobRef, {
-          jobId: jobId,
-          createdAt: new Date(),
-        });
-        setLike(true);
-      }
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   if (like) {
+    //     const dateRef = query(
+    //       collection(db, `users/${useruid}/favoriteJob`),
+    //       where("jobId", "==", jobId)
+    //     );
+    //     const snapshot = await getDocs(dateRef);
+    //     snapshot.forEach(async (docSnap) => {
+    //       await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, docSnap.id));
+    //       setLike(false);
+    //     });
+    //   } else {
+    //     await setDoc(newFavoriteJobRef, {
+    //       jobId: jobId,
+    //       createdAt: new Date(),
+    //     });
+    //     setLike(true);
+    //   }
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Map from "../../../Map";
 import Select from "react-select";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "../../../../../firebase/clientApp";
+// import { db } from "../../../../../firebase/clientApp";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
@@ -130,35 +130,35 @@ const PostBoxForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    if (validate(formData)) {
-      try {
-        console.log(formData);
-        const data = { ...formData, skill, keylist };
-        // console.log({ ...formData, skill, keylist });
-        addDoc(collection(db, "job_features"), {
-          ...data,
-          company: userUid,
-          createdAt: serverTimestamp(),
-          status:"active"
-        }).then((rs) => {
-          setLoading(false);
-          Swal.fire({
-            title: "Success",
-            text: "Your Job has been posted",
-            icon: "success",
-            confirmButtonText: "Accept",
-            timer: 3000,
-            timerProgressBar: true,
-          });
-        });
-      } catch (err) {
-        setLoading(false);
-        console.log(err);
-      }
-    } else {
+    // if (validate(formData)) {
+    //   try {
+    //     console.log(formData);
+    //     const data = { ...formData, skill, keylist };
+    //     // console.log({ ...formData, skill, keylist });
+    //     addDoc(collection(db, "job_features"), {
+    //       ...data,
+    //       company: userUid,
+    //       createdAt: serverTimestamp(),
+    //       status:"active"
+    //     }).then((rs) => {
+    //       setLoading(false);
+    //       Swal.fire({
+    //         title: "Success",
+    //         text: "Your Job has been posted",
+    //         icon: "success",
+    //         confirmButtonText: "Accept",
+    //         timer: 3000,
+    //         timerProgressBar: true,
+    //       });
+    //     });
+    //   } catch (err) {
+    //     setLoading(false);
+    //     console.log(err);
+    //   }
+    // } else {
      
-      setLoading(false);
-    }
+    //   setLoading(false);
+    // }
   };
   // useEffect(() => {
   //   console.log(errors);

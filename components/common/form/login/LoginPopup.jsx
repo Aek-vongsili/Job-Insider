@@ -1,7 +1,7 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Register from "../register/Register";
 import FormContent from "./FormContent";
-import { auth } from "../../../../firebase/clientApp";
+// import { auth } from "../../../../firebase/clientApp";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
@@ -9,19 +9,19 @@ const LoginPopup = ({data}) => {
   const router = useRouter()
   const [isLoginSuccess,setIsLoginSuccess] = useState(true)
   const handleSignIn = (email,password)=>{
-    try{
-      signInWithEmailAndPassword(auth,email,password)
-      .then(result=>{
-        setIsLoginSuccess((prevLoggedIn) => !prevLoggedIn)
-        console.log(result);
-        router.push("/")
-      })
+    // try{
+    //   signInWithEmailAndPassword(auth,email,password)
+    //   .then(result=>{
+    //     setIsLoginSuccess((prevLoggedIn) => !prevLoggedIn)
+    //     console.log(result);
+    //     router.push("/")
+    //   })
      
       
-    }catch(err){
-      console.log(err);
-      setIsLoginSuccess(false)
-    }
+    // }catch(err){
+    //   console.log(err);
+    //   setIsLoginSuccess(false)
+    // }
   }
   return (
     <>

@@ -3,14 +3,7 @@ import Seo from "../../../components/common/Seo";
 import CompanyProfile from "../../../components/dashboard-pages/employers-dashboard/company-profile";
 import Layout from "../../../components/Layout";
 import { withAuth } from "../../../utils/withAuth";
-const index = ({ dataDoc }) => {
-  // const dispatch = useDispatch();
-  // // console.log(dataDoc);
-  // useEffect(() => {
-  //   if (dataDoc) {
-  //     dispatch(setCompanyData(dataDoc));
-  //   }
-  // }, [dataDoc]);
+const index = () => {
   return (
     <>
       <Seo pageTitle="Company Profile" />

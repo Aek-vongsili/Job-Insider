@@ -1,58 +1,35 @@
 import Link from "next/link";
 import LoginWithSocial from "./LoginWithSocial";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../../../firebase/clientApp";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../../Loading/Loading";
-import { setLoading, setUser } from "../../../../features/user/userSlice";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { fbAuthLogin } from "../../../../features/auth/actionCreator";
 
 const FormContent = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState("");
+  const isLoading = useSelector((state) => {
+    return state.firebaseAuth.loading;
+  });
   const [showpass, setShowPass] = useState(false);
+  const error = useSelector((state) => {
+    return state.firebaseAuth.error;
+  });
+
   const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-
-      if (user) {
-        user.getIdToken().then((token) => {
-          axios
-            .post("/api/jwt", { token: token })
-            .then((rs) => {
-              console.log(rs);
-              router.push("/");
-            })
-            .catch((err) => {
-              alert(err);
-            });
-        });
-        // const token = await user.getIdToken(true)
-        // console.log(token);
-        // const in30Minutes = 1/48;
-        // Cookies.set('token',token,{
-        //   expires: in30Minutes
-        // })
-
-        // setLoading(false)
-      }
-    } catch (err) {
-      setErr(err.message);
-      setLoading(false);
-    }
+    await dispatch(fbAuthLogin({ email, password }, () => router.push("/")));
+    // router.push("/");
   };
   return (
     <div className="form-inner">
-      <h3>Login to Job Insider</h3>
+      <h3>Login to HubJob</h3>
 
       {/* <!--Login Form--> */}
       <form onSubmit={handleSubmit}>
@@ -70,26 +47,28 @@ const FormContent = () => {
 
         <div className="form-group">
           <label>Password</label>
-          <input
-            type={showpass ? "text" : "password"}
-            name="password"
-            placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {showpass ? (
-            <i
-              class="fa fa-eye eye-open"
-              aria-hidden="true"
-              onClick={() => setShowPass((prev) => !prev)}
-            ></i>
-          ) : (
-            <i
-              class="fa fa-eye-slash eye-close"
-              aria-hidden="true"
-              onClick={() => setShowPass((prev) => !prev)}
-            ></i>
-          )}
-          <p className="err-message">{err ? err : ""}</p>
+          <div className="password-input-wrapper">
+            <input
+              type={showpass ? "text" : "password"}
+              name="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            {showpass ? (
+              <i
+                className="fa fa-eye eye-open"
+                aria-hidden="true"
+                onClick={() => setShowPass((prev) => !prev)}
+              ></i>
+            ) : (
+              <i
+                className="fa fa-eye-slash eye-close"
+                aria-hidden="true"
+                onClick={() => setShowPass((prev) => !prev)}
+              ></i>
+            )}
+          </div>
+          {error && <p className="err-message">{error.message}</p>}
         </div>
 
         {/* password */}
@@ -114,9 +93,9 @@ const FormContent = () => {
             className="theme-btn btn-style-one"
             type="submit"
             name="log-in"
-            disabled={!!loading}
+            disabled={!!isLoading}
           >
-            {loading ? <Loading /> : "Log in"}
+            {isLoading ? <Loading /> : "Log in"}
           </button>
         </div>
         {/* login */}

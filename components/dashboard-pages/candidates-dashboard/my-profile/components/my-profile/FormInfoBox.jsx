@@ -7,7 +7,7 @@ import { storage } from "../../../../../../firebase/clientApp";
 import { useSelector } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../../../../../firebase/clientApp";
+// import { db } from "../../../../../../firebase/clientApp";
 import Swal from "sweetalert2";
 import Loading from "../../../../../Loading/Loading";
 const FormInfoBox = () => {
@@ -140,74 +140,74 @@ const FormInfoBox = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    const userRef = doc(db, "users", userUid);
-    if (profileImg) {
-      const profileUrl = await uploadImage(profileImg);
-      await updateDoc(userRef, {
-        "profile.userProfile.profileImage": profileUrl,
-      });
-    }
-    setDoc(
-      userRef,
-      {
-        profile: {
-          userProfile: {
-            ...formData,
-            dateOfBirth: `${day}/${month}/${year}`,
-            province: selectedProvince,
-            district: selectedDistrict,
-          },
-        },
-      },
-      { merge: true }
-    )
-      .then((rs) => {
-        setLoading(false);
-        Swal.fire({
-          title: "Success",
-          text: "Update Your Information Success",
-          icon: "success",
-          confirmButtonText: "Accept",
-          timer: 3000,
-          timerProgressBar: true,
-        }).then(() => {
-          window.location.reload();
-        });
-      })
-      .catch((err) => {
-        setLoading(false);
-        Swal.fire({
-          title: "Error",
-          text: "Something went wrong!",
-          icon: "error",
-          confirmButtonText: "Accept",
-          timer: 3500,
-          timerProgressBar: true,
-        });
-      });
+    // setLoading(true);
+    // const userRef = doc(db, "users", userUid);
+    // if (profileImg) {
+    //   const profileUrl = await uploadImage(profileImg);
+    //   await updateDoc(userRef, {
+    //     "profile.userProfile.profileImage": profileUrl,
+    //   });
+    // }
+    // setDoc(
+    //   userRef,
+    //   {
+    //     profile: {
+    //       userProfile: {
+    //         ...formData,
+    //         dateOfBirth: `${day}/${month}/${year}`,
+    //         province: selectedProvince,
+    //         district: selectedDistrict,
+    //       },
+    //     },
+    //   },
+    //   { merge: true }
+    // )
+    //   .then((rs) => {
+    //     setLoading(false);
+    //     Swal.fire({
+    //       title: "Success",
+    //       text: "Update Your Information Success",
+    //       icon: "success",
+    //       confirmButtonText: "Accept",
+    //       timer: 3000,
+    //       timerProgressBar: true,
+    //     }).then(() => {
+    //       window.location.reload();
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     setLoading(false);
+    //     Swal.fire({
+    //       title: "Error",
+    //       text: "Something went wrong!",
+    //       icon: "error",
+    //       confirmButtonText: "Accept",
+    //       timer: 3500,
+    //       timerProgressBar: true,
+    //     });
+    //   });
   };
   const getProfileData = async () => {
-    const userRef = doc(db, "users", userUid);
-    const profileData = await getDoc(userRef);
-    if (
-      profileData.exists() &&
-      profileData.data().profile &&
-      profileData.data().profile.userProfile
-    ) {
-      const { profileImage, district, province, dateOfBirth, ...data } =
-        profileData.data()?.profile?.userProfile;
-      const [day, month, year] = dateOfBirth.split("/");
-      setDay(day);
-      setMonth(month);
-      setYear(year);
-      setProfileUrl(profileImage);
-      setFormData(data);
-      setSelectedProvince(province);
-      setDistrict(cityData[province] || []);
-      setSelectedDistrict(district);
-    }
-    console.log(profileData.data());
+    // const userRef = doc(db, "users", userUid);
+    // const profileData = await getDoc(userRef);
+    // if (
+    //   profileData.exists() &&
+    //   profileData.data().profile &&
+    //   profileData.data().profile.userProfile
+    // ) {
+    //   const { profileImage, district, province, dateOfBirth, ...data } =
+    //     profileData.data()?.profile?.userProfile;
+    //   const [day, month, year] = dateOfBirth.split("/");
+    //   setDay(day);
+    //   setMonth(month);
+    //   setYear(year);
+    //   setProfileUrl(profileImage);
+    //   setFormData(data);
+    //   setSelectedProvince(province);
+    //   setDistrict(cityData[province] || []);
+    //   setSelectedDistrict(district);
+    // }
+    // console.log(profileData.data());
   };
   useEffect(() => {
     getProfileData();

@@ -1,65 +1,69 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunk from "redux-thunk";
+import { createWrapper, HYDRATE } from "next-redux-wrapper";
+import {
+  reduxFirestore,
+  getFirestore,
+  firestoreReducer,
+} from "redux-firestore";
+import { firebaseReducer, getFirebase } from "react-redux-firebase";
 import jobSlice from "../features/job/jobSlice";
 import toggleSlice from "../features/toggle/toggleSlice";
 import filterSlice from "../features/filter/filterSlice";
-import employerSlice from "../features/employer/employerSlice";
-import employerProfile from "../features/employer/employerProfile";
 import employerFilterSlice from "../features/filter/employerFilterSlice";
 import candidateSlice from "../features/candidate/candidateSlice";
 import candidateFilterSlice from "../features/filter/candidateFilterSlice";
 import shopSlice from "../features/shop/shopSlice";
 import userSlice from "../features/user/userSlice";
-import { persistReducer } from "redux-persist";
-// import storage from 'redux-persist/lib/storage'
-import createWebStorage from "redux-persist/lib/storage/createWebStorage";
-import { WebStorage } from "redux-persist/lib/types";
+import fbConfig from "../firebase/fbConfig";
+import { firebaseAuth, AuthReducer } from "../features/auth/reducers";
+import { employerSingle, employerReducer } from "../features/employer/reducers";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/firestore";
+import "firebase/compat/storage";
 
-function createPersistStorage(){
-  const isServer = typeof window === "undefined";
-
-  // Returns noop (dummy) storage.
-  if (isServer) {
+const reducer = (state, action) => {
+  if (action.type === HYDRATE) {
+    // If you use Redux Toolkit, you should return combined state
     return {
-      getItem() {
-        return Promise.resolve(null);
-      },
-      setItem() {
-        return Promise.resolve();
-      },
-      removeItem() {
-        return Promise.resolve();
-      },
+      ...state,
+      ...action.payload,
     };
   }
-
-  return createWebStorage("local");
-}
-const storage =
-  typeof window !== "undefined"
-    ? createWebStorage("local")
-    : createPersistStorage();
-const persistConfig = {
-  key: "root",
-  storage: storage,
-  whitelist: ["user"],
+  return combineReducers({
+    job: jobSlice,
+    fs: firestoreReducer,
+    firebase: firebaseReducer,
+    firebaseAuth,
+    auth: AuthReducer,
+    toggle: toggleSlice,
+    filter: filterSlice,
+    employerFilter: employerFilterSlice,
+    employerData: employerReducer,
+    employerSingle: employerSingle,
+    candidate: candidateSlice,
+    candidateFilter: candidateFilterSlice,
+    shop: shopSlice,
+    user: userSlice,
+  })(state, action);
 };
-const reducer = combineReducers({
-  job: jobSlice,
-  toggle: toggleSlice,
-  filter: filterSlice,
-  employer: employerSlice,
-  employerFilter: employerFilterSlice,
-  employerProfile:employerProfile,
-  candidate: candidateSlice,
-  candidateFilter: candidateFilterSlice,
-  shop: shopSlice,
-  user: userSlice,
-});
-const persistedReducer = persistReducer(persistConfig, reducer);
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: false,
-    }).concat(),
-});
+
+export const newStore = () => {
+  return createStore(
+    reducer,
+    compose(
+      applyMiddleware(
+        thunk.withExtraArgument({
+          getFirebase,
+          getFirestore,
+          storage: firebase.storage,
+        })
+      ),
+      reduxFirestore(fbConfig)
+    )
+  );
+};
+
+export const wrapper = createWrapper(newStore, { debug: false });

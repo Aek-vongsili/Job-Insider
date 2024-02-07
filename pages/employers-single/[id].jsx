@@ -21,9 +21,9 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../firebase/clientApp";
+// import { db } from "../../firebase/clientApp";
 
-const EmployersSingleV1 = ({ employerData , openJobs}) => {
+const EmployersSingleV1 = ({ employerData, openJobs }) => {
   const router = useRouter();
   const [employer, setEmployersInfo] = useState({});
   const id = router.query.id;
@@ -34,8 +34,8 @@ const EmployersSingleV1 = ({ employerData , openJobs}) => {
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
-  const dateObj = new Date(employerData?.company_info?.company_est)
-  const companyEst =formatDate(dateObj)
+  const dateObj = new Date(employerData?.company_info?.company_est);
+  const companyEst = formatDate(dateObj);
   // useEffect(() => {
   //   if (!id) <h1>Loading...</h1>;
   //   else setEmployersInfo(employersInfo.find((item) => item.id == id));
@@ -269,45 +269,45 @@ const EmployersSingleV1 = ({ employerData , openJobs}) => {
     </>
   );
 };
-export async function getServerSideProps(context) {
-  const { params } = context;
-  console.log(params.id);
-  let employerData;
-  let openJobs;
-  try {
-    const docRef = doc(db, "employers", `${params.id}`);
-    const docSnap = await getDoc(docRef);
+// export async function getServerSideProps(context) {
+//   const { params } = context;
+//   console.log(params.id);
+//   let employerData;
+//   let openJobs;
+//   try {
+//     const docRef = doc(db, "employers", `${params.id}`);
+//     const docSnap = await getDoc(docRef);
 
-    // console.log(docSnap.data().profile)
-    if (docSnap.exists()) {
-      const q = query(
-        collection(db, "job_features"),
-        where("company", "==", params.id)
-      );
-      const querySnapshot = await getDocs(q);
-      // console.log(querySnapshot.size);
-      openJobs = querySnapshot.size;
-      // querySnapshot.forEach((doc) => {
-      //   // doc.data() is never undefined for query doc snapshots
-      //   console.log(doc.id, " => ", doc.data());
-      // });
-      employerData = docSnap.data().profile;
-    } else {
-      return {
-        notFound: true,
-      };
-    }
-  } catch (err) {
-    throw err;
-  }
+//     // console.log(docSnap.data().profile)
+//     if (docSnap.exists()) {
+//       const q = query(
+//         collection(db, "job_features"),
+//         where("company", "==", params.id)
+//       );
+//       const querySnapshot = await getDocs(q);
+//       // console.log(querySnapshot.size);
+//       openJobs = querySnapshot.size;
+//       // querySnapshot.forEach((doc) => {
+//       //   // doc.data() is never undefined for query doc snapshots
+//       //   console.log(doc.id, " => ", doc.data());
+//       // });
+//       employerData = docSnap.data().profile;
+//     } else {
+//       return {
+//         notFound: true,
+//       };
+//     }
+//   } catch (err) {
+//     throw err;
+//   }
 
-  return {
-    props: {
-      employerData: employerData,
-      openJobs: openJobs,
-    },
-  };
-}
+//   return {
+//     props: {
+//       employerData: employerData,
+//       openJobs: openJobs,
+//     },
+//   };
+// }
 export default dynamic(() => Promise.resolve(EmployersSingleV1), {
   ssr: false,
 });

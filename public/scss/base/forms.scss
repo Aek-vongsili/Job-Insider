@@ -312,13 +312,20 @@ input:checked + .slider:before {
 .default-form .form-group {
   position: relative;
   margin-bottom: 20px;
-  .eye-close,
-  .eye-open {
+  .password-input-wrapper {
+    position: relative;
+  }
+
+  .password-input-wrapper input {
+    padding-right: 30px; /* Adjust this value based on the eye icon size */
+  }
+
+  .password-input-wrapper i {
     position: absolute;
-    top: 39%;
-    right: 3%;
+    top: 50%;
+    right: 20px; /* Adjust this value to position the eye icon as desired */
+    transform: translateY(-50%);
     cursor: pointer;
-    color: #858282;
   }
   .err-message {
     color: red;
@@ -380,9 +387,8 @@ input:checked + .slider:before {
 .default-form .form-group input[type="url"]::placeholder,
 .default-form .form-group input[type="date"]::placeholder,
 .default-form .form-group textarea::placeholder,
-.default-form .form-group select::placeholder{
+.default-form .form-group select::placeholder {
   color: #8b8b8b;
-  
 }
 .default-form .form-group input[type="text"]:focus,
 .default-form .form-group input[type="email"]:focus,

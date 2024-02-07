@@ -9,29 +9,12 @@ import ContactInfoBox from "./components/ContactInfoBox";
 import CopyrightFooter from "../../CopyrightFooter";
 import MenuToggler from "../../MenuToggler";
 import { useEffect } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../../../firebase/clientApp";
+// import { db } from "../../../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
-import { setCompanyData } from "../../../../features/employer/employerProfile";
 
 const index = () => {
-  const userUid = useSelector((state) => state.user?.user?.uid);
-  
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const userRef = doc(db, "users", userUid);
-  //   const getData = async () => {
-  //     const docSnap = await getDoc(userRef);
-  //     if (docSnap.exists()) {
-  //       if (docSnap.data()?.profile) {
-  //         dispatch(setCompanyData(docSnap.data()?.profile));
-  //       }
-  //     } else {
-  //       console.log("No such document!");
-  //     }
-  //   };
-  //   getData();
-  // }, []);
+
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>

@@ -7,7 +7,7 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
-import { app, db, storage } from "../../../../../firebase/clientApp";
+// import { app, db, storage } from "../../../../../firebase/clientApp";
 import { useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 const PostBoxForm = () => {
@@ -42,7 +42,7 @@ const PostBoxForm = () => {
   const [keylist, setKeylist] = useState([{ keyList: "" }]);
   const [skill, setSkill] = useState([{ skillList: "" }]);
 
-  const jobID = doc(db, "Job-Featured", "eA0qbWcY3XzWWQmd8QFD");
+  // const jobID = doc(db, "Job-Featured", "eA0qbWcY3XzWWQmd8QFD");
   const jobtype = [
     { value: "Full Time", label: "Fulltime" },
     { value: "Freelancer", label: "Freelancer" },

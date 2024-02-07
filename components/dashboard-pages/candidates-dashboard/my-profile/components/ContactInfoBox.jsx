@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Map from "../../../Map";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../../../../firebase/clientApp";
+// import { db } from "../../../../../firebase/clientApp";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
@@ -80,37 +80,37 @@ const ContactInfoBox = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const userRef = doc(db, "users", userUid);
-    await updateDoc(userRef, {
-      "profile.location": {
-        country: "Laos",
-        city: city,
-        address: address,
-        latitude: markerPosition?.lat,
-        longtitude: markerPosition?.lng,
-      },
-    })
-      .then(() => {
-        setLoading(false);
-        Swal.fire({
-          title: "Update Success",
-          text: "Update Your Location Success",
-          icon: "success",
-          confirmButtonText: "Accept",
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      })
-      .catch((err) => {
-        Swal.fire({
-          title: "Error",
-          text: "Something went wrong!",
-          icon: "error",
-          confirmButtonText: "Accept",
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      });
+    // const userRef = doc(db, "users", userUid);
+    // await updateDoc(userRef, {
+    //   "profile.location": {
+    //     country: "Laos",
+    //     city: city,
+    //     address: address,
+    //     latitude: markerPosition?.lat,
+    //     longtitude: markerPosition?.lng,
+    //   },
+    // })
+    //   .then(() => {
+    //     setLoading(false);
+    //     Swal.fire({
+    //       title: "Update Success",
+    //       text: "Update Your Location Success",
+    //       icon: "success",
+    //       confirmButtonText: "Accept",
+    //       timer: 3000,
+    //       timerProgressBar: true,
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     Swal.fire({
+    //       title: "Error",
+    //       text: "Something went wrong!",
+    //       icon: "error",
+    //       confirmButtonText: "Accept",
+    //       timer: 3000,
+    //       timerProgressBar: true,
+    //     });
+    //   });
   };
   useEffect(() => {
     if (location_info) {

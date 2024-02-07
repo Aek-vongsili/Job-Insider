@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useSelector } from "react-redux";
-import { db } from "../../../../../firebase/clientApp";
+// import { db } from "../../../../../firebase/clientApp";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
@@ -14,7 +14,7 @@ const SocialNetworkBox = () => {
     const { name, value } = e.target;
     setSocialData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
-  const social_info = useSelector((state) => state.employerProfile.social);
+  const social_info = useSelector((state) => state.employerProfile?.social);
   useEffect(() => {
     if (social_info) {
       setSocialData(social_info);
@@ -23,33 +23,33 @@ const SocialNetworkBox = () => {
 
   const handleSaveData = async (e) => {
     e.preventDefault();
-    const userRef = doc(db, "employers", userUid);
-    setLoading(true);
-    setDoc(
-      userRef,
-      {
-        profile: {
-          social: socialData,
-        },
-      },
-      { merge: true }
-    ).then((rs) => {
-      setLoading(false);
-      Swal.fire({
-        title: "Update Success",
-        text: "Update Your Social Information Success",
-        icon: "success",
-        confirmButtonText: "Accept",
-        timer: 3500,
-        timerProgressBar: true,
-      }).then((rs) => {
-        if (rs.isConfirmed) {
-          router.reload();
-        } else if (rs.isDismissed) {
-          router.reload();
-        }
-      });
-    });
+    // const userRef = doc(db, "employers", userUid);
+    // setLoading(true);
+    // setDoc(
+    //   userRef,
+    //   {
+    //     profile: {
+    //       social: socialData,
+    //     },
+    //   },
+    //   { merge: true }
+    // ).then((rs) => {
+    //   setLoading(false);
+    //   Swal.fire({
+    //     title: "Update Success",
+    //     text: "Update Your Social Information Success",
+    //     icon: "success",
+    //     confirmButtonText: "Accept",
+    //     timer: 3500,
+    //     timerProgressBar: true,
+    //   }).then((rs) => {
+    //     if (rs.isConfirmed) {
+    //       router.reload();
+    //     } else if (rs.isDismissed) {
+    //       router.reload();
+    //     }
+    //   });
+    // });
   };
   return (
     <form className="default-form" onSubmit={handleSaveData}>

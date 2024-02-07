@@ -3,9 +3,6 @@ import Seo from "../components/common/Seo";
 import Home16 from "../components/home-16";
 import Layout from "../components/Layout";
 import { useEffect } from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../firebase/clientApp";
-
 import { setLogout, setRole } from "../features/user/userSlice";
 import firebaseAdmin from "../firebaseAdmin";
 import { useDispatch } from "react-redux";
@@ -30,7 +27,7 @@ const index = ({ role }) => {
 export async function getServerSideProps({ req, res }) {
   const { cookies } = req;
   const token = cookies.token || null;
-  // console.log(token);
+  console.log(token);
   let role = "";
   try {
     if (token) {

@@ -10,7 +10,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../../../../firebase/clientApp.js";
+// import { db } from "../../../../../firebase/clientApp.js";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router.js";
 
@@ -35,40 +35,40 @@ const JobFavouriteTable = () => {
     return formattedDate;
   };
   const handleDelete = async (favId) => {
-    await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, favId));
+    // await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, favId));
     getFavoriteJobData();
   };
   const getFavoriteJobData = async () => {
-    const dateRef = collection(db, `users/${useruid}/favoriteJob`);
+    // const dateRef = collection(db, `users/${useruid}/favoriteJob`);
 
-    const querySnapshot = await getDocs(dateRef);
-    console.log(querySnapshot);
-    const jobDataArray = [];
+    // const querySnapshot = await getDocs(dateRef);
+    // console.log(querySnapshot);
+    // const jobDataArray = [];
 
-    await Promise.all(
-      querySnapshot.docs.map(async (docSnap) => {
-        const getJobData = await getDoc(
-          doc(db, "job_features", docSnap.data()?.jobId)
-        );
-        if (getJobData.exists()) {
-          const getCompany = await getDoc(
-            doc(db, "employers", getJobData.data()?.company)
-          );
-          if (getCompany.exists()) {
-            jobDataArray.push({
-              ...getJobData.data(),
-              ...getCompany.data()?.profile,
-              jobid: getJobData.id,
-              favJobId: docSnap.id,
-              createdAt: docSnap.data()?.createdAt,
-            });
-          }
-        }
-      })
-    );
+    // await Promise.all(
+    //   querySnapshot.docs.map(async (docSnap) => {
+    //     const getJobData = await getDoc(
+    //       doc(db, "job_features", docSnap.data()?.jobId)
+    //     );
+    //     if (getJobData.exists()) {
+    //       const getCompany = await getDoc(
+    //         doc(db, "employers", getJobData.data()?.company)
+    //       );
+    //       if (getCompany.exists()) {
+    //         jobDataArray.push({
+    //           ...getJobData.data(),
+    //           ...getCompany.data()?.profile,
+    //           jobid: getJobData.id,
+    //           favJobId: docSnap.id,
+    //           createdAt: docSnap.data()?.createdAt,
+    //         });
+    //       }
+    //     }
+    //   })
+    // );
 
-    setJobData(jobDataArray);
-    setLoading(false);
+    // setJobData(jobDataArray);
+    // setLoading(false);
   };
   useEffect(() => {
     getFavoriteJobData();

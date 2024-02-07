@@ -17,7 +17,7 @@ import {
 } from "../../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
 import mobileMenuData2 from "../../../data/mobileMenuData2";
-import { auth } from "../../../firebase/clientApp";
+// import { auth } from "../../../firebase/clientApp";
 import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -26,16 +26,16 @@ const Index = () => {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    await axios.get("/api/logout");
-    auth
-      .signOut()
-      .then((rs) => {
-        window.location.reload();
-        router.push("/");
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    // await axios.get("/api/logout");
+    // auth
+    //   .signOut()
+    //   .then((rs) => {
+    //     window.location.reload();
+    //     router.push("/");
+    //   })
+    //   .catch((err) => {
+    //     alert(err);
+    //   });
   };
   const isLogin = useSelector((state) => state.user.isLoggedIn);
 
