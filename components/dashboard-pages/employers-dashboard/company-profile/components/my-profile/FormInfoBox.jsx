@@ -268,7 +268,6 @@ const FormInfoBox = () => {
     }
   }, [company_profile]);
 
-
   return (
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="uploading-outer">
@@ -281,7 +280,7 @@ const FormInfoBox = () => {
             className="uploadButton-input"
             type="file"
             name="attachments[]"
-            accept="image/*"
+            accept=".jpg, .jpeg, .png"
             id="upload"
             onChange={handleLogoUpload}
           />
@@ -314,7 +313,7 @@ const FormInfoBox = () => {
             className="uploadButton-input"
             type="file"
             name="attachments[]"
-            accept="image/*, application/pdf"
+            accept=".jpg, .jpeg, .png"
             id="upload_cover"
             onChange={handleCoverUpload}
           />

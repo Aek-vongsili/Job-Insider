@@ -3,10 +3,12 @@ import Map from "../../../Map";
 import Select from "react-select";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 // import { db } from "../../../../../firebase/clientApp";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
+import { jobInsertData } from "../../../../../features/jobs/actionCreator";
 const PostBoxForm = () => {
+  const dispatch = useDispatch();
   const initialFormData = {
     deadlineDate: "",
     jobCategories: "",
@@ -20,9 +22,10 @@ const PostBoxForm = () => {
   const [keylist, setKeylist] = useState([{ keyList: "" }]);
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
   const userUid = useSelector((state) => state.user?.user?.uid);
-
+  const loading = useSelector((state) => {
+    return state.jobs.loading;
+  });
   const specialisms = [
     { value: "Banking", label: "Banking" },
     { value: "Digital & Creative", label: "Digital & Creative" },
@@ -129,7 +132,19 @@ const PostBoxForm = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (validate(formData)) {
+      const data = { ...formData, skill, keylist };
+      dispatch(jobInsertData(data)).then(() => {
+        Swal.fire({
+          title: "Success",
+          text: "Your Job has been posted",
+          icon: "success",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      });
+    }
     // if (validate(formData)) {
     //   try {
     //     console.log(formData);
@@ -156,7 +171,7 @@ const PostBoxForm = () => {
     //     console.log(err);
     //   }
     // } else {
-     
+
     //   setLoading(false);
     // }
   };
@@ -180,7 +195,9 @@ const PostBoxForm = () => {
             onChange={handleInputChange}
             style={{ border: `${errors?.jobTitle ? borderStyle : ""}` }}
           />
-          <p className="err-message">{errors?.jobTitle}</p>
+          {errors?.jobTitle && (
+            <p className="err-message">{errors?.jobTitle}</p>
+          )}
         </div>
 
         {/* <!-- About Company --> */}
@@ -192,7 +209,9 @@ const PostBoxForm = () => {
             style={{ border: `${errors?.jobDescription ? borderStyle : ""}` }}
             placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
           ></textarea>
-          <p className="err-message">{errors?.jobDescription}</p>
+          {errors?.jobDescription && (
+            <p className="err-message">{errors?.jobDescription}</p>
+          )}
         </div>
 
         {/* <!-- Search Select --> */}
@@ -221,7 +240,7 @@ const PostBoxForm = () => {
               <option key={i.id}>{i.name}</option>
             ))}
           </select>
-          <p className="err-message">{errors?.jobType}</p>
+          {errors?.jobType && <p className="err-message">{errors?.jobType}</p>}
         </div>
 
         {/* <!-- Input --> */}
@@ -241,7 +260,7 @@ const PostBoxForm = () => {
             <option>$4500</option>
             <option>$5000</option>
           </select>
-          <p className="err-message">{errors?.salary}</p>
+          {errors?.salary && <p className="err-message">{errors?.salary}</p>}
         </div>
 
         {/* <div className="form-group col-lg-6 col-md-12">
@@ -281,7 +300,9 @@ const PostBoxForm = () => {
               <option key={i.id}>{i.name}</option>
             ))}
           </select>
-          <p className="err-message">{errors?.jobCategories}</p>
+          {errors?.jobCategories && (
+            <p className="err-message">{errors?.jobCategories}</p>
+          )}
         </div>
 
         {/* <!-- Input --> */}
@@ -293,7 +314,9 @@ const PostBoxForm = () => {
             onChange={handleInputChange}
             style={{ border: `${errors?.jobCategories ? borderStyle : ""}` }}
           />
-          <p className="err-message">{errors?.deadlineDate}</p>
+          {errors?.deadlineDate && (
+            <p className="err-message">{errors?.deadlineDate}</p>
+          )}
         </div>
         <div className="form-group col-lg-12 col-md-12">
           <label>Job Key Responsibilities</label>
@@ -357,7 +380,6 @@ const PostBoxForm = () => {
         {/* <!-- Input --> */}
         <div className="form-group col-lg-12 col-md-12 text-right">
           <button className="theme-btn btn-style-one" disabled={loading}>
-            {" "}
             {!!loading ? <Loading /> : "Post"}
           </button>
         </div>
