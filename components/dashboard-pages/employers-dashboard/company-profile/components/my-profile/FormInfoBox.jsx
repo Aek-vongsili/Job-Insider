@@ -172,25 +172,6 @@ const FormInfoBox = () => {
       company_cat: selectedValue,
     }));
   };
-
-  const uploadImage = async (img) => {
-    return new Promise((resolve, reject) => {
-      const imageName = `${Date.now()}_${uuidv4()}`;
-      const storageRef = ref(storage, `/Image_upload/${imageName}`);
-
-      uploadString(storageRef, img, "data_url")
-        .then((snapshot) => {
-          console.log("Uploaded a data_url string!");
-          getDownloadURL(snapshot.ref).then((url) => {
-            resolve(url);
-          });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate(formData)) {
@@ -202,62 +183,6 @@ const FormInfoBox = () => {
       }
       dispatch(employersUpdateData(formData));
     }
-
-    // const userRef = doc(db, "employers", userUid);
-    // console.log(formData);
-
-    // // await updateDoc(userRef, {
-    // //   "profile.company_info":formData,
-    // // });
-    // if (validate(formData)) {
-    //   if (logoImg) {
-    //     const logoImgUrl = await uploadImage(logoImg);
-    //     await updateDoc(userRef, {
-    //       "profile.company_info.logoImage": logoImgUrl,
-    //     });
-    //   }
-    //   if (coverImg) {
-    //     const coverImgUrl = await uploadImage(coverImg);
-    //     await updateDoc(userRef, {
-    //       "profile.company_info.coverImage": coverImgUrl,
-    //     });
-    //   }
-    //   setDoc(
-    //     userRef,
-    //     {
-    //       profile: {
-    //         company_info: formData,
-    //       },
-    //     },
-    //     { merge: true }
-    //   )
-    //     .then((rs) => {
-    //       setLoading(false);
-    //       Swal.fire({
-    //         title: "Update Success",
-    //         text: "Update Your Information Success",
-    //         icon: "success",
-    //         confirmButtonText: "Accept",
-    //         timer: 3000,
-    //         timerProgressBar: true,
-    //       }).then(() => {
-    //         window.location.reload();
-    //       });
-    //     })
-    //     .catch((err) => {
-    //       Swal.fire({
-    //         title: "Error",
-    //         text: "Something went wrong!",
-    //         icon: "error",
-    //         confirmButtonText: "Accept",
-    //         timer: 3500,
-    //         timerProgressBar: true,
-    //       });
-    //     });
-    // } else {
-    //   setLoading(false);
-    //   console.log(errors);
-    // }
   };
   useEffect(() => {
     if (company_profile) {

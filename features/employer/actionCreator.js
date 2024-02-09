@@ -90,7 +90,6 @@ const employersProfileData = (uid) => {
     try {
       dispatch(employerSingleBegin());
       const companyData = await db.collection("employers").doc(uid).get();
-      console.log(companyData.data());
       if (companyData.exists) {
         // If the document exists and profile field is not empty
         dispatch(employerSingleSuccess(companyData.data())); // Example dispatch to handle the data

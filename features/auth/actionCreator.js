@@ -2,6 +2,7 @@ import actions from "./actions";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import axios from "axios";
+import employerAction from "../employer/actions";
 const showSuccessNotification = (text, callback) => {
   Swal.fire({
     icon: "success",
@@ -16,7 +17,7 @@ const showSuccessNotification = (text, callback) => {
     }
   });
 };
-
+const { employerSingleSuccess } = employerAction;
 const {
   fbLoginBegin,
   fbLoginSuccess,
@@ -93,6 +94,7 @@ const fbAuthLogout = (callback) => {
       Cookies.remove("token");
       await dispatch(logoutSuccess(false));
       await dispatch(fbLogOutSuccess());
+      await dispatch(employerSingleSuccess(null));
       callback();
     } catch (err) {
       await dispatch(fbLogOutErr(err));
