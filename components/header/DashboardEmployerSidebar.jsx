@@ -18,14 +18,7 @@ const DashboardEmployerSidebar = () => {
     dispatch(menuToggle());
   };
   const handleLogout = async () => {
-    // try {
-    //   await signOut(auth);
-    //   await axios.get("/api/logout");
 
-    //   router.push("/");
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
   return (

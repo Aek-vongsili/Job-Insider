@@ -26,16 +26,7 @@ const Index = () => {
   const router = useRouter();
 
   const handleSignOut = async () => {
-    // await axios.get("/api/logout");
-    // auth
-    //   .signOut()
-    //   .then((rs) => {
-    //     window.location.reload();
-    //     router.push("/");
-    //   })
-    //   .catch((err) => {
-    //     alert(err);
-    //   });
+ 
   };
   const isLogin = useSelector((state) => state.user.isLoggedIn);
 
