@@ -14,7 +14,7 @@ import {
 import { useRouter } from "next/router";
 
 const FilterTopBox = () => {
-  const companyData = useSelector((state) => state.employer.employersList);
+  const companyData = useSelector((state) => state?.employer?.employersList);
   const {
     keyword,
     location,
