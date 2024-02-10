@@ -17,9 +17,7 @@ if (typeof window !== "undefined") {
 }
 
 function MyApp({ Component, ...rest }) {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(fbConfig);
-  }
+ 
 
   useEffect(() => {
     Aos.init({

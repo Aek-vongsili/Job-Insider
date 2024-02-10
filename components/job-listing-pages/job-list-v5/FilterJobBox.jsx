@@ -29,6 +29,7 @@ import {
 // import { db } from "../../../firebase/clientApp";
 import { useRouter } from "next/router";
 import { setLoading } from "../../../features/user/userSlice";
+import { jobReadData } from "../../../features/jobs/actionCreator";
 // import Loading from "../../Loading/Loading";
 const Loading = () => {
   return (
@@ -103,9 +104,12 @@ const BookmarkIcon = ({ jobId }) => {
 const FilterJobBox = () => {
   const router = useRouter();
   const { jobList, jobSort } = useSelector((state) => state.filter);
-  const jobData = useSelector((state) => state.job.jobList);
-  console.log(jobs);
-  console.log(jobList);
+  const jobData = useSelector((state) => {
+    return state.jobs.data;
+  });
+  const loading = useSelector((state) => {
+    return state.jobs.loading;
+  });
   const {
     keyword,
     location,
@@ -118,13 +122,11 @@ const FilterJobBox = () => {
   } = jobList || {};
 
   const { sort, perPage } = jobSort;
-  const [loading, setLoading] = useState(true);
-  const role = useSelector((state) => state.user.role);
+  const role = useSelector((state) => state.auth.role);
+
   const dispatch = useDispatch();
   useEffect(() => {
-    if (jobData) {
-      setLoading(false);
-    }
+    dispatch(jobReadData());
     if (role === "Employer") {
       router.push("/");
     }
@@ -246,7 +248,7 @@ const FilterJobBox = () => {
         <div className="inner-box">
           <div className="content">
             <span className="company-logo">
-              <img src={item?.company_info?.logoImage} alt="item brand" />
+              <img src={item?.profile?.logoImage} alt="item brand" />
             </span>
             <h4>
               <Link
@@ -262,7 +264,7 @@ const FilterJobBox = () => {
             <ul className="job-info">
               <li>
                 <span className="icon flaticon-briefcase"></span>
-                {item?.company_info.company_name}
+                {item?.profile?.company_name}
               </li>
               {/* compnay info */}
               <li>

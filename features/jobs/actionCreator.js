@@ -29,5 +29,51 @@ const jobInsertData = (jobData) => {
     }
   };
 };
+const jobReadData = () => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(jobReadBegin());
+      const jobsData = [];
+      const querySnapshot = await db.collection("jobs").get();
+      // Iterate over each job document
+      for (const doc of querySnapshot.docs) {
+        const jobData = doc.data();
 
-export { jobInsertData };
+        // Fetch corresponding company document using companyId stored in the job document
+        const companyDoc = await db
+          .collection("employers")
+          .doc(jobData?.company)
+          .get();
+        const companyData = companyDoc.exists ? companyDoc.data() : null;
+
+        // Combine jobData with companyData, if available
+        const combinedData = {
+          id: doc.id,
+          ...jobData,
+          ...companyData,
+        };
+        console.log(combinedData);
+        // Push combined data to jobsData array
+        jobsData.push(combinedData);
+      }
+      dispatch(jobReadSuccess(jobsData));
+    } catch (err) {
+      dispatch(jobReadErr(err));
+    }
+  };
+};
+const jobSingleData = (jobUid) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(jobSingleBegin());
+      const jobData = await db.collection("jobs").doc(jobUid).get();
+      console.log(jobData);
+    } catch (err) {
+      console.log(err);
+      dispatch(jobSingleErr(err));
+    }
+  };
+};
+export { jobInsertData, jobReadData, jobSingleData };

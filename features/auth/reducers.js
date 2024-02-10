@@ -31,10 +31,10 @@ const initialState = {
   isSignUpLoading: false,
 };
 const initState = {
-  login: Cookies.get("logedIn"),
+  login: Cookies.get("logedIn")||null,
   loading: false,
   error: null,
-  role: Cookies.get("role"),
+  role: Cookies.get("role")||null,
 };
 
 const firebaseAuth = (state = initialState, action) => {

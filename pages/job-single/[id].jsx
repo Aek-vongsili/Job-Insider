@@ -6,6 +6,7 @@ import DefaulHeader from "../../components/header/DefaulHeader";
 import MobileMenu from "../../components/header/MobileMenu";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { wrapper } from "../../app/store";
 import Seo from "../../components/common/Seo";
 import RelatedJobs from "../../components/job-single-pages/related-jobs/RelatedJobs";
 import JobOverView from "../../components/job-single-pages/job-overview/JobOverView";
@@ -17,21 +18,15 @@ import Contact from "../../components/job-single-pages/shared-components/Contact
 import JobDetailsDescriptions from "../../components/job-single-pages/shared-components/JobDetailsDescriptions";
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
 import Layout from "../../components/Layout";
-import { doc, getDoc } from "firebase/firestore";
-// import { db } from "../../firebase/clientApp";
-import { format, compareAsc, parseISO } from "date-fns";
-import { useSelector } from "react-redux";
-import { selectJobById } from "../../features/job/jobSlice";
 import Link from "next/link";
 
-const JobSingleDynamicV1 = ({ job }) => {
+const JobSingleDynamicV1 = ({ jobData }) => {
   const router = useRouter();
+  console.log(jobData);
   const { id } = router.query;
   if (!id) {
     return <div>Loading...</div>; // Or display a different component if id is not present
   }
-  const jobData = JSON.parse(job);
-  console.log(jobData);
 
   const convertTimestampToDateTime = (timestampInSeconds) => {
     const timestampInMilliseconds = timestampInSeconds * 1000; // Convert to milliseconds
@@ -144,10 +139,7 @@ const JobSingleDynamicV1 = ({ job }) => {
                   {/* End .job-block-outer */}
 
                   <figure className="image">
-                    <img
-                      src={jobData?.company_info?.logoImage}
-                      alt="resource"
-                    />
+                    <img src={jobData?.profile.logoImage} alt="resource" />
                   </figure>
                   <JobDetailsDescriptions jobData={jobData} />
                   {/* End jobdetails content */}
@@ -254,7 +246,7 @@ const JobSingleDynamicV1 = ({ job }) => {
                         <div className="company-title">
                           <div className="company-logo">
                             <img
-                              src={jobData?.company_info?.logoImage}
+                              src={jobData?.profile?.logoImage}
                               alt="resource"
                             />
                           </div>
@@ -271,11 +263,11 @@ const JobSingleDynamicV1 = ({ job }) => {
                         </div>
                         {/* End company title */}
 
-                        <CompanyInfo company={jobData} />
+                        <CompanyInfo company={jobData?.profile} />
 
                         <div className="btn-box">
                           <a
-                            href={`https://${jobData?.company_info?.company_website}`}
+                            href={`https://${jobData?.profile?.company_website}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="theme-btn btn-style-three"
@@ -317,44 +309,35 @@ const JobSingleDynamicV1 = ({ job }) => {
     </>
   );
 };
-// export async function getServerSideProps(context) {
-//   const { params } = context;
-//   // console.log(params);
 
-//   let job = {};
-//   try {
-//     const docRef = doc(db, "job_features", `${params.id}`);
-//     const docSnap = await getDoc(docRef);
-//     if (docSnap.exists()) {
-//       // console.log("Document data:", docSnap.data());
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ query }) => {
+      const jobData = await store.firestore
+        .collection("jobs")
+        .doc(query.id)
+        .get();
+      const employerData = await store.firestore
+        .collection("employers")
+        .doc(jobData.data()?.company)
+        .get();
 
-//       const companyRef = doc(db, "employers", docSnap.data().company);
-//       const companySnap = await getDoc(companyRef);
-//       if (companySnap.exists()) {
-//         // console.log("Company data:", companySnap.data());
-//         const { profile, ...data } = companySnap.data();
-//         // setJobData({ ...docSnap.data(), ...profile });
-//         job = { ...docSnap.data(), ...profile };
-//       } else {
-//         console.log("No company document!");
-//       }
-//     } else {
-//       console.log("No job document!");
-//       return {
-//         notFound: true,
-//       };
-//     }
-//   } catch (error) {
-//     throw err;
-//   }
-//   const jobData = JSON.stringify(job);
-//   // console.log(jobData);
-//   return {
-//     props: {
-//       job: jobData,
-//     },
-//   };
-// }
+      // Check if jobData or employerData is undefined and handle accordingly
+      const serializedJobData = jobData.data()
+        ? JSON.parse(JSON.stringify(jobData.data()))
+        : null;
+      const serializedEmployerData = employerData.data()
+        ? JSON.parse(JSON.stringify(employerData.data()))
+        : null;
+      const combineData = { ...serializedJobData, ...serializedEmployerData };
+
+      return {
+        props: {
+          jobData: combineData,
+        },
+      };
+    }
+);
 export default dynamic(() => Promise.resolve(JobSingleDynamicV1), {
   ssr: false,
 });

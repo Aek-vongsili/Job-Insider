@@ -35,7 +35,7 @@ const reducer = (state, action) => {
   }
   return combineReducers({
     job: jobSlice,
-    fs: firestoreReducer,
+    // fs: firestoreReducer || null,
     firebase: firebaseReducer,
     firebaseAuth,
     auth: AuthReducer,

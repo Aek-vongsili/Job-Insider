@@ -1,15 +1,16 @@
 const IntroDescriptions = () => {
   return (
     <div className="text-box">
-      <h4>About Job Insider</h4>
+      <h4>About HubJob</h4>
       <p>
-        The "Job Insider" is co-owned by three of best friends who are
-        passionate and strong interest in advertising, job posting, and mobile
-        applications development by supporting our clients and customers to have
-        potential access to all types of their careers interested and job
-        prospects. Established on February 20, 2023. Our main goal is to support
-        private firms, INGOs, UN Agencies, embassies in Laos, and all interested
-        customers who intend to post job vacancies on their behalf.
+        <b>“HubJob Company Limited”</b> was founded on August 8, 2023, and is
+        co-owned by three of the best friends who are passionate about
+        advertising, job posting online, freelance/consulting connections, and
+        mobile application development. It provides professional support for
+        clients and customers to have potential access to all types of careers
+        and job prospects. Its prioritized goal is to support private firms,
+        INGOs, UN agencies, embassies in Laos/offshore business partners in
+        reaching a wide range of target audiences.
       </p>
       <h4>Our Mission </h4>
       <p>
@@ -32,15 +33,17 @@ const IntroDescriptions = () => {
         employers' perspective.
       </p>
       <h4>Our Services</h4>
-      <p>- Accept job posting and advertising online on our webpage</p>
       <p>
-        - Provide consultancy services on hiring and selection as well as
-        supporting to create a workable resume, cover letters, including provide
-        some strategies for our gentle customers. For instance, giving a useful
-        strategy for current job interview preparation and data collection and
-        analysis as well as salary survey/this will be our long-term goal in the
-        near future.
+        - Accept job posting and advertising online on our webpage <br/>
+        - Provide
+          consultancy services on hiring and selection as well as supporting to
+          create a workable resume, cover letters, including provide some
+          strategies for our gentle customers. For instance, giving a useful
+          strategy for current job interview preparation and data collection and
+          analysis as well as salary survey/this will be our long-term goal in the
+          near future.
       </p>
+      <p></p>
     </div>
   );
 };

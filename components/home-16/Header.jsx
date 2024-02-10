@@ -6,11 +6,7 @@ import employerMenuData from "../../data/employerMenuData";
 import candidatesMenuData from "../../data/candidatesMenuData";
 import { isActiveLink } from "../../utils/linkActiveChecker";
 import HeaderNavContent from "../header/HeaderNavContent";
-import { onAuthStateChanged, signOut } from "firebase/auth";
-// import { auth, db } from "../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogout, setUser, setRole } from "../../features/user/userSlice";
-
 import { fbAuthLogout, fbLoginCheck } from "../../features/auth/actionCreator";
 import { useFirebase } from "react-redux-firebase";
 
