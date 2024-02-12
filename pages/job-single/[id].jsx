@@ -317,6 +317,11 @@ export const getServerSideProps = wrapper.getServerSideProps(
         .collection("jobs")
         .doc(query.id)
         .get();
+      if (!jobData.data()) {
+        return {
+          notFound: true,
+        };
+      }
       const employerData = await store.firestore
         .collection("employers")
         .doc(jobData.data()?.company)

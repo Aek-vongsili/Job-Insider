@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import Seo from "../components/common/Seo";
 import JobListV5 from "../components/job-listing-pages/job-list-v5";
 import Layout from "../components/Layout";
-// import { db } from "../firebase/clientApp";
 const index = () => {
   return (
     <>
