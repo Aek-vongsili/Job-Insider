@@ -15,7 +15,7 @@ export default function Document() {
         />
         <meta
           name="description"
-          content="Superio - Job Borad React NextJS Template"
+          content="HubJob Company Limited is co-owned by three of our best friends who are passionate and have a strong interest in advertising, job posting, and application development. We support our clients and customers to have potential access to all types of careers and job prospects. Established on August 8th, 2023. Our main goal is to support private firms, INGOs, UN agencies, embassies in Laos, and all interested customers who intend to post job vacancies on their behalf to reach potential, qualifications, and other interest in applications from diverse industries."
         />
         <meta name="ibthemes" content="ATFN" />
 
