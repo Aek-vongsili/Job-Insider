@@ -4,13 +4,6 @@ function generateSiteMap() {
      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
        <!--We manually set the two URLs we know already-->
        <url>
-         <loc>https://jsonplaceholder.typicode.com</loc> 
-       </url>
-       <url>
-         <loc>https://jsonplaceholder.typicode.com/guide</loc>   
-       </url>
-       <!-- Add /about and /home URLs -->
-       <url>
          <loc>${process.env.NEXT_PUBLIC_BASE_URL}</loc>
          <lastmod>${currentDate}</lastmod>
          <changefreq>yearly</changefreq>
