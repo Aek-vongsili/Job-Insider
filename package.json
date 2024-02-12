@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "clean": "npx rimraf .next out",
-    "deploy": "firebase deploy --only functions,hosting"
+    "deploy": "firebase deploy --only functions,hosting",
+    "postbuild": "next-sitemap --config next-sitemap.config.js"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -40,6 +41,7 @@
     "js-cookie": "^3.0.5",
     "next": "13.0.5",
     "next-redux-wrapper": "^8.1.0",
+    "next-sitemap": "^4.2.3",
     "next-transpile-modules": "^10.0.0",
     "photoswipe": "^5.3.4",
     "react": "16.8.0",
