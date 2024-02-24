@@ -2,16 +2,17 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import cityData from "../../../../../../data/countryData";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { storage } from "../../../../../../firebase/clientApp";
-import { useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-// import { db } from "../../../../../../firebase/clientApp";
+import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../../Loading/Loading";
+import {
+  candidateProfileData,
+  candidateUpdateData,
+  candidateUploadFile,
+} from "../../../../../../features/candidates/actionCreator";
 const FormInfoBox = () => {
-  const [profileImg, setProfileImg] = useState("");
+  const dispatch = useDispatch();
+  const [profileImg, setProfileImg] = useState(null);
   const [profileUrl, setProfileUrl] = useState("");
   const [logoImgName, setLogoImgName] = useState("");
   const [formData, setFormData] = useState(new FormData());
@@ -21,9 +22,15 @@ const FormInfoBox = () => {
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [district, setDistrict] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const userUid = useSelector((state) => state.user?.user?.uid);
-  
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  const candidateData = useSelector((state) => {
+    return state.candidateSingle.data;
+  });
+  const loading = useSelector((state) => {
+    return state.candidateSingle.loading;
+  });
   const catOptions = [
     { value: "Banking", label: "Banking" },
     { value: "Digital & Creative", label: "Digital & Creative" },
@@ -107,26 +114,6 @@ const FormInfoBox = () => {
   const handleYearChange = (event) => {
     setYear(event.target.value);
   };
-  const uploadImage = async (img) => {
-    return new Promise((resolve, reject) => {
-      const imageName = `${Date.now()}_${uuidv4()}`;
-      const storageRef = ref(
-        storage,
-        `/user_profile/${userUid}/profile_Image/${imageName}`
-      );
-
-      uploadString(storageRef, img, "data_url")
-        .then((snapshot) => {
-          console.log("Uploaded a data_url string!");
-          getDownloadURL(snapshot.ref).then((url) => {
-            resolve(url);
-          });
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  };
 
   const handleProvinceChange = (e) => {
     const newState = e.target.value;
@@ -140,79 +127,58 @@ const FormInfoBox = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // setLoading(true);
-    // const userRef = doc(db, "users", userUid);
-    // if (profileImg) {
-    //   const profileUrl = await uploadImage(profileImg);
-    //   await updateDoc(userRef, {
-    //     "profile.userProfile.profileImage": profileUrl,
-    //   });
-    // }
-    // setDoc(
-    //   userRef,
-    //   {
-    //     profile: {
-    //       userProfile: {
-    //         ...formData,
-    //         dateOfBirth: `${day}/${month}/${year}`,
-    //         province: selectedProvince,
-    //         district: selectedDistrict,
-    //       },
-    //     },
-    //   },
-    //   { merge: true }
-    // )
-    //   .then((rs) => {
-    //     setLoading(false);
-    //     Swal.fire({
-    //       title: "Success",
-    //       text: "Update Your Information Success",
-    //       icon: "success",
-    //       confirmButtonText: "Accept",
-    //       timer: 3000,
-    //       timerProgressBar: true,
-    //     }).then(() => {
-    //       window.location.reload();
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     setLoading(false);
-    //     Swal.fire({
-    //       title: "Error",
-    //       text: "Something went wrong!",
-    //       icon: "error",
-    //       confirmButtonText: "Accept",
-    //       timer: 3500,
-    //       timerProgressBar: true,
-    //     });
-    //   });
-  };
-  const getProfileData = async () => {
-    // const userRef = doc(db, "users", userUid);
-    // const profileData = await getDoc(userRef);
-    // if (
-    //   profileData.exists() &&
-    //   profileData.data().profile &&
-    //   profileData.data().profile.userProfile
-    // ) {
-    //   const { profileImage, district, province, dateOfBirth, ...data } =
-    //     profileData.data()?.profile?.userProfile;
-    //   const [day, month, year] = dateOfBirth.split("/");
-    //   setDay(day);
-    //   setMonth(month);
-    //   setYear(year);
-    //   setProfileUrl(profileImage);
-    //   setFormData(data);
-    //   setSelectedProvince(province);
-    //   setDistrict(cityData[province] || []);
-    //   setSelectedDistrict(district);
-    // }
-    // console.log(profileData.data());
+    if (profileImg) {
+      dispatch(candidateUploadFile(profileImg, userUid));
+    }
+    dispatch(
+      candidateUpdateData({
+        ...formData,
+        dateOfBirth: `${day}/${month}/${year}`,
+        province: selectedProvince,
+        district: selectedDistrict,
+      })
+    )
+      .then((rs) => {
+        Swal.fire({
+          title: "Success",
+          text: "Update Your Information Success",
+          icon: "success",
+          confirmButtonText: "Accept",
+          timer: 3000,
+          timerProgressBar: true,
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong!",
+          icon: "error",
+          confirmButtonText: "Accept",
+          timer: 3500,
+          timerProgressBar: true,
+        });
+      });
   };
   useEffect(() => {
-    getProfileData();
-  }, []);
-
+    if (userUid) {
+      dispatch(candidateProfileData(userUid));
+    }
+  }, [dispatch, userUid]);
+  useEffect(() => {
+    if (candidateData?.profile) {
+      const { profileImage, district, province, dateOfBirth, ...data } =
+        candidateData?.profile;
+      const [day, month, year] = dateOfBirth.split("/");
+      setDay(day);
+      setMonth(month);
+      setYear(year);
+      setProfileUrl(profileImage);
+      setFormData(data);
+      setSelectedProvince(province);
+      setDistrict(cityData[province] || []);
+      setSelectedDistrict(district);
+    }
+  }, [candidateData]);
   return (
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="uploading-outer">
@@ -225,7 +191,7 @@ const FormInfoBox = () => {
             className="uploadButton-input"
             type="file"
             name="attachments[]"
-            accept="image/*"
+            accept="image/jpeg, image/jpg, image/png"
             id="upload"
             onChange={handleLogoUpload}
           />

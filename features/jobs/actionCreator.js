@@ -53,7 +53,6 @@ const jobReadData = () => {
           ...jobData,
           ...companyData,
         };
-        console.log(combinedData);
         // Push combined data to jobsData array
         jobsData.push(combinedData);
       }

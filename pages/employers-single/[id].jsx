@@ -46,7 +46,7 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
   return (
     <>
       <Layout>
-        <Seo pageTitle="Employers Single Dyanmic V1" />
+        <Seo pageTitle="Employers Details" />
 
         {/* <!-- Header Span --> */}
         <span className="header-span"></span>

@@ -68,7 +68,7 @@ const EditModal = ({
                   )}
                 </div>
                 <div className="form-group">
-                  <label>Since</label>
+                  <label>Dates Attended</label>
                   <div className="select-group">
                     <select
                       className="chosen-single form-select"
@@ -167,7 +167,6 @@ const AddEducation = ({
                   <label>Degree</label>
                   <select
                     name="degree"
-                    id=""
                     className="chosen-single form-select"
                     onChange={handleInputChange}
                   >
@@ -175,7 +174,9 @@ const AddEducation = ({
                       Select Degree
                     </option>
                     {degrees.map((i, index) => (
-                      <option value={i}>{i}</option>
+                      <option value={i} key={index}>
+                        {i}
+                      </option>
                     ))}
                   </select>
                   {errors?.degree && (
@@ -183,7 +184,7 @@ const AddEducation = ({
                   )}
                 </div>
                 <div className="form-group">
-                  <label>Since</label>
+                  <label>Dates Attended</label>
                   <div className="select-group">
                     <select
                       className="chosen-single form-select"
@@ -387,7 +388,7 @@ const Education = ({ setEducation, education, deleteEducation }) => {
                     validation={validation}
                     errors={errors}
                   />
-                  <button onClick={() => deleteEducation(index)}>
+                  <button onClick={() => deleteEducation(index)} type="button">
                     <span className="la la-trash"></span>
                   </button>
                 </div>

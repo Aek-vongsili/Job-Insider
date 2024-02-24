@@ -1,12 +1,22 @@
 import MobileMenu from "../../../header/MobileMenu";
 import LoginPopup from "../../../common/form/login/LoginPopup";
 import DashboardCandidatesSidebar from "../../../header/DashboardCandidatesSidebar";
-
 import CopyrightFooter from "../../CopyrightFooter";
 import MenuToggler from "../../MenuToggler";
 import Resume from "./components";
-import CvUploader from "./components/CvUploader";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { candidateProfileData } from "../../../../features/candidates/actionCreator";
 const index = () => {
+  const dispatch = useDispatch()
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  useEffect(() => {
+    if(userUid){
+      dispatch(candidateProfileData(userUid));
+    }
+  },[dispatch,userUid]);
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>

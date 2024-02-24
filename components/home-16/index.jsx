@@ -65,7 +65,7 @@ const index = () => {
       </section>
       {/* <!-- End Work Section --> */}
 
-      <section className="layout-pt-120 layout-pb-120 section-bg-color">
+      {/* <section className="layout-pt-120 layout-pb-120 section-bg-color">
         <div className="section-bg-color__item -full -very-light-blue"></div>
 
         <div className="auto-container">
@@ -75,7 +75,7 @@ const index = () => {
               Lorem ipsum dolor sit amet elit, sed do eiusmod tempor
             </div>
           </div>
-          {/* End sec-title */}
+       
 
           <div className="carousel-outer" data-aos="fade-up">
             <div className="candidates-carousel default-dots">
@@ -83,12 +83,12 @@ const index = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End Candidates Section --> */}
 
-      <section className="testimonial-section -type-2 layout-pt-120 layout-pb-120">
+      {/* <section className="testimonial-section -type-2 layout-pt-120 layout-pb-120">
         <div className="container-fluid">
-          {/* <!-- Sec Title --> */}
+         
           <div className="sec-title text-center">
             <h2>Testimonials From Our Customers</h2>
             <div className="text">
@@ -97,12 +97,12 @@ const index = () => {
           </div>
         </div>
         <div className="carousel-outer" data-aos="fade-up">
-          {/* <!-- Testimonial Carousel --> */}
+       
           <div className="testimonial-carousel gap-x25 center-item-active slick-list-visible">
             <Testimonial />
           </div>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End Testimonial Section --> */}
 
       <LoginRegBanner />

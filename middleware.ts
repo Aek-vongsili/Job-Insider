@@ -22,6 +22,8 @@ export default async function middleware(req: NextRequest) {
   } else {
     if (req.nextUrl.pathname.startsWith("/login")) {
       return NextResponse.redirect(new URL("/", req.url));
+    } else if (req.nextUrl.pathname.startsWith("/register")) {
+      return NextResponse.redirect(new URL("/", req.url));
     }
     return NextResponse.next();
   }
@@ -33,5 +35,6 @@ export const config = {
     "/employers-dashboard/:path*",
     "/login",
     "/candidates-dashboard/:path*",
+    "/register",
   ],
 };

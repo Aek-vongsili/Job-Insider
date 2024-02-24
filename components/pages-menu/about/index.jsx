@@ -82,19 +82,19 @@ const index = () => {
       </section>
       {/* <!-- End Testimonial Section --> */}
 
-      <section className="work-section style-two">
+      {/* <section className="work-section style-two">
         <div className="auto-container">
           <div className="sec-title text-center">
             <h2>How It Works?</h2>
             <div className="text">Job for anyone, anywhere</div>
           </div>
-          {/* End sec-title */}
+         
 
           <div className="row" data-aos="fade-up">
             <Block1 />
           </div>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End Work Section --> */}
 
       <section className="clients-section">

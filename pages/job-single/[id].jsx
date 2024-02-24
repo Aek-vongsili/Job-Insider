@@ -22,7 +22,6 @@ import Link from "next/link";
 
 const JobSingleDynamicV1 = ({ jobData }) => {
   const router = useRouter();
-  console.log(jobData);
   const { id } = router.query;
   if (!id) {
     return <div>Loading...</div>; // Or display a different component if id is not present
@@ -72,7 +71,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   return (
     <>
       <Layout>
-        <Seo pageTitle="Job Single Dyanmic V1" />
+        <Seo pageTitle="Job Details" />
         <span className="header-span"></span>
 
         {/* <LoginPopup /> */}
@@ -258,7 +257,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                             className="profile-link"
                             target="_blank"
                           >
-                            View company profile
+                            {jobData?.profile?.company_name}
                           </Link>
                         </div>
                         {/* End company title */}
@@ -266,14 +265,21 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         <CompanyInfo company={jobData?.profile} />
 
                         <div className="btn-box">
-                          <a
+                          {/* <a
                             href={`https://${jobData?.profile?.company_website}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="theme-btn btn-style-three"
                           >
                             {jobData?.company_info?.company_website}
-                          </a>
+                          </a> */}
+                          <Link
+                            href={`/employers-single/${jobData?.company}`}
+                            className="theme-btn btn-style-three"
+                            target="_blank"
+                          >
+                            View Company Profile
+                          </Link>
                         </div>
                         {/* End btn-box */}
                       </div>

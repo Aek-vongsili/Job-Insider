@@ -19,7 +19,11 @@ import userSlice from "../features/user/userSlice";
 import fbConfig from "../firebase/fbConfig";
 import { firebaseAuth, AuthReducer } from "../features/auth/reducers";
 import { employerSingle, employerReducer } from "../features/employer/reducers";
-import { jobReducer, jobSingleReducer } from "../features//jobs/reducers";
+import { jobReducer, jobSingleReducer } from "../features/jobs/reducers";
+import {
+  candidateReducer,
+  candidateSingleReducer,
+} from "../features/candidates/reducers";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import "firebase/compat/firestore";
@@ -47,6 +51,8 @@ const reducer = (state, action) => {
     jobs: jobReducer,
     jobSingle: jobSingleReducer,
     candidate: candidateSlice,
+    candidates: candidateReducer,
+    candidateSingle: candidateSingleReducer,
     candidateFilter: candidateFilterSlice,
     shop: shopSlice,
     user: userSlice,

@@ -122,7 +122,7 @@ const HeaderNavContent = () => {
           </li>
           {/* End Employers menu items */}
 
-          <li
+          {/* <li
             className={
               isActiveParent(candidateItems, router.asPath) ||
               router.asPath === "/candidates-dashboard/dashboard"
@@ -138,47 +138,8 @@ const HeaderNavContent = () => {
                 }>Candidates</span>
             </Link>
             
-            {/* <ul>
-              {candidateItems.map((item) => (
-                <li className="dropdown" key={item.id}>
-                  <span
-                    className={
-                      isActiveParentChaild(item.items, router.asPath)
-                        ? "current"
-                        : ""
-                    }
-                  >
-                    {item.title}
-                  </span>
-                  <ul>
-                    {item.items.map((menu, i) => (
-                      <li
-                        className={
-                          isActiveLink(menu.routePath, router.asPath)
-                            ? "current"
-                            : ""
-                        }
-                        key={i}
-                      >
-                        <Link href={menu.routePath}>{menu.name}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                </li>
-              ))}
-              <li
-                className={
-                  router.asPath === "/candidates-dashboard/dashboard"
-                    ? "current"
-                    : ""
-                }
-              >
-                <Link href="/candidates-dashboard/dashboard">
-                  Candidates Dashboard
-                </Link>
-              </li>
-            </ul> */}
-          </li>
+            
+          </li> */}
           {/* End Candidates menu items */}
 
           {/* <li

@@ -325,8 +325,8 @@ const Experiences = ({ experiences, setExperiences, deleteExperience }) => {
       </div>
       {/* <!-- Resume BLock --> */}
       {experiences?.map((i, index) => (
-        <div className="resume-block">
-          <div className="inner" key={index}>
+        <div className="resume-block" key={index}>
+          <div className="inner">
             <span className="name">S</span>
             <div className="title-box">
               <div className="info-box">
