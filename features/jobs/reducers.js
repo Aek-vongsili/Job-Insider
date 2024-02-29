@@ -12,12 +12,27 @@ const {
   JOB_SINGLE_BEGIN,
   JOB_SINGLE_SUCCESS,
   JOB_SINGLE_ERR,
+
+  FAV_JOB_BEGIN,
+  FAV_JOB_SUCCESS,
+  FAV_JOB_ERR,
+
+  REMOVE_FAV_JOB_BEGIN,
+  REMOVE_FAV_JOB_SUCCESS,
+  REMOVE_FAV_JOB_ERR,
+
+  FAV_JOB_GET_BEGIN,
+  FAV_JOB_GET_SUCCESS,
+  FAV_JOB_GET_ERR,
 } = actions;
 
 const initialState = {
   data: [],
   error: null,
   loading: false,
+  jobFavLike: null,
+  jobFavData: [],
+  jobFavLoading: false,
 };
 
 const initialStateSingle = {
@@ -64,6 +79,59 @@ const jobReducer = (state = initialState, action) => {
         error: err,
         loading: false,
       };
+    case FAV_JOB_BEGIN:
+      return {
+        ...state,
+        jobFavLoading: true,
+      };
+    case FAV_JOB_SUCCESS:
+      return {
+        ...state,
+        jobFavLike: data,
+        jobFavLoading: false,
+      };
+    case FAV_JOB_ERR:
+      return {
+        ...state,
+        error: err,
+        jobFavLoading: false,
+      };
+
+    case REMOVE_FAV_JOB_BEGIN:
+      return {
+        ...state,
+        jobFavLoading: true,
+      };
+    case REMOVE_FAV_JOB_SUCCESS:
+      return {
+        ...state,
+        jobFavLike: data,
+        jobFavLoading: false,
+      };
+    case REMOVE_FAV_JOB_ERR:
+      return {
+        ...state,
+        error: err,
+        jobFavLoading: false,
+      };
+
+    case FAV_JOB_GET_BEGIN:
+      return {
+        ...state,
+        jobFavLoading: true,
+      };
+    case FAV_JOB_GET_SUCCESS:
+      return {
+        ...state,
+        jobFavData: data,
+        jobFavLoading: false,
+      };
+    case FAV_JOB_GET_ERR:
+      return {
+        ...state,
+        error: err,
+        jobFavLoading: false,
+      };
     default:
       return state;
   }
@@ -93,4 +161,4 @@ const jobSingleReducer = (state = initialStateSingle, action) => {
       return state;
   }
 };
-export {jobReducer,jobSingleReducer}
+export { jobReducer, jobSingleReducer };

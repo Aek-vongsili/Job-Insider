@@ -15,22 +15,15 @@ import {
   addSort,
 } from "../../../features/filter/filterSlice";
 import { useEffect, useState } from "react";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
-// import { db } from "../../../firebase/clientApp";
 import { useRouter } from "next/router";
 import { setLoading } from "../../../features/user/userSlice";
-import { jobReadData } from "../../../features/jobs/actionCreator";
-// import Loading from "../../Loading/Loading";
+import {
+  favouriteJobAdd,
+  getFavouriteJob,
+  jobReadData,
+  removeFavouriteJob,
+} from "../../../features/jobs/actionCreator";
+
 const Loading = () => {
   return (
     <div class="loader">
@@ -42,54 +35,45 @@ const Loading = () => {
   );
 };
 const BookmarkIcon = ({ jobId }) => {
-  const useruid = useSelector((state) => state.user.user?.uid);
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  const dispatch = useDispatch();
   // const newFavoriteJobRef = doc(collection(db, `users/${useruid}/favoriteJob`));
   const [like, setLike] = useState(false);
-
+  const favJobData = useSelector((state) => {
+    return state.jobs.jobFavData;
+  });
   useEffect(() => {
-    const checkIfLiked = async () => {
-      // try {
-      //   const dateRef = query(
-      //     collection(db, `users/${useruid}/favoriteJob`),
-      //     where("jobId", "==", jobId)
-      //   );
-      //   const snapshot = await getDocs(dateRef);
-      //   if (!snapshot.empty) {
-      //     setLike(true);
-      //   }
-      // } catch (error) {
-      //   console.error("Error checking if liked:", error);
-      // }
-    };
-    if (useruid) {
-      checkIfLiked();
+    dispatch(getFavouriteJob(userUid));
+  }, [userUid, like]);
+  useEffect(() => {
+    const isJobFavorited = favJobData.some((job) => job.jobId === jobId);
+    if (isJobFavorited) {
+      setLike(true); // Set like to true if the job is favorited
+    } else {
+      setLike(false); // Set like to false if the job is not favorited
     }
-  }, [useruid, jobId, setLoading]);
+  }, [jobId, favJobData]);
   const saveShow = async () => {
-    if (!useruid) {
-      return alert("not login");
+    if (!userUid) {
+      alert("not login");
+      return;
+    } else {
+      const isJobAlreadySaved = favJobData.some((job) => job.jobId === jobId);
+
+      if (isJobAlreadySaved) {
+        // If the job is already saved, remove it from favorites
+        dispatch(removeFavouriteJob(userUid, jobId)).then(() => {
+          setLike(false); // Update the like state to false
+        });
+      } else {
+        // If the job is not saved, add it to favorites
+        dispatch(favouriteJobAdd(userUid, jobId)).then(() => {
+          setLike(true); // Update the like state to true
+        });
+      }
     }
-    // try {
-    //   if (like) {
-    //     const dateRef = query(
-    //       collection(db, `users/${useruid}/favoriteJob`),
-    //       where("jobId", "==", jobId)
-    //     );
-    //     const snapshot = await getDocs(dateRef);
-    //     snapshot.forEach(async (docSnap) => {
-    //       await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, docSnap.id));
-    //       setLike(false);
-    //     });
-    //   } else {
-    //     await setDoc(newFavoriteJobRef, {
-    //       jobId: jobId,
-    //       createdAt: new Date(),
-    //     });
-    //     setLike(true);
-    //   }
-    // } catch (err) {
-    //   console.log(err);
-    // }
   };
 
   return (

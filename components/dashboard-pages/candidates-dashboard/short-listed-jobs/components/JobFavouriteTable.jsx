@@ -1,25 +1,25 @@
 import Link from "next/link.js";
 import jobs from "../../../../../data/job-featured.js";
 import { useEffect, useState } from "react";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-// import { db } from "../../../../../firebase/clientApp.js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router.js";
+import {
+  getFavouriteJob,
+  removeFavouriteJob,
+} from "../../../../../features/jobs/actionCreator.js";
 
 const JobFavouriteTable = () => {
   const router = useRouter();
-  const [jobData, setJobData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const useruid = useSelector((state) => state.user.user?.uid);
-  console.log(jobData);
+  const dispatch = useDispatch();
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  const jobData = useSelector((state) => {
+    return state.jobs.jobFavData;
+  });
+  const loading = useSelector((state) => {
+    return state.jobs.jobFavLoading;
+  });
   const convertDateTime = (datetime) => {
     const date = new Date(
       datetime.seconds * 1000 + datetime.nanoseconds / 1000000
@@ -35,44 +35,12 @@ const JobFavouriteTable = () => {
     return formattedDate;
   };
   const handleDelete = async (favId) => {
-    // await deleteDoc(doc(db, `users/${useruid}/favoriteJob`, favId));
-    getFavoriteJobData();
-  };
-  const getFavoriteJobData = async () => {
-    // const dateRef = collection(db, `users/${useruid}/favoriteJob`);
-
-    // const querySnapshot = await getDocs(dateRef);
-    // console.log(querySnapshot);
-    // const jobDataArray = [];
-
-    // await Promise.all(
-    //   querySnapshot.docs.map(async (docSnap) => {
-    //     const getJobData = await getDoc(
-    //       doc(db, "job_features", docSnap.data()?.jobId)
-    //     );
-    //     if (getJobData.exists()) {
-    //       const getCompany = await getDoc(
-    //         doc(db, "employers", getJobData.data()?.company)
-    //       );
-    //       if (getCompany.exists()) {
-    //         jobDataArray.push({
-    //           ...getJobData.data(),
-    //           ...getCompany.data()?.profile,
-    //           jobid: getJobData.id,
-    //           favJobId: docSnap.id,
-    //           createdAt: docSnap.data()?.createdAt,
-    //         });
-    //       }
-    //     }
-    //   })
-    // );
-
-    // setJobData(jobDataArray);
-    // setLoading(false);
+    await dispatch(removeFavouriteJob(userUid, favId));
+    await dispatch(getFavouriteJob(userUid));
   };
   useEffect(() => {
-    getFavoriteJobData();
-  }, []);
+    dispatch(getFavouriteJob(userUid));
+  }, [userUid, dispatch]);
 
   return (
     <div className="tabs-box">
@@ -109,7 +77,15 @@ const JobFavouriteTable = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td>Loading...</td>
+                    <td
+                      colSpan="4"
+                      style={{
+                        textAlign: "center",
+                        position: "relative",
+                      }}
+                    >
+                      Loading...
+                    </td>
                   </tr>
                 ) : (
                   jobData?.map((item, index) => (
@@ -120,24 +96,21 @@ const JobFavouriteTable = () => {
                           <div className="inner-box">
                             <div className="content">
                               <span className="company-logo">
-                                <img
-                                  src={item?.company_info?.logoImage}
-                                  alt="logo"
-                                />
+                                <img src={item?.logoImage} alt="logo" />
                               </span>
                               <h4>
-                                <Link href={`/job-single/${item?.jobid}`}>
-                                  {item.jobTitle}
+                                <Link href={`/job-single/${item?.jobId}`}>
+                                  {item?.jobTitle}
                                 </Link>
                               </h4>
                               <ul className="job-info">
                                 <li>
                                   <span className="icon flaticon-briefcase"></span>
-                                  {item?.company_info?.company_name}
+                                  {item?.company_name}
                                 </li>
                                 <li>
                                   <span className="icon flaticon-map-locator"></span>
-                                  {item?.location?.address}
+                                  {item?.address}
                                 </li>
                               </ul>
                             </div>
@@ -153,7 +126,7 @@ const JobFavouriteTable = () => {
                               <button
                                 data-text="View Aplication"
                                 onClick={() =>
-                                  router.push(`/job-single/${item?.jobid}`)
+                                  router.push(`/job-single/${item?.jobId}`)
                                 }
                               >
                                 <span className="la la-eye"></span>
@@ -162,7 +135,7 @@ const JobFavouriteTable = () => {
                             <li>
                               <button
                                 data-text="Delete Aplication"
-                                onClick={() => handleDelete(item?.favJobId)}
+                                onClick={() => handleDelete(item?.jobId)}
                               >
                                 <span className="la la-trash"></span>
                               </button>

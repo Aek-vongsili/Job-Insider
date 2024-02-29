@@ -37,6 +37,9 @@ const reducer = (state, action) => {
       ...action.payload,
     };
   }
+  if (action.type === "LOGOUT_SUCCESS") {
+    state = undefined;
+  }
   return combineReducers({
     job: jobSlice,
     // fs: firestoreReducer || null,

@@ -13,6 +13,18 @@ const {
   jobReadBegin,
   jobReadSuccess,
   jobReadErr,
+
+  favJobBegin,
+  favJobSuccess,
+  favJobErr,
+
+  favJobGetBegin,
+  favJobGetSuccess,
+  favJobGetErr,
+
+  removeFavJobBegin,
+  removeFavJobSuccess,
+  removeFavJobErr,
 } = actions;
 
 const jobInsertData = (jobData) => {
@@ -75,4 +87,119 @@ const jobSingleData = (jobUid) => {
     }
   };
 };
-export { jobInsertData, jobReadData, jobSingleData };
+
+const favouriteJobAdd = (userUid, jobId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    const fb = getFirebase();
+    try {
+      dispatch(favJobBegin());
+      await db
+        .collection("candidates")
+        .doc(userUid)
+        .set(
+          {
+            favouriteJobs: db.FieldValue.arrayUnion({
+              jobId: jobId,
+              createdAt: new Date(),
+            }),
+          },
+          { merge: true }
+        );
+
+      dispatch(favJobSuccess());
+    } catch (err) {
+      dispatch(favJobErr(err));
+    }
+  };
+};
+
+const removeFavouriteJob = (userUid, jobId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(removeFavJobBegin());
+
+      const userDocRef = db.collection("candidates").doc(userUid);
+
+      // Get the current document data
+      const userDoc = await userDocRef.get();
+      if (!userDoc.exists) {
+        throw new Error("Document does not exist");
+      }
+
+      // Remove the item from the array
+      const updatedFavouriteJobs = userDoc
+        .data()
+        .favouriteJobs.filter((job) => job.jobId !== jobId);
+
+      // Update the document with the modified array
+      await userDocRef.update({
+        favouriteJobs: updatedFavouriteJobs,
+      });
+
+      dispatch(removeFavJobSuccess());
+    } catch (err) {
+      console.log(err);
+      dispatch(removeFavJobErr(err));
+    }
+  };
+};
+
+const getFavouriteJob = (uid) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(favJobGetBegin());
+      // Retrieve candidate data from Firestore
+      const candidateData = await db.collection("candidates").doc(uid).get();
+
+      // Check if the candidate data exists and contains favorite jobs
+      if (candidateData.exists && candidateData.data()?.favouriteJobs) {
+        const favouriteJobs = candidateData.data().favouriteJobs;
+        const favJobData = [];
+
+        // Use Promise.all() to await all asynchronous operations
+        await Promise.all(
+          favouriteJobs.map(async ({ jobId, createdAt }) => {
+            const jobDoc = await db.collection("jobs").doc(jobId).get();
+            if (jobDoc.exists) {
+              const { company, jobTitle, deadlineDate } = jobDoc.data();
+              const employer = await db
+                .collection("employers")
+                .doc(company)
+                .get();
+              const { profile, location } = employer.data();
+              const { company_name, logoImage } = profile;
+              favJobData.push({
+                ...location,
+                company,
+                logoImage,
+                company_name,
+                jobTitle,
+                deadlineDate,
+                jobId: jobDoc.id,
+                createdAt,
+              }); // Push the job data into favJobData array
+            }
+          })
+        );
+        dispatch(favJobGetSuccess(favJobData));
+      } else {
+        dispatch(favJobGetSuccess([]));
+      }
+    } catch (err) {
+      // Handle errors
+      console.log(err);
+      dispatch(favJobGetErr(err));
+    }
+  };
+};
+export {
+  jobInsertData,
+  jobReadData,
+  jobSingleData,
+  favouriteJobAdd,
+  getFavouriteJob,
+  removeFavouriteJob,
+};

@@ -11,6 +11,18 @@ const actions = {
   JOB_INSERT_SUCCESS: "JOB_INSERT_SUCCESS",
   JOB_INSERT_ERR: "JOB_INSERT_ERR",
 
+  FAV_JOB_BEGIN: "FAV_JOB_BEGIN",
+  FAV_JOB_SUCCESS: "FAV_JOB_SUCCESS",
+  FAV_JOB_ERR: "FAV_JOB_ERR",
+
+  REMOVE_FAV_JOB_BEGIN: "REMOVE_FAV_JOB_BEGIN",
+  REMOVE_FAV_JOB_SUCCESS: "REMOVE_FAV_JOB_SUCCESS",
+  REMOVE_FAV_JOB_ERR: "REMOVE_FAV_JOB_ERR",
+
+  FAV_JOB_GET_BEGIN: "FAV_JOB_GET_BEGIN",
+  FAV_JOB_GET_SUCCESS: "FAV_JOB_GET_SUCCESS",
+  FAV_JOB_GET_ERR: "FAV_JOB_GET_ERR",
+
   jobReadBegin: () => {
     return {
       type: actions.JOBS_READ_BEGIN,
@@ -21,6 +33,7 @@ const actions = {
       type: actions.JOBS_READ_SUCCESS,
       data,
     };
+    s;
   },
 
   jobReadErr: (err) => {
@@ -62,6 +75,60 @@ const actions = {
   jobSingleErr: (err) => {
     return {
       type: actions.JOB_SINGLE_ERR,
+      err,
+    };
+  },
+  favJobBegin: () => {
+    return {
+      type: actions.FAV_JOB_BEGIN,
+    };
+  },
+  favJobSuccess: (data) => {
+    return {
+      type: actions.FAV_JOB_SUCCESS,
+      data,
+    };
+  },
+
+  favJobErr: (err) => {
+    return {
+      type: actions.FAV_JOB_ERR,
+      err,
+    };
+  },
+  removeFavJobBegin: () => {
+    return {
+      type: actions.REMOVE_FAV_JOB_BEGIN,
+    };
+  },
+  removeFavJobSuccess: (data) => {
+    return {
+      type: actions.REMOVE_FAV_JOB_SUCCESS,
+      data,
+    };
+  },
+
+  removeFavJobErr: (err) => {
+    return {
+      type: actions.REMOVE_FAV_JOB_ERR,
+      err,
+    };
+  },
+  favJobGetBegin: () => {
+    return {
+      type: actions.FAV_JOB_GET_BEGIN,
+    };
+  },
+  favJobGetSuccess: (data) => {
+    return {
+      type: actions.FAV_JOB_GET_SUCCESS,
+      data,
+    };
+  },
+
+  favJobGetErr: (err) => {
+    return {
+      type: actions.FAV_JOB_GET_ERR,
       err,
     };
   },

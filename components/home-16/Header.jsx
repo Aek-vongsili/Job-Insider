@@ -16,7 +16,9 @@ const Header = () => {
   const dispatch = useDispatch();
   const firebase = useFirebase();
   // const isLogin = useSelector((state) => state.user.isLoggedIn);
-  const role = useSelector((state) => state.auth.role);
+  const role = useSelector((state) => {
+    return state.auth.role;
+  });
   const employerImg = useSelector(
     (state) => state.employerProfile?.company_info
   );
