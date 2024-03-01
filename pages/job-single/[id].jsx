@@ -22,6 +22,7 @@ import Link from "next/link";
 
 const JobSingleDynamicV1 = ({ jobData }) => {
   const router = useRouter();
+  const employerData = "";
   const { id } = router.query;
   if (!id) {
     return <div>Loading...</div>; // Or display a different component if id is not present
@@ -67,6 +68,19 @@ const JobSingleDynamicV1 = ({ jobData }) => {
       return `${years} ${years === 1 ? "year" : "years"} ago`;
     }
   };
+  const styleClass = (jobType) => {
+    switch (jobType) {
+      case "Full-Time":
+      case "Part-Time":
+      case "Contract/Freelance":
+        return "time";
+      case "Temporary":
+      case "Internship":
+        return "privacy";
+      case "Remote/Telecommute":
+        return "required";
+    }
+  };
 
   return (
     <>
@@ -84,62 +98,121 @@ const JobSingleDynamicV1 = ({ jobData }) => {
         {/* End MobileMenu */}
 
         {/* <!-- Job Detail Section --> */}
-        <section className="job-detail-section style-two">
+        <section className="job-detail-section">
+          <div className="upper-box">
+            <div className="auto-container">
+              <div className="job-block-seven">
+                <div className="inner-box">
+                  <div className="content">
+                    <span className="company-logo">
+                      <img src={jobData?.profile?.logoImage} alt="logo" />
+                    </span>
+                    <h4>{jobData?.jobTitle}</h4>
+
+                    <ul className="job-info">
+                      <li>
+                        <span className="icon flaticon-briefcase"></span>
+                        {jobData?.profile?.company_name}
+                      </li>
+                      {/* compnay info */}
+                      <li>
+                        <span className="icon flaticon-map-locator"></span>
+                        {jobData?.location?.address}
+                      </li>
+                      {/* location info */}
+                      <li>
+                        <span className="icon flaticon-clock-3"></span>{" "}
+                        {calculateTimeDistanceFromNow(
+                          jobData?.createdAt?.seconds
+                        )}
+                      </li>
+                      {/* time info */}
+                      <li>
+                        <span className="icon flaticon-money"></span>{" "}
+                        {jobData?.salary}
+                      </li>
+                      {/* salary info */}
+                    </ul>
+                    {/* End .job-info */}
+
+                    <ul className="job-other-info">
+                      {/* {company?.jobType?.map((val, i) => ( */}
+                      <li className={`${styleClass(jobData?.jobType)}`}>
+                        {jobData?.jobType}
+                      </li>
+                      {/* ))} */}
+                    </ul>
+                    {/* End .job-other-info */}
+                  </div>
+                  {/* End .content */}
+
+                  <div
+                    className="action"
+                    style={{ display: "block", textAlign: "right" }}
+                  >
+                    <div
+                      className="deadline-time"
+                      style={{ marginBottom: "15px" }}
+                    >
+                      {"Application ends : "}
+                      <strong style={{ color: "red" }}>
+                        {new Date(jobData?.deadlineDate).toLocaleDateString(
+                          "en-GB"
+                        )}
+                      </strong>
+                    </div>
+
+                    <button
+                      href="#"
+                      className="theme-btn btn-style-one"
+                      data-bs-toggle="modal"
+                      data-bs-target="#applyJobModal"
+                      style={{ minWidth: "222px" }}
+                    >
+                      Apply now
+                    </button>
+                    <button className="bookmark-btn">
+                      <i className="flaticon-bookmark"></i>
+                    </button>
+                  </div>
+                  {/* End apply for job btn */}
+
+                  {/* <!-- Modal --> */}
+                  <div
+                    className="modal fade"
+                    id="applyJobModal"
+                    tabIndex="-1"
+                    aria-hidden="true"
+                  >
+                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                      <div className="apply-modal-content modal-content">
+                        <div className="text-center">
+                          <h3 className="title">Apply for this job</h3>
+                          <button
+                            type="button"
+                            className="closed-modal"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                          ></button>
+                        </div>
+                        {/* End modal-header */}
+
+                        <ApplyJobModalContent />
+                        {/* End PrivateMessageBox */}
+                      </div>
+                      {/* End .send-private-message-wrapper */}
+                    </div>
+                  </div>
+                  {/* End .modal */}
+                </div>
+              </div>
+              {/* <!-- Job Block --> */}
+            </div>
+          </div>
           <div className="job-detail-outer">
             <div className="auto-container">
               <div className="row">
                 <div className="content-column col-lg-8 col-md-12 col-sm-12">
-                  <div className="job-block-outer">
-                    <div className="job-block-seven style-two">
-                      <div className="inner-box">
-                        <div className="content">
-                          <h4>{jobData?.jobTitle}</h4>
-
-                          <ul className="job-info">
-                            <li>
-                              <span className="icon flaticon-briefcase"></span>
-                              {jobData?.company_info?.company_name}
-                            </li>
-                            {/* compnay info */}
-                            <li>
-                              <span className="icon flaticon-map-locator"></span>
-                              {jobData?.location?.address}
-                            </li>
-                            {/* location info */}
-                            <li>
-                              <span className="icon flaticon-clock-3"></span>{" "}
-                              {calculateTimeDistanceFromNow(
-                                jobData?.createdAt?.seconds
-                              )}
-                            </li>
-                            {/* time info */}
-                            <li>
-                              <span className="icon flaticon-money"></span>{" "}
-                              {jobData?.salary}
-                            </li>
-                            {/* salary info */}
-                          </ul>
-                          {/* End .job-info */}
-
-                          <ul className="job-other-info">
-                            {/* {company?.jobType?.map((val, i) => (
-                              <li key={i} className={`${val.styleClass}`}>
-                                {val.type}
-                              </li>
-                            ))} */}
-                          </ul>
-                          {/* End .job-other-info */}
-                        </div>
-                        {/* End .content */}
-                      </div>
-                    </div>
-                    {/* <!-- Job Block --> */}
-                  </div>
-                  {/* End .job-block-outer */}
-
-                  <figure className="image">
-                    <img src={jobData?.profile.logoImage} alt="resource" />
-                  </figure>
                   <JobDetailsDescriptions jobData={jobData} />
                   {/* End jobdetails content */}
 
@@ -168,19 +241,6 @@ const JobSingleDynamicV1 = ({ jobData }) => {
 
                 <div className="sidebar-column col-lg-4 col-md-12 col-sm-12">
                   <aside className="sidebar">
-                    <div className="btn-box">
-                      <a
-                        href="#"
-                        className="theme-btn btn-style-one"
-                        data-bs-toggle="modal"
-                        data-bs-target="#applyJobModal"
-                      >
-                        Apply For Job
-                      </a>
-                      <button className="bookmark-btn">
-                        <i className="flaticon-bookmark"></i>
-                      </button>
-                    </div>
                     {/* End apply for job btn */}
 
                     {/* <!-- Modal --> */}
@@ -242,7 +302,10 @@ const JobSingleDynamicV1 = ({ jobData }) => {
 
                     <div className="sidebar-widget company-widget">
                       <div className="widget-content">
-                        <div className="company-title">
+                        <div
+                          className="company-title"
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
                           <div className="company-logo">
                             <img
                               src={jobData?.profile?.logoImage}

@@ -9,11 +9,11 @@ const Footer = () => {
       <div className="auto-container">
         <div className="widgets-section" data-aos="fade-up">
           <div className="row">
-            <div className="big-column col-xl-3 col-lg-3 col-md-12">
+            <div className="big-column col-xl-4 col-lg-6 col-md-12">
               <div className="footer-column about-widget">
                 <div className="logo">
                   <Link href="/">
-                    <Image src="/images/Artboard 6.svg" alt="brand" width={120} height={120}/>
+                    <Image src="/images/Artboard 6.svg" alt="brand" width={110} height={110}/>
                   </Link>
                 </div>
                 <p className="phone-num">
@@ -21,8 +21,8 @@ const Footer = () => {
                   <a href="thebeehost@support.com">+856 20 55969965</a>
                 </p>
                 <p className="address">
-                  Phaxay, Sixattanak, Vientiane
-                  <br /> Laos <br />
+                  Phaxay, Sixattanak, Vientiane, Laos
+                <br />
                   <a href="mailto:kettakoun8899@gmail.com" className="email">
                    Hubjob@gmail.com
                   </a>
@@ -31,16 +31,16 @@ const Footer = () => {
             </div>
             {/* End footer address left widget */}
 
-            <div className="big-column col-xl-9 col-lg-9 col-md-12">
+            <div className="big-column col-xl-8 col-lg-9 col-md-12">
               <div className="row">
                 <FooterContent3 />
 
-                <div className="footer-column col-lg-3 col-md-6 col-sm-12">
+                {/* <div className="footer-column col-lg-3 col-md-6 col-sm-12">
                   <div className="footer-widget">
                     <h4 className="widget-title">Mobile Apps</h4>
                     <FooterApps2 />
                   </div>
-                </div>
+                </div> */}
               </div>
               {/* End .row */}
             </div>

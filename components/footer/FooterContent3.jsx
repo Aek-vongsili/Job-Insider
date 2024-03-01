@@ -6,7 +6,7 @@ const FooterContent3 = () => {
     <>
       {footerContent.slice(0, 3).map((item) => (
         <div
-          className="footer-column col-lg-3 col-md-6 col-sm-12"
+          className="footer-column col-lg-4 col-md-6 col-sm-12"
           key={item.id}
         >
           <div className="footer-widget links-widget">

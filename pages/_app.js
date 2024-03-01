@@ -17,8 +17,6 @@ if (typeof window !== "undefined") {
 }
 
 function MyApp({ Component, ...rest }) {
- 
-
   useEffect(() => {
     Aos.init({
       duration: 1400,
@@ -45,8 +43,8 @@ function MyApp({ Component, ...rest }) {
 
           {/* Toastify */}
           <ToastContainer
-            position="bottom-right"
-            autoClose={500}
+            position="top-center"
+            autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
@@ -54,7 +52,7 @@ function MyApp({ Component, ...rest }) {
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="colored"
+            theme="light"
           />
           {/* Scroll To Top */}
           <ScrollToTop />

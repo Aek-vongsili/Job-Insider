@@ -1,6 +1,6 @@
-import { ca } from "date-fns/locale";
-import actions from "./actions";
 
+import actions from "./actions";
+import { toast } from "react-toastify";
 const {
   jobSingleBegin,
   jobSingleSuccess,
@@ -108,6 +108,7 @@ const favouriteJobAdd = (userUid, jobId) => {
         );
 
       dispatch(favJobSuccess());
+      toast.success("Added to favorites")
     } catch (err) {
       dispatch(favJobErr(err));
     }
@@ -139,6 +140,7 @@ const removeFavouriteJob = (userUid, jobId) => {
       });
 
       dispatch(removeFavJobSuccess());
+      toast.error("Removed from favorites")
     } catch (err) {
       console.log(err);
       dispatch(removeFavJobErr(err));

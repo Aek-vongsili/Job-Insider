@@ -606,7 +606,7 @@ Job Section Two
   transition: all 300ms ease;
 }
 
-.job-block-two .company-logo img {
+.job-block-two img {
   display: block;
   width: 100%;
 }
@@ -1372,7 +1372,8 @@ Job Detail Section
 
 .job-block-seven .company-logo img {
   display: block;
-  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 .job-block-seven h4 {
@@ -1695,6 +1696,7 @@ Job Detail Section
 .job-overview li {
   position: relative;
   padding-left: 50px;
+
   &:not(:last-child) {
     margin-bottom: 30px;
   }
