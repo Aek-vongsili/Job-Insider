@@ -32,6 +32,8 @@ const index = () => {
         activeIndex={index}
         onSelect={handleSelect}
         interval={null}
+        touch={true}
+        bsPrefix="carousel"
       >
         {imagePath.map((i, index) => (
           <Carousel.Item key={i.id}>
