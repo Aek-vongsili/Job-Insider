@@ -8,20 +8,22 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { wrapper, newStore } from "../app/store";
 import firebase from "firebase/compat/app";
-import fbConfig from "../firebase/fbConfig";
 import LoadingLayout from "../components/layouts/LoadingLayout";
 import { createFirestoreInstance } from "redux-firestore";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
 }
-import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 function MyApp({ Component, ...rest }) {
   useEffect(() => {
     Aos.init({
       duration: 1400,
       once: true,
     });
+  }, []);
+  useEffect(() => {
+    require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
   const { store, props } = wrapper.useWrappedStore(rest);

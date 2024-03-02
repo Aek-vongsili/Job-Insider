@@ -17,7 +17,7 @@ const index = () => {
       setIndex((prevIndex) =>
         prevIndex === imagePath.length - 1 ? 0 : prevIndex + 1
       );
-    }, 2000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [imagePath.length]);
