@@ -34,14 +34,14 @@ const IntroDescriptions = () => {
       </p>
       <h4>Our Services</h4>
       <p>
-        - Accept job posting and advertising online on our webpage <br/>
-        - Provide
-          consultancy services on hiring and selection as well as supporting to
-          create a workable resume, cover letters, including provide some
-          strategies for our gentle customers. For instance, giving a useful
-          strategy for current job interview preparation and data collection and
-          analysis as well as salary survey/this will be our long-term goal in the
-          near future.
+        1. Provide job posting and advertising online on our webpage. <br />
+        2. Provide consultancy services on hiring and selection as well as
+        supporting to create a workable resume, cover letters, including provide
+        some strategies for our gentle customers. For instance, giving a useful
+        strategy for current job interview preparation and data collection and
+        analysis as well as salary survey/this will be our long-term goal in the
+        near future. <br />
+        3. Other services.
       </p>
       <p></p>
     </div>

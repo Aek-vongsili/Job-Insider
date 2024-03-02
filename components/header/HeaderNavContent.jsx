@@ -225,6 +225,19 @@ const HeaderNavContent = () => {
               </span>
             </Link>
           </li>
+          <li>
+            <Link href={"/pricing"}>
+              <span
+                className={
+                  isActiveLink(pageItems[0].routePath, router.asPath)
+                    ? "current"
+                    : ""
+                }
+              >
+                Pricing
+              </span>
+            </Link>
+          </li>
           {/* End Pages menu items */}
         </ul>
       </nav>

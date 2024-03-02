@@ -1,4 +1,4 @@
-// import { auth } from "../firebase/clientApp";
+
 
 export default [
     {
@@ -30,5 +30,10 @@ export default [
         id: 6,
         label: "about",
         routePath: "/about"
+    },
+    {
+        id: 7,
+        label: "pricing",
+        routePath: "/pricing"
     },
 ];

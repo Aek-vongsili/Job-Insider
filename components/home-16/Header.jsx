@@ -70,17 +70,7 @@ const Header = () => {
   };
   return (
     // <!-- Main Header-->
-    <header
-      className={`main-header header-style-four -type-16 ${
-        router.pathname === "/"
-          ? navbar
-            ? "fixed-header animated slideInDown"
-            : ""
-          : navbar
-          ? "fixed-header animated slideInDown"
-          : "fixed-header"
-      }`}
-    >
+    <header className="main-header header-style-four -type-16 fixed-header">
       <div className="container-fluid">
         <div className="main-box">
           {/* <!--Nav Outer --> */}

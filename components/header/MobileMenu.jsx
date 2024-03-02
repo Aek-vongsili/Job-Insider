@@ -18,7 +18,7 @@ const MobileMenu = () => {
   return (
     // <!-- Main Header-->
     <header className="main-header main-header-mobile">
-      <div className="auto-container">
+      <div className="auto-container" style={{height:100,display:"grid"}}>
         {/* <!-- Main box --> */}
         <div className="inner-box">
           <div className="nav-outer">
