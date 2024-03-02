@@ -15,7 +15,7 @@ import { ReactReduxFirebaseProvider } from "react-redux-firebase";
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
 }
-
+import "bootstrap/dist/css/bootstrap.css";
 function MyApp({ Component, ...rest }) {
   useEffect(() => {
     Aos.init({
