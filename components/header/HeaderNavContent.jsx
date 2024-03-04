@@ -4,7 +4,7 @@ import {
   isActiveLink,
   isActiveParentChaild,
 } from "../../utils/linkActiveChecker";
-import menudata from "../../data/menudata";
+import menuData from "../../data/menuData";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
@@ -19,7 +19,7 @@ const HeaderNavContent = () => {
         <ul className="navigation" id="navbar">
           {/* current dropdown */}
 
-          {menudata
+          {menuData
             .filter((item) => {
               if (role === "Candidate" && item.label === "Candidates") {
                 return false; // Exclude "Candidates" tab for candidates
