@@ -13,10 +13,7 @@ export default function Document() {
           name="keywords"
           content="	candidates, career, employment, indeed, job board, job listing, job portal, job postings, job search, job seeker, jobs, recruiters, recruiting, recruitment, resume"
         />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
+
         <meta
           name="description"
           content="HubJob Company Limited is co-owned by three of our best friends who are passionate and have a strong interest in advertising, job posting, and application development. We support our clients and customers to have potential access to all types of careers and job prospects. Established on August 8th, 2023. Our main goal is to support private firms, INGOs, UN agencies, embassies in Laos, and all interested customers who intend to post job vacancies on their behalf to reach potential, qualifications, and other interest in applications from diverse industries."

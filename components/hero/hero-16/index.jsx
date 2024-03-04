@@ -1,12 +1,13 @@
 import { Carousel } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 const index = () => {
   const [index, setIndex] = useState(0);
   const imagePath = [
-    { id: 1, path: "images/index-16/header/bg4.png" },
-    { id: 2, path: "images/index-16/header/bg4.png" },
-    { id: 3, path: "images/index-16/header/bg4.png" },
+    { id: 1, path: "/images/index-16/header/bg4.png" },
+    { id: 2, path: "/images/index-16/header/bg4.png" },
+    { id: 3, path: "/images/index-16/header/bg4.png" },
   ];
   const handleSelect = (selectedIndex, e) => {
     setIndex(selectedIndex);
@@ -17,7 +18,7 @@ const index = () => {
       setIndex((prevIndex) =>
         prevIndex === imagePath.length - 1 ? 0 : prevIndex + 1
       );
-    }, 4000);
+    }, 4500);
 
     return () => clearInterval(interval);
   }, [imagePath.length]);
@@ -37,7 +38,15 @@ const index = () => {
       >
         {imagePath.map((i, index) => (
           <Carousel.Item key={i.id}>
-            <img className="d-block w-100" src={i.path} alt="First slide" />
+            <Image
+              className="d-block w-100"
+              src={i.path}
+              alt="First slide"
+              width={1500}
+              height={1500}
+              quality={100}
+              priority
+            />
           </Carousel.Item>
         ))}
       </Carousel>

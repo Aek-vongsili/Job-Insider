@@ -11,6 +11,7 @@ import firebase from "firebase/compat/app";
 import LoadingLayout from "../components/layouts/LoadingLayout";
 import { createFirestoreInstance } from "redux-firestore";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import Head from "next/head";
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");
 }
@@ -37,6 +38,12 @@ function MyApp({ Component, ...rest }) {
       <ReactReduxFirebaseProvider {...rrfProps}>
         <div className="page-wrapper">
           <LoadingLayout>
+            <Head>
+              <meta
+                name="viewport"
+                content="width=device-width, initial-scale=1, shrink-to-fit=no"
+              />
+            </Head>
             <Component {...props.pageProps} />
           </LoadingLayout>
 

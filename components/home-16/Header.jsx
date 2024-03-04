@@ -1,13 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import employerMenuData from "../../data/employerMenuData";
 import candidatesMenuData from "../../data/candidatesMenuData";
 import { isActiveLink } from "../../utils/linkActiveChecker";
 import HeaderNavContent from "../header/HeaderNavContent";
 import { useDispatch, useSelector } from "react-redux";
 import { fbAuthLogout, fbLoginCheck } from "../../features/auth/actionCreator";
+import { candidateProfileData } from "../../features//candidates/actionCreator";
+import { employersProfileData } from "../../features/employer/actionCreator";
 import { useFirebase } from "react-redux-firebase";
 
 const Header = () => {
@@ -15,22 +17,40 @@ const Header = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const firebase = useFirebase();
-  // const isLogin = useSelector((state) => state.user.isLoggedIn);
+  const [image, setImage] = useState(undefined);
+  const candidateData = useSelector((state) => {
+    return state.candidateSingle.data;
+  });
+  const employerSingle = useSelector((state) => {
+    return state.employerSingle.data;
+  });
   const role = useSelector((state) => {
     return state.auth.role;
   });
-  const employerImg = useSelector(
-    (state) => state.employerProfile?.company_info
-  );
+  console.log(employerSingle);
   const isLogin = useSelector((state) => {
     return state.auth.login;
   });
-  const userImage = () => {
-    switch (role) {
-      case "Employer":
-        return employerImg?.logoImage;
-    }
-  };
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+
+  useEffect(() => {
+    const updateUserImage = () => {
+      switch (role) {
+        case "Employer":
+          setImage(employerSingle?.profile?.logoImage);
+          break;
+        case "Candidate":
+          setImage(candidateData?.profile?.profileImage);
+          break;
+        default:
+          setImage(undefined);
+      }
+    };
+
+    updateUserImage();
+  }, [role, employerSingle, candidateData,dispatch]);
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -50,6 +70,13 @@ const Header = () => {
       unsubscribe();
     };
   }, [dispatch]);
+  useEffect(() => {
+    if (role === "Candidate") {
+      dispatch(candidateProfileData(userUid));
+    } else if (role === "Employer") {
+      dispatch(employersProfileData(userUid)); // Should use userUid instead of uid
+    }
+  }, [dispatch, role, userUid]);
   const Logout = async () => {
     try {
       await dispatch(fbAuthLogout(() => router.push("/")));
@@ -68,6 +95,7 @@ const Header = () => {
         return candidatesMenuData;
     }
   };
+  const menuData = useMemo(() => checkRole(role), [role]);
   return (
     // <!-- Main Header-->
     <header className="main-header header-style-four -type-16 fixed-header">
@@ -109,9 +137,11 @@ const Header = () => {
                   <div className="thumb">
                     <Image
                       alt="avatar"
-                      src={userImage() || "/images/resource/company-6.png"}
+                      className="fill-image"
+                      src={image || "/images/resource/company-6.png"}
                       width={50}
                       height={50}
+                      quality={100}
                     />
                   </div>
 
@@ -120,8 +150,8 @@ const Header = () => {
                   </span>
                 </a>
 
-                <ul className="dropdown-menu">
-                  {checkRole(role)?.map((item) => (
+                <ul className="dropdown-menu slideDown">
+                  {menuData?.map((item) => (
                     <li
                       className={`${
                         isActiveLink(item.routePath, router.asPath)
@@ -151,8 +181,6 @@ const Header = () => {
                 <Link
                   href="/login"
                   className="theme-btn btn-style-six call-modal"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#loginPopupModal"
                 >
                   Login / Register
                 </Link>

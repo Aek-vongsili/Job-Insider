@@ -2,6 +2,7 @@ import Link from "next/link";
 import jobs from "../../../data/job-featured";
 import Pagination from "../components/Pagination";
 import JobSelect from "../components/JobSelect";
+import ReactLoading from "react-loading";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addCategory,
@@ -261,9 +262,9 @@ const FilterJobBox = () => {
                 {calculateTimeDistanceFromNow(item?.createdAt?.seconds)}
               </li>
               {/* time info */}
-              <li>
+              {/* <li>
                 <span className="icon flaticon-money"></span> {item?.salary}
-              </li>
+              </li> */}
               {/* salary info */}
             </ul>
             {/* End .job-info */}
@@ -387,7 +388,20 @@ const FilterJobBox = () => {
       <div className="row">
         {/* {!!loading && <Loading />} */}
 
-        {!!loading ? <Loading /> : content}
+        {!!loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "300px",
+            }}
+          >
+            <ReactLoading type="bars" color="#1967d2" height={75} width={75} />
+          </div>
+        ) : (
+          content
+        )}
       </div>
       {/* End .row with jobs */}
 

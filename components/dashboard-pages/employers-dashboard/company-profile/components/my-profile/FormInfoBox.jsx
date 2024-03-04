@@ -218,6 +218,7 @@ const FormInfoBox = () => {
                 priority
                 width={500}
                 height={500}
+                quality={100}
               />
             ) : (
               <p>Drag and drop your image here or click to upload</p>

@@ -1,11 +1,8 @@
 import dynamic from "next/dynamic";
-import jobs from "../../data/job-featured";
-import LoginPopup from "../../components/common/form/login/LoginPopup";
-import FooterDefault from "../../components/footer/common-footer";
-import DefaulHeader from "../../components/header/DefaulHeader";
 import MobileMenu from "../../components/header/MobileMenu";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import ReactLoading from "react-loading";
 import { wrapper } from "../../app/store";
 import Seo from "../../components/common/Seo";
 import RelatedJobs from "../../components/job-single-pages/related-jobs/RelatedJobs";
@@ -161,19 +158,40 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         )}
                       </strong>
                     </div>
-
-                    <button
-                      href="#"
-                      className="theme-btn btn-style-one"
-                      data-bs-toggle="modal"
-                      data-bs-target="#applyJobModal"
-                      style={{ minWidth: "222px" }}
+                    <div
+                      style={{
+                        position: "relative",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     >
-                      Apply now
-                    </button>
-                    <button className="bookmark-btn">
-                      <i className="flaticon-bookmark"></i>
-                    </button>
+                      <button
+                        href="#"
+                        className="theme-btn btn-style-one"
+                        data-bs-toggle="modal"
+                        data-bs-target="#applyJobModal"
+                        style={{ minWidth: "222px" }}
+                      >
+                        Apply now
+                      </button>
+                      <button
+                        className="bookmark-btn"
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                         
+                        }}
+                      >
+                        {/* <i className="flaticon-bookmark"></i> */}
+                        <ReactLoading
+                          type="spin"
+                          color="#fff"
+                          width={25}
+                          height={25}
+                        />
+                      </button>
+                    </div>
                   </div>
                   {/* End apply for job btn */}
 

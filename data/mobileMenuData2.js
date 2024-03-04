@@ -28,12 +28,13 @@ export default [
     },
     {
         id: 6,
-        label: "about",
-        routePath: "/about"
+        label: "Pricing",
+        routePath: "/pricing"
     },
     {
         id: 7,
-        label: "pricing",
-        routePath: "/pricing"
+        label: "About",
+        routePath: "/about"
     },
+    
 ];
