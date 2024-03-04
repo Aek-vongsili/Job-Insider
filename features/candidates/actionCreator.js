@@ -35,7 +35,6 @@ const candidateProfileData = (uid) => {
     try {
       dispatch(candidateSingleBegin());
       const candidateData = await db.collection("candidates").doc(uid).get();
-      console.log(candidateData.data());
       if (candidateData.exists) {
         dispatch(candidateSingleSuccess(candidateData.data()));
       }

@@ -13,7 +13,6 @@ import { employersProfileData } from "../../features/employer/actionCreator";
 import { useFirebase } from "react-redux-firebase";
 
 const Header = () => {
-  const [navbar, setNavbar] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const firebase = useFirebase();
@@ -27,7 +26,6 @@ const Header = () => {
   const role = useSelector((state) => {
     return state.auth.role;
   });
-  console.log(employerSingle);
   const isLogin = useSelector((state) => {
     return state.auth.login;
   });
@@ -51,15 +49,7 @@ const Header = () => {
 
     updateUserImage();
   }, [role, employerSingle, candidateData,dispatch]);
-  const changeBackground = () => {
-    if (window.scrollY >= 10) {
-      setNavbar(true);
-    } else {
-      setNavbar(false);
-    }
-  };
   useEffect(() => {
-    window.addEventListener("scroll", changeBackground);
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         dispatch(fbLoginCheck());

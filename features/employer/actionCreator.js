@@ -33,7 +33,7 @@ const employerUploadFile = (imageAsString, path) => {
     try {
       dispatch(employerUploadBegin());
       const uid = fb.auth().currentUser.uid;
-      console.log(uid);
+
       const imageName = `${Date.now()}_${uuidv4()}`;
       const uploadTask = storage()
         .ref(`/company_profile/${uid}/${path}/${imageName}`)
