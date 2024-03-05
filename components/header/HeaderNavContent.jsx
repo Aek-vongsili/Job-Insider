@@ -1,9 +1,5 @@
 import Link from "next/link";
-import {
-  isActiveParent,
-  isActiveLink,
-  isActiveParentChaild,
-} from "../../utils/linkActiveChecker";
+import { isActiveLink } from "../../utils/linkActiveChecker";
 import menuData from "../../data/menuData";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";

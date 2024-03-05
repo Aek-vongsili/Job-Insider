@@ -33,6 +33,7 @@ const initialState = {
   jobFavLike: null,
   jobFavData: [],
   jobFavLoading: false,
+  jobFavGetLoading: false,
 };
 
 const initialStateSingle = {
@@ -118,19 +119,19 @@ const jobReducer = (state = initialState, action) => {
     case FAV_JOB_GET_BEGIN:
       return {
         ...state,
-        jobFavLoading: true,
+        jobFavGetLoading: true,
       };
     case FAV_JOB_GET_SUCCESS:
       return {
         ...state,
         jobFavData: data,
-        jobFavLoading: false,
+        jobFavGetLoading: false,
       };
     case FAV_JOB_GET_ERR:
       return {
         ...state,
         error: err,
-        jobFavLoading: false,
+        jobFavGetLoading: false,
       };
     default:
       return state;

@@ -25,7 +25,7 @@ const index = () => {
   return (
     <section
       className="banner-section-four -type-16"
-      style={{ paddingTop: 100 }}
+      style={{ marginTop: 100 }}
     >
       <Carousel
         data-bs-theme="dark"

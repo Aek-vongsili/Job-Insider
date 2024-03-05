@@ -16,6 +16,7 @@ const PostBoxForm = () => {
     jobTitle: "",
     jobType: "",
     salary: "",
+    gender: "",
     // ... other fields
   };
   const [skill, setSkill] = useState([{ skillList: "" }]);
@@ -73,9 +74,13 @@ const PostBoxForm = () => {
   };
 
   const handleSkillRemove = (index) => {
-    const list = [...skill];
-    list.splice(index, 1);
-    setSkill(list);
+    console.log("Removing skill at index:", index);
+
+    // Filter out the skill at the specified index
+    const updatedSkill = skill.filter((_, i) => i !== index);
+    console.log("Updated skill array:", updatedSkill);
+
+    setSkill(updatedSkill);
   };
 
   const handleSkillAdd = () => {
@@ -111,7 +116,7 @@ const PostBoxForm = () => {
       errors.jobTitle = "Job Title is required!";
     }
     if (!values.jobDescription) {
-      errors.jobDescription = "JobDescription is required!";
+      errors.jobDescription = "Job Description is required!";
     }
     if (!values.jobType) {
       errors.jobType = "Please Select Job Type";
@@ -121,18 +126,34 @@ const PostBoxForm = () => {
     }
 
     if (!values.jobCategories) {
-      errors.jobCategories = "Please Select jobCategories";
+      errors.jobCategories = "Please Select job categories";
     }
 
     if (!values.deadlineDate) {
       errors.deadlineDate = "Deadline date is required";
     }
+    if (!values.gender) {
+      errors.gender = "Select gender";
+    }
+    if (!values.qualification) {
+      errors.qualification = "Select qualification";
+    }
+    if (!values.skill || values.skill[0]?.skillList.trim() === "") {
+      errors.skill = "Please enter at least one skill";
+    }
+
+    // Validate the first keylist entry
+    if (!values.keylist || values.keylist[0]?.keyList.trim() === "") {
+      errors.keylist = "Please enter at least one key responsibilities";
+    }
+
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate(formData)) {
+    console.log({ ...formData, skill, keylist });
+    if (validate({ ...formData, skill, keylist })) {
       const data = { ...formData, skill, keylist };
       dispatch(jobInsertData(data)).then(() => {
         Swal.fire({
@@ -242,6 +263,42 @@ const PostBoxForm = () => {
           </select>
           {errors?.jobType && <p className="err-message">{errors?.jobType}</p>}
         </div>
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Gender</label>
+          <select
+            className="chosen-single form-select"
+            name="gender"
+            onChange={handleInputChange}
+            style={{ border: `${errors?.gender ? borderStyle : ""}` }}
+          >
+            <option value="">Select</option>
+
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="others">Others</option>
+          </select>
+          {errors?.gender && <p className="err-message">{errors?.gender}</p>}
+        </div>
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Qualification</label>
+          <select
+            className="chosen-single form-select"
+            name="qualification"
+            onChange={handleInputChange}
+            style={{ border: `${errors?.qualification ? borderStyle : ""}` }}
+          >
+            <option value="">Select</option>
+
+            <option value="Certificate">Certificate</option>
+            <option value="Associate Degree">Associate Degree</option>
+            <option value="Bachelor Degree">Bachelor Degree</option>
+            <option value="Master's Degree">Master's Degree</option>
+            <option value="Doctorate Degree">Doctorate Degree</option>
+          </select>
+          {errors?.qualification && (
+            <p className="err-message">{errors?.qualification}</p>
+          )}
+        </div>
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
@@ -262,30 +319,6 @@ const PostBoxForm = () => {
           </select>
           {errors?.salary && <p className="err-message">{errors?.salary}</p>}
         </div>
-
-        {/* <div className="form-group col-lg-6 col-md-12">
-          <label>Career Level</label>
-          <select className="chosen-single form-select">
-            <option>Select</option>
-            <option>Banking</option>
-            <option>Digital & Creative</option>
-            <option>Retail</option>
-            <option>Human Resources</option>
-            <option>Management</option>
-          </select>
-        </div> */}
-
-        {/* <div className="form-group col-lg-6 col-md-12">
-          <label>Experience</label>
-          <select className="chosen-single form-select">
-            <option>Select</option>
-            <option>Banking</option>
-            <option>Digital & Creative</option>
-            <option>Retail</option>
-            <option>Human Resources</option>
-            <option>Management</option>
-          </select>
-        </div> */}
 
         <div className="form-group col-lg-6 col-md-12">
           <label>Job Categories</label>
@@ -319,7 +352,7 @@ const PostBoxForm = () => {
           )}
         </div>
         <div className="form-group col-lg-12 col-md-12">
-          <label>Job Key Responsibilities</label>
+          <label>Key Responsibilities</label>
           {keylist.map((singleKey, index) => (
             <div className="add-key" key={index}>
               <div className="add-key_btn">
@@ -327,9 +360,13 @@ const PostBoxForm = () => {
                   type="text"
                   name="keyList"
                   placeholder="Key Responsibilities"
-                  value={singleKey.name}
+                  value={singleKey.keyList}
                   onChange={(e) => handleKeyChange(e, index)}
+                  style={{ border: `${errors?.keylist ? borderStyle : ""}` }}
                 />
+                {errors?.keylist && (
+                  <p className="err-message">{errors?.keylist}</p>
+                )}
                 {keylist.length - 1 === index && (
                   <button onClick={handleKeyAdd} type="button">
                     Add a Key
@@ -347,7 +384,7 @@ const PostBoxForm = () => {
           ))}
         </div>
         <div className="form-group col-lg-12 col-md-12">
-          <label>Require Skills</label>
+          <label>Skill & Experience</label>
           {skill.map((singleKey, index) => (
             <div className="add-key" key={index}>
               <div className="add-key_btn">
@@ -355,9 +392,13 @@ const PostBoxForm = () => {
                   type="text"
                   name="skillList"
                   placeholder="Skills / Qualifications"
-                  value={singleKey.name}
+                  value={singleKey.skillList}
                   onChange={(e) => handleSkillChange(e, index)}
+                  style={{ border: `${errors?.skill ? borderStyle : ""}` }}
                 />
+                {errors?.skill && (
+                  <p className="err-message">{errors?.skill}</p>
+                )}
                 {skill.length - 1 === index && (
                   <button onClick={handleSkillAdd} type="button">
                     Add a skills

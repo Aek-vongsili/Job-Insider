@@ -1,4 +1,3 @@
-
 import actions from "./actions";
 import { toast } from "react-toastify";
 const {
@@ -34,7 +33,9 @@ const jobInsertData = (jobData) => {
     try {
       const uid = fb.auth().currentUser.uid;
       dispatch(jobInsertBegin());
-      await db.collection("jobs").add({ ...jobData, company: uid });
+      await db
+        .collection("jobs")
+        .add({ ...jobData, company: uid, createdAt: new Date() });
       dispatch(jobInsertSuccess());
     } catch (err) {
       dispatch(jobInsertErr(err));
@@ -108,7 +109,7 @@ const favouriteJobAdd = (userUid, jobId) => {
         );
 
       dispatch(favJobSuccess());
-      toast.success("Added to favorites")
+      toast.success("Added to favorites");
     } catch (err) {
       dispatch(favJobErr(err));
     }
@@ -140,7 +141,7 @@ const removeFavouriteJob = (userUid, jobId) => {
       });
 
       dispatch(removeFavJobSuccess());
-      toast.error("Removed from favorites")
+      toast.error("Removed from favorites");
     } catch (err) {
       console.log(err);
       dispatch(removeFavJobErr(err));

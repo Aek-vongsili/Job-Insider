@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import employerMenuData from "../../data/employerMenuData";
 import candidatesMenuData from "../../data/candidatesMenuData";
 import { isActiveLink } from "../../utils/linkActiveChecker";
@@ -48,7 +48,7 @@ const Header = () => {
     };
 
     updateUserImage();
-  }, [role, employerSingle, candidateData,dispatch]);
+  }, [role, employerSingle, candidateData, dispatch]);
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -60,13 +60,19 @@ const Header = () => {
       unsubscribe();
     };
   }, [dispatch]);
-  useEffect(() => {
+  const fetchProfileData = useCallback(() => {
+    console.log("dd")
     if (role === "Candidate") {
       dispatch(candidateProfileData(userUid));
     } else if (role === "Employer") {
-      dispatch(employersProfileData(userUid)); // Should use userUid instead of uid
+      dispatch(employersProfileData(userUid));
     }
   }, [dispatch, role, userUid]);
+
+  useEffect(() => {
+    fetchProfileData(); // Call the memoized function
+  }, [fetchProfileData]);
+
   const Logout = async () => {
     try {
       await dispatch(fbAuthLogout(() => router.push("/")));

@@ -36,7 +36,16 @@ const ImgBox = () => {
         {/* Second item */}
         <div className="column col-lg-3 col-md-6 col-sm-6">
           <figure className="image">
-            <img src="/images/about/ab2.jpeg" alt="about image" />
+            <img
+              src="/images/about/ab2.jpeg"
+              alt="about image"
+              style={{
+                height: "125px",
+
+                objectFit: "cover",
+                objectPosition: "top",
+              }}
+            />
           </figure>
           <figure className="image">
             <img
@@ -67,15 +76,37 @@ const ImgBox = () => {
             />
           </figure>
           <figure className="image">
-            <img src="/images/about/ab3.jpeg" alt="about image" />
+            <img
+              src="/images/about/ab3.jpeg"
+              alt="about image"
+              style={{
+                height: "125px",
+
+                objectFit: "cover",
+                objectPosition: "top",
+              }}
+            />
           </figure>
           <figure className="image">
-            <img src="/images/about/ab2.jpeg" alt="about image" />
+            <img
+              src="/images/about/ab9.jpg"
+              alt="about image"
+              style={{
+                height: "125px",
+
+                objectFit: "cover",
+                objectPosition: "top",
+              }}
+            />
           </figure>
         </div>
         <div className="column col-lg-3 col-md-6 col-sm-6">
           <figure className="image">
-            <img src="/images/about/ab1.jpg" alt="about image" />
+            <img
+              src="/images/about/ab1.jpg"
+              alt="about image"
+              style={{ height: 395, objectFit: "cover" }}
+            />
           </figure>
         </div>
         {/* Repeat for other items if needed */}

@@ -5,8 +5,6 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { menuToggle } from "../../features/toggle/toggleSlice";
 // import { auth } from "../../firebase/clientApp";
-import axios from "axios";
-import { signOut } from "firebase/auth";
 
 const DashboardEmployerSidebar = () => {
   const router = useRouter();

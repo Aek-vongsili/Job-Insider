@@ -32,7 +32,7 @@ const JobOverView = ({ jobData, timeDistance }) => {
           <h5>Job Title:</h5>
           <span>{jobData?.jobTitle}</span>
         </li>
-        <li>
+        {/* <li>
           <i className="icon icon-clock"></i>
           <h5>Hours:</h5>
           <span>50h / week</span>
@@ -46,7 +46,7 @@ const JobOverView = ({ jobData, timeDistance }) => {
           <i className="icon icon-salary"></i>
           <h5>Salary:</h5>
           <span>{jobData?.salary}</span>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

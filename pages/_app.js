@@ -1,4 +1,4 @@
-import Aos from "aos";
+import AOS from "aos";
 import "aos/dist/aos.css";
 import "../styles/index.scss";
 import { useEffect } from "react";
@@ -18,7 +18,7 @@ if (typeof window !== "undefined") {
 
 function MyApp({ Component, ...rest }) {
   useEffect(() => {
-    Aos.init({
+    AOS.init({
       duration: 1400,
       once: true,
     });

@@ -42,6 +42,7 @@ const BookmarkIcon = ({ jobId }) => {
   const dispatch = useDispatch();
   // const newFavoriteJobRef = doc(collection(db, `users/${useruid}/favoriteJob`));
   const [like, setLike] = useState(false);
+
   const favJobData = useSelector((state) => {
     return state.jobs.jobFavData;
   });
@@ -112,10 +113,7 @@ const FilterJobBox = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(jobReadData());
-    if (role === "Employer") {
-      router.push("/");
-    }
-  }, [role, router]);
+  }, [router]);
 
   // keyword filter on title
   const keywordFilter = (item) =>

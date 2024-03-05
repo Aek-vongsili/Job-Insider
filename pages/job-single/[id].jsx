@@ -16,11 +16,38 @@ import JobDetailsDescriptions from "../../components/job-single-pages/shared-com
 import ApplyJobModalContent from "../../components/job-single-pages/shared-components/ApplyJobModalContent";
 import Layout from "../../components/Layout";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  favouriteJobAdd,
+  getFavouriteJob,
+  removeFavouriteJob,
+} from "../../features/jobs/actionCreator";
 
 const JobSingleDynamicV1 = ({ jobData }) => {
   const router = useRouter();
-  const employerData = "";
   const { id } = router.query;
+  const dispatch = useDispatch();
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  const loading = useSelector((state) => {
+    return state.jobs.jobFavLoading;
+  });
+  const [like, setLike] = useState(false);
+  const favJobData = useSelector((state) => {
+    return state.jobs.jobFavData;
+  });
+  useEffect(() => {
+    dispatch(getFavouriteJob(userUid));
+  }, [userUid, like]);
+  useEffect(() => {
+    const isJobFavorited = favJobData.some((job) => job.jobId === id);
+    if (isJobFavorited) {
+      setLike(true); // Set like to true if the job is favorited
+    } else {
+      setLike(false); // Set like to false if the job is not favorited
+    }
+  }, [id, favJobData]);
   if (!id) {
     return <div>Loading...</div>; // Or display a different component if id is not present
   }
@@ -78,7 +105,26 @@ const JobSingleDynamicV1 = ({ jobData }) => {
         return "required";
     }
   };
+  const handleSaveFavouriteJob = () => {
+    if (!userUid) {
+      alert("not login");
+      return;
+    } else {
+      const isJobAlreadySaved = favJobData.some((job) => job.jobId === id);
 
+      if (isJobAlreadySaved) {
+        // If the job is already saved, remove it from favorites
+        dispatch(removeFavouriteJob(userUid, id)).then(() => {
+          setLike(false); // Update the like state to false
+        });
+      } else {
+        // If the job is not saved, add it to favorites
+        dispatch(favouriteJobAdd(userUid, id)).then(() => {
+          setLike(true); // Update the like state to true
+        });
+      }
+    }
+  };
   return (
     <>
       <Layout>
@@ -124,10 +170,10 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         )}
                       </li>
                       {/* time info */}
-                      <li>
+                      {/* <li>
                         <span className="icon flaticon-money"></span>{" "}
                         {jobData?.salary}
-                      </li>
+                      </li> */}
                       {/* salary info */}
                     </ul>
                     {/* End .job-info */}
@@ -180,16 +226,23 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         style={{
                           display: "flex",
                           justifyContent: "center",
-                         
+                          backgroundColor: like ? "#1967d2" : "",
                         }}
+                        onClick={handleSaveFavouriteJob}
                       >
-                        {/* <i className="flaticon-bookmark"></i> */}
-                        <ReactLoading
-                          type="spin"
-                          color="#fff"
-                          width={25}
-                          height={25}
-                        />
+                        {loading ? (
+                          <ReactLoading
+                            type="spin"
+                            color="#fff"
+                            width={25}
+                            height={25}
+                          />
+                        ) : (
+                          <i
+                            className="flaticon-bookmark"
+                            style={{ color: like ? "gold" : "" }}
+                          ></i>
+                        )}
                       </button>
                     </div>
                   </div>
