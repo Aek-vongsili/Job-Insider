@@ -24,6 +24,18 @@ const {
   employerLocationReadBegin,
   employerLocationReadSuccess,
   employerLocationReadErr,
+
+  employerJobListReadBegin,
+  employerJobListReadSuccess,
+  employerJobListReadErr,
+
+  employerDeleteJobBegin,
+  employerDeleteJobSuccess,
+  employerDeleteJobErr,
+
+  employerEditJobBegin,
+  employerEditJobSuccess,
+  employerEditJobErr,
 } = actions;
 
 const employerUploadFile = (imageAsString, path) => {
@@ -152,10 +164,69 @@ const employerLocationSubmit = (data) => {
     }
   };
 };
+const employerJobListRead = (uid) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerJobListReadBegin());
+      const jobsQuerySnapshot = await db
+        .collection("jobs")
+        .where("company", "==", uid)
+        .get();
+      const jobsData = [];
+      jobsQuerySnapshot.forEach((doc) => {
+        jobsData.push({ id: doc.id, ...doc.data() });
+      });
+      if (jobsData.length === 0) {
+        // If no data is found, dispatch an empty array
+        dispatch(employerJobListReadSuccess([]));
+      } else {
+        // Dispatch the retrieved job data
+        dispatch(employerJobListReadSuccess(jobsData));
+      }
+    } catch (err) {
+      dispatch(employerJobListReadErr(err));
+    }
+  };
+};
 
+const employerJobDelete = (jobId, uid) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerDeleteJobBegin());
+      const jobsQuerySnapshot = await db
+        .collection("jobs")
+        .where("company", "==", uid)
+        .get();
+
+      if (!jobsQuerySnapshot.empty) {
+        const deletePromises = [];
+
+        jobsQuerySnapshot.forEach((doc) => {
+          if (doc.id === jobId) {
+            deletePromises.push(db.collection("jobs").doc(doc.id).delete());
+          }
+        });
+        await Promise.all(deletePromises);
+        dispatch(employerDeleteJobSuccess());
+        return true;
+      } else {
+        dispatch(employerDeleteJobErr("No jobs found for deletion."));
+        return false;
+      }
+    } catch (err) {
+      console.error("Error deleting jobs:", err);
+      dispatch(employerDeleteJobErr(err));
+      return false;
+    }
+  };
+};
 export {
   employerUploadFile,
   employersUpdateData,
   employersProfileData,
   employerLocationSubmit,
+  employerJobListRead,
+  employerJobDelete,
 };

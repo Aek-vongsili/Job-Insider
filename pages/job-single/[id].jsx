@@ -33,6 +33,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   const loading = useSelector((state) => {
     return state.jobs.jobFavLoading;
   });
+  const role = useSelector((state) => state.auth.role);
   const [like, setLike] = useState(false);
   const favJobData = useSelector((state) => {
     return state.jobs.jobFavData;
@@ -105,7 +106,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
         return "required";
     }
   };
-  const handleSaveFavouriteJob = () => {
+  const handleSaveFavouriteJob = async() => {
     if (!userUid) {
       alert("not login");
       return;
@@ -114,14 +115,12 @@ const JobSingleDynamicV1 = ({ jobData }) => {
 
       if (isJobAlreadySaved) {
         // If the job is already saved, remove it from favorites
-        dispatch(removeFavouriteJob(userUid, id)).then(() => {
-          setLike(false); // Update the like state to false
-        });
+        await dispatch(removeFavouriteJob(userUid, id));
+        setLike(false); // Update the like state to false
       } else {
         // If the job is not saved, add it to favorites
-        dispatch(favouriteJobAdd(userUid, id)).then(() => {
-          setLike(true); // Update the like state to true
-        });
+        await dispatch(favouriteJobAdd(userUid, id));
+        setLike(true); // Update the like state to true
       }
     }
   };
@@ -353,7 +352,12 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       />
 
                       {/* <!-- Map Widget --> */}
-                      <h4 className="widget-title">Job Location</h4>
+                      <h4
+                        className="widget-title"
+                        style={{ marginTop: "30px" }}
+                      >
+                        Job Location
+                      </h4>
                       <div className="widget-content">
                         <div className="map-outer">
                           <div style={{ height: "300px", width: "100%" }}>

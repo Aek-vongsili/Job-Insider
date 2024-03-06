@@ -23,6 +23,18 @@ const actions = {
   EMPLOYER_LOCATION_READ_SUCCESS: "EMPLOYER_LOCATION_READ_SUCCESS",
   EMPLOYER_LOCATION_READ_ERR: "EMPLOYER_LOCATION_READ_ERR",
 
+  EMPLOYER_GET_JOBS_BEGIN: "EMPLOYER_GET_JOBS_BEGIN",
+  EMPLOYER_GET_JOBS_SUCCESS: "EMPLOYER_GET_JOBS_SUCCESS",
+  EMPLOYER_GET_JOBS_ERR: "EMPLOYER_GET_JOBS_ERR",
+
+  EMPLOYER_EDIT_JOB_BEGIN: "EMPLOYER_EDIT_JOB_BEGIN",
+  EMPLOYER_EDIT_JOB_SUCCESS: "EMPLOYER_EDIT_JOB_SUCCESS",
+  EMPLOYER_EDIT_JOB_ERR: "EMPLOYER_EDIT_JOB_ERR",
+
+  EMPLOYER_DELETE_JOB_BEGIN: "EMPLOYER_DELETE_JOB_BEGIN",
+  EMPLOYER_DELETE_JOB_SUCCESS: "EMPLOYER_DELETE_JOB_SUCCESS",
+  EMPLOYER_DELETE_JOB_ERR: "EMPLOYER_DELETE_JOB_ERR",
+
   employerUpdateBegin: () => {
     return {
       type: actions.EMPLOYER_UPDATE_BEGIN,
@@ -131,6 +143,65 @@ const actions = {
   employerLocationReadErr: (err) => {
     return {
       type: actions.EMPLOYER_LOCATION_READ_ERR,
+      err,
+    };
+  },
+
+  //EMPLOYER JOB LIST
+  employerJobListReadBegin: () => {
+    return {
+      type: actions.EMPLOYER_GET_JOBS_BEGIN,
+    };
+  },
+  employerJobListReadSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_GET_JOBS_SUCCESS,
+      data,
+    };
+  },
+
+  employerJobListReadErr: (err) => {
+    return {
+      type: actions.EMPLOYER_GET_JOBS_ERR,
+      err,
+    };
+  },
+
+  //EMPLOYER EDIT JOB
+  employerEditJobBegin: () => {
+    return {
+      type: actions.EMPLOYER_EDIT_JOB_BEGIN,
+    };
+  },
+  employerEditJobSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_EDIT_JOB_SUCCESS,
+      data,
+    };
+  },
+
+  employerEditJobErr: (err) => {
+    return {
+      type: actions.EMPLOYER_EDIT_JOB_ERR,
+      err,
+    };
+  },
+  //EMPLOYER DELETE JOB
+  employerDeleteJobBegin: () => {
+    return {
+      type: actions.EMPLOYER_DELETE_JOB_BEGIN,
+    };
+  },
+  employerDeleteJobSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_DELETE_JOB_SUCCESS,
+      data,
+    };
+  },
+
+  employerDeleteJobErr: (err) => {
+    return {
+      type: actions.EMPLOYER_DELETE_JOB_ERR,
       err,
     };
   },

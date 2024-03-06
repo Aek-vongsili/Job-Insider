@@ -1,9 +1,10 @@
 import Link from "next/link";
 import employerMenuData from "../../data/employerMenuData";
-import { isActiveLink } from "../../utils/linkActiveChecker";
+import { isActiveLink, isActiveLink2 } from "../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { menuToggle } from "../../features/toggle/toggleSlice";
+import { fbAuthLogout } from "../../features/auth/actionCreator";
 // import { auth } from "../../firebase/clientApp";
 
 const DashboardEmployerSidebar = () => {
@@ -16,7 +17,12 @@ const DashboardEmployerSidebar = () => {
     dispatch(menuToggle());
   };
   const handleLogout = async () => {
-
+    try {
+      await dispatch(fbAuthLogout(() => router.push("/")));
+    } catch (error) {
+      // Handle any errors here
+      console.error("Logout error:", error);
+    }
   };
 
   return (
@@ -34,7 +40,7 @@ const DashboardEmployerSidebar = () => {
           {employerMenuData.map((item) => (
             <li
               className={`${
-                isActiveLink(item.routePath, router.asPath) ? "active" : ""
+                isActiveLink2(item.routePath, router.asPath) ? "active" : ""
               } mb-1`}
               key={item.id}
               onClick={menuToggleHandler}

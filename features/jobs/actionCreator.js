@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import actions from "./actions";
 import { toast } from "react-toastify";
 const {
@@ -31,11 +32,31 @@ const jobInsertData = (jobData) => {
     const fb = getFirebase();
     const db = getFirestore();
     try {
-      const uid = fb.auth().currentUser.uid;
       dispatch(jobInsertBegin());
-      await db
-        .collection("jobs")
-        .add({ ...jobData, company: uid, createdAt: new Date() });
+      const uid = fb.auth().currentUser.uid;
+      const userDoc = await db.collection("employers").doc(uid).get();
+      if (!userDoc.exists) {
+        // If the user is not found in the employers collection, show an error message and exit
+        Swal.fire({
+          title: "Error",
+          text: "Only employers can insert jobs.",
+          icon: "error",
+          confirmButtonText: "Got it",
+          timer: 3000, // Timer in milliseconds (3 seconds in this case)
+          timerProgressBar: true, // Show a progress bar
+        });
+        dispatch(jobInsertErr("Only employer can insert job"));
+        return;
+        // Exit the function
+      }
+      const { deadlineDate, ...data } = jobData;
+      await db.collection("jobs").add({
+        ...data,
+        company: uid,
+        deadlineDate: new Date(deadlineDate),
+        createdAt: new Date(),
+        status: "active",
+      });
       dispatch(jobInsertSuccess());
     } catch (err) {
       dispatch(jobInsertErr(err));
@@ -81,7 +102,9 @@ const jobSingleData = (jobUid) => {
     try {
       dispatch(jobSingleBegin());
       const jobData = await db.collection("jobs").doc(jobUid).get();
-      console.log(jobData);
+      if (jobData.exists) {
+        dispatch(jobSingleSuccess(jobData.data()));
+      }
     } catch (err) {
       console.log(err);
       dispatch(jobSingleErr(err));
@@ -95,6 +118,22 @@ const favouriteJobAdd = (userUid, jobId) => {
     const fb = getFirebase();
     try {
       dispatch(favJobBegin());
+      const candidateDoc = await db.collection("candidates").doc(userUid).get();
+      if (!candidateDoc.exists) {
+        // If the user doesn't exist in the candidate collection or the role is not "candidate", show an error message and exit
+        Swal.fire({
+          title: "Error",
+          text: "Only candidates can save jobs.",
+          icon: "error",
+          confirmButtonText: "Got it",
+          timer: 3000, // Timer in milliseconds (3 seconds in this case)
+          timerProgressBar: true, // Show a progress bar
+        });
+        dispatch(
+          favJobErr("User not found in candidate collection or not a candidate")
+        );
+        return; // Exit the function
+      }
       await db
         .collection("candidates")
         .doc(userUid)

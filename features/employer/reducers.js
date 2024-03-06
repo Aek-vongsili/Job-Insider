@@ -24,6 +24,18 @@ const {
   EMPLOYER_LOCATION_READ_BEGIN,
   EMPLOYER_LOCATION_READ_SUCCESS,
   EMPLOYER_LOCATION_READ_ERR,
+
+  EMPLOYER_GET_JOBS_BEGIN,
+  EMPLOYER_GET_JOBS_SUCCESS,
+  EMPLOYER_GET_JOBS_ERR,
+
+  EMPLOYER_EDIT_JOB_BEGIN,
+  EMPLOYER_EDIT_JOB_SUCCESS,
+  EMPLOYER_EDIT_JOB_ERR,
+
+  EMPLOYER_DELETE_JOB_BEGIN,
+  EMPLOYER_DELETE_JOB_SUCCESS,
+  EMPLOYER_DELETE_JOB_ERR,
 } = actions;
 
 const initialState = {
@@ -40,6 +52,9 @@ const initialSingleState = {
   error: null,
   locationData: null,
   locationLoading: false,
+  jobData: [],
+  jobLoading: false,
+  jobError: null,
 };
 
 const employerReducer = (state = initialState, action) => {
@@ -154,6 +169,55 @@ const employerSingle = (state = initialSingleState, action) => {
         ...state,
         locationLoading: false,
         error: err,
+      };
+    case EMPLOYER_GET_JOBS_BEGIN:
+      return {
+        ...state,
+        jobLoading: true,
+      };
+    case EMPLOYER_GET_JOBS_SUCCESS:
+      return {
+        ...state,
+        jobLoading: false,
+        jobData: data,
+      };
+    case EMPLOYER_GET_JOBS_ERR:
+      return {
+        ...state,
+        jobLoading: false,
+        jobError: err,
+      };
+    case EMPLOYER_EDIT_JOB_BEGIN:
+      return {
+        ...state,
+        jobLoading: true,
+      };
+    case EMPLOYER_EDIT_JOB_SUCCESS:
+      return {
+        ...state,
+        jobLoading: false,
+      };
+    case EMPLOYER_EDIT_JOB_ERR:
+      return {
+        ...state,
+        jobLoading: false,
+        jobError: err,
+      };
+    case EMPLOYER_DELETE_JOB_BEGIN:
+      return {
+        ...state,
+        jobLoading: true,
+      };
+    case EMPLOYER_DELETE_JOB_SUCCESS:
+      return {
+        ...state,
+        jobLoading: false,
+      };
+    case EMPLOYER_DELETE_JOB_ERR:
+      return {
+        ...state,
+        jobLoading: false,
+        jobError: err,
       };
     default:
       return state;

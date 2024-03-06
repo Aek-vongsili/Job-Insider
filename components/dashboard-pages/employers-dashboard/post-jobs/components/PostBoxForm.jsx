@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
 import Map from "../../../Map";
-import Select from "react-select";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-// import { db } from "../../../../../firebase/clientApp";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";

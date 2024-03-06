@@ -1,15 +1,7 @@
 import Map from "../../../Map";
 import Select from "react-select";
-import {
-  arrayUnion,
-  collection,
-  doc,
-  getDocs,
-  updateDoc,
-} from "firebase/firestore";
-// import { app, db, storage } from "../../../../../firebase/clientApp";
+
 import { useState } from "react";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 const PostBoxForm = () => {
   const specialisms = [
     { value: "Banking", label: "Banking" },

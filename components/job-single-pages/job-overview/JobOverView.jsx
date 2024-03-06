@@ -13,6 +13,11 @@ const JobOverView = ({ jobData, timeDistance }) => {
     <div className="widget-content">
       <ul className="job-overview">
         <li>
+          <i className="icon icon-user-2"></i>
+          <h5>Job Title:</h5>
+          <span>{jobData?.jobTitle}</span>
+        </li>
+        <li>
           <i className="icon icon-calendar"></i>
           <h5>Date Posted:</h5>
           <span>Posted {timeDistance}</span>
@@ -29,9 +34,15 @@ const JobOverView = ({ jobData, timeDistance }) => {
         </li>
         <li>
           <i className="icon icon-user-2"></i>
-          <h5>Job Title:</h5>
-          <span>{jobData?.jobTitle}</span>
+          <h5>Gender</h5>
+          <span>{jobData?.gender}</span>
         </li>
+        <li>
+          <i className="icon icon-user-2"></i>
+          <h5>Qualification</h5>
+          <span>{jobData?.qualification}</span>
+        </li>
+
         {/* <li>
           <i className="icon icon-clock"></i>
           <h5>Hours:</h5>

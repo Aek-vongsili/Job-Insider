@@ -20,7 +20,6 @@ const index = () => {
   });
   useEffect(() => {
     if (isAuthenticate) {
-      console.log("getting")
       dispatch(employersProfileData(isAuthenticate));
     }
   }, [dispatch, isAuthenticate]);
