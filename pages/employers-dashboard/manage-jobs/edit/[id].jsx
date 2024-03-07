@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import ReactLoading from "react-loading";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../components/Loading/Loading";
@@ -17,6 +17,7 @@ import MenuToggler from "../../../../components/dashboard-pages/MenuToggler";
 import CopyrightFooter from "../../../../components/dashboard-pages/CopyrightFooter";
 import Layout from "../../../../components/Layout";
 import { useRouter } from "next/router";
+import { employerEditJob } from "../../../../features/employer/actionCreator";
 const EditJob = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -35,9 +36,11 @@ const EditJob = () => {
   const [keylist, setKeylist] = useState([{ keyList: "" }]);
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
-  const userUid = useSelector((state) => state.user?.user?.uid);
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
   const loading = useSelector((state) => {
-    return state.jobs.loading;
+    return state.employerSingle.jobLoading;
   });
   const jobData = useSelector((state) => {
     return state.jobSingle.data;
@@ -155,12 +158,12 @@ const EditJob = () => {
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  const handleSubmit = (e) => {
+  const handleEdit = (e) => {
     e.preventDefault();
     console.log(formData);
     if (validate({ ...formData, skill, keylist })) {
       const data = { ...formData, skill, keylist };
-      dispatch(jobInsertData(data)).then(() => {
+      dispatch(employerEditJob(userUid, id, data)).then(() => {
         Swal.fire({
           title: "Success",
           text: "Your Job has been posted",
@@ -236,7 +239,7 @@ const EditJob = () => {
 
                     <div className="widget-content">
                       {/* End job steps form */}
-                      <form className="default-form" onSubmit={handleSubmit}>
+                      <form className="default-form" onSubmit={handleEdit}>
                         <div className="row">
                           {/* <!-- Input --> */}
                           <div className="form-group col-lg-12 col-md-12">
@@ -535,10 +538,20 @@ const EditJob = () => {
                           {/* <!-- Input --> */}
                           <div className="form-group col-lg-12 col-md-12 text-right">
                             <button
-                              className="theme-btn btn-style-one"
+                              className="theme-btn btn-style-one d-flex justify-content-center align-items-center"
                               disabled={loading}
+                              // Ensure button has a minimum width
                             >
-                              {!!loading ? <Loading /> : "Update"}
+                              {!loading ? (
+                                <span>Update</span>
+                              ) : (
+                                <ReactLoading
+                                  type="bars"
+                                  color="#fff"
+                                  height={30}
+                                  width={30}
+                                />
+                              )}
                             </button>
                           </div>
                         </div>

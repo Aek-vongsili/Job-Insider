@@ -177,7 +177,7 @@ const JobListingsTable = () => {
                           </li>
                           <li>
                             <Link
-                              data-text="Reject Aplication"
+                              data-text="Edit"
                               href={{
                                 pathname: "manage-jobs/edit/[id]",
                                 query: { id: item?.id },
@@ -188,7 +188,7 @@ const JobListingsTable = () => {
                           </li>
                           <li>
                             <button
-                              data-text="Delete Aplication"
+                              data-text="Delete"
                               onClick={() => handleDeleteJob(item?.id)}
                             >
                               <span className="la la-trash"></span>

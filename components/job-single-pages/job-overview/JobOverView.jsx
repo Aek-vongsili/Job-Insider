@@ -1,14 +1,5 @@
 const JobOverView = ({ jobData, timeDistance }) => {
   // Replace with your date string
-  const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-  const dateObject = new Date(jobData?.deadlineDate);
-  const formattedDate = formatDate(dateObject);
   return (
     <div className="widget-content">
       <ul className="job-overview">
@@ -25,7 +16,13 @@ const JobOverView = ({ jobData, timeDistance }) => {
         <li>
           <i className="icon icon-expiry"></i>
           <h5>Expiration date:</h5>
-          <span>{formattedDate}</span>
+          <span>
+            {" "}
+            {new Date(
+              jobData?.deadlineDate.seconds * 1000 +
+                jobData?.deadlineDate.nanoseconds / 1000000
+            ).toLocaleDateString("en-GB")}
+          </span>
         </li>
         <li>
           <i className="icon icon-location"></i>

@@ -222,6 +222,28 @@ const employerJobDelete = (jobId, uid) => {
     }
   };
 };
+const employerEditJob = (uid, jobId, updateData) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerEditJobBegin());
+      const jobDoc = await db.collection("jobs").doc(jobId).get();
+      if (!jobDoc.exists) {
+        throw new Error("Job not found");
+      }
+      const jobData = jobDoc.data();
+      if (jobData.company === uid) {
+        await db
+          .collection("jobs")
+          .doc(jobId)
+          .update({ ...updateData, updatedAt: new Date() });
+      }
+      dispatch(employerEditJobSuccess())
+    } catch (err) {
+      dispatch(employerEditJobErr(err));
+    }
+  };
+};
 export {
   employerUploadFile,
   employersUpdateData,
@@ -229,4 +251,5 @@ export {
   employerLocationSubmit,
   employerJobListRead,
   employerJobDelete,
+  employerEditJob
 };

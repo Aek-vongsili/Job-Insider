@@ -13,8 +13,7 @@ const index = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DefaulHeader />
-      {/* <!--End Main Header --> */}
+    
 
       <MobileMenu />
       {/* End MobileMenu */}
@@ -31,7 +30,7 @@ const index = () => {
       </section>
       {/* <!-- End TNC Section --> */}
 
-      <FooterDefault footerStyle="alternate5" />
+    
       {/* <!-- End Main Footer --> */}
     </>
   );

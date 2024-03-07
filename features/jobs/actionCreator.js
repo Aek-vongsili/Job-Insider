@@ -25,6 +25,14 @@ const {
   removeFavJobBegin,
   removeFavJobSuccess,
   removeFavJobErr,
+
+  jobApplyBegin,
+  jobApplySuccess,
+  jobApplyErr,
+
+  jobApplicationCheckBegin,
+  jobApplicationCheckSuccess,
+  jobApplicationCheckErr,
 } = actions;
 
 const jobInsertData = (jobData) => {
@@ -237,6 +245,94 @@ const getFavouriteJob = (uid) => {
     }
   };
 };
+
+const jobApplyApplication = (userUid, jobId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(jobApplyBegin());
+      const resume = await getUserResume(userUid, db);
+      if (resume && resume?.cvUrl) {
+        const userApplied = await dispatch(checkIfUserApplied(userUid, jobId));
+        console.log(userApplied);
+        if (!userApplied) {
+          await applyJobToFirestore(userUid, jobId, db);
+        } else {
+          throw new Error("User has already applied for this job");
+        }
+      }
+      dispatch(jobApplySuccess());
+    } catch (err) {
+      console.log(err);
+      dispatch(jobApplyErr(err));
+    }
+  };
+};
+
+const getUserResume = async (userUid, db) => {
+  try {
+    const cvDoc = await db.collection("candidates").doc(userUid).get();
+    if (cvDoc.exists) {
+      const userData = cvDoc.data();
+      if (userData.resume) {
+        return userData.resume; // Return the resume if it exists and is truthy
+      } else {
+        return null; // Return null if the resume field is falsy or doesn't exist
+      }
+    } else {
+      return null; // User document not found
+    }
+  } catch (err) {
+    throw new Error("Error fetching user's resume: " + err.message);
+  }
+};
+
+const applyJobToFirestore = async (userId, jobId, db) => {
+  try {
+    const jobRef = db.collection("jobs").doc(jobId);
+    const jobSnapshot = await jobRef.get();
+
+    if (!jobSnapshot.exists) {
+      throw new Error("Job not found");
+    }
+
+    // Add the job application to a subcollection of the job document
+    await jobRef.collection("applications").add({
+      userId: userId,
+      appliedAt: new Date(),
+    });
+  } catch (err) {
+    throw new Error("Error applying for the job: " + err.message);
+  }
+};
+const checkIfUserApplied = (userId, jobId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(jobApplicationCheckBegin());
+      const jobRef = db.collection("jobs").doc(jobId);
+      const applicationQuery = await jobRef
+        .collection("applications")
+        .where("userId", "==", userId)
+        .get();
+
+      let userApplied = false;
+      applicationQuery.forEach((doc) => {
+        // Access data of each document
+        const data = doc.data();
+        console.log(data); // Log data of each document
+        userApplied = true; // Assuming if any document exists, user has applied
+      });
+
+      dispatch(jobApplicationCheckSuccess(userApplied)); // Dispatching the success action with the result
+      return userApplied;
+    } catch (err) {
+      dispatch(jobApplicationCheckErr(err));
+      console.log(err);
+      // throw new Error("Error checking if user applied for job: " + err.message);
+    }
+  };
+};
 export {
   jobInsertData,
   jobReadData,
@@ -244,4 +340,6 @@ export {
   favouriteJobAdd,
   getFavouriteJob,
   removeFavouriteJob,
+  jobApplyApplication,
+  checkIfUserApplied,
 };

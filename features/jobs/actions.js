@@ -23,6 +23,15 @@ const actions = {
   FAV_JOB_GET_SUCCESS: "FAV_JOB_GET_SUCCESS",
   FAV_JOB_GET_ERR: "FAV_JOB_GET_ERR",
 
+  JOB_APPLY_BEGIN: "JOB_APPLY_BEGIN",
+  JOB_APPLY_SUCCESS: "JOB_APPLY_SUCCESS",
+  JOB_APPLY_ERR: "JOB_APPLY_ERR",
+
+  JOB_APPLICATION_CHECK_BEGIN:"JOB_APPLICATION_CHECK_BEGIN",
+  JOB_APPLICATION_CHECK_SUCCESS:"JOB_APPLICATION_CHECK_SUCCESS",
+  JOB_APPLICATION_CHECK_ERR:"JOB_APPLICATION_CHECK_ERR",
+
+
   jobReadBegin: () => {
     return {
       type: actions.JOBS_READ_BEGIN,
@@ -129,6 +138,43 @@ const actions = {
   favJobGetErr: (err) => {
     return {
       type: actions.FAV_JOB_GET_ERR,
+      err,
+    };
+  },
+
+  jobApplyBegin: () => {
+    return {
+      type: actions.JOB_APPLY_BEGIN,
+    };
+  },
+  jobApplySuccess: (data) => {
+    return {
+      type: actions.JOB_APPLY_SUCCESS,
+      data,
+    };
+  },
+
+  jobApplyErr: (err) => {
+    return {
+      type: actions.JOB_APPLY_ERR,
+      err,
+    };
+  },
+  jobApplicationCheckBegin: () => {
+    return {
+      type: actions.JOB_APPLICATION_CHECK_BEGIN,
+    };
+  },
+  jobApplicationCheckSuccess: (data) => {
+    return {
+      type: actions.JOB_APPLICATION_CHECK_SUCCESS,
+      data,
+    };
+  },
+
+  jobApplicationCheckErr: (err) => {
+    return {
+      type: actions.JOB_APPLICATION_CHECK_ERR,
       err,
     };
   },

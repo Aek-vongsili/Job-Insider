@@ -24,6 +24,14 @@ const {
   FAV_JOB_GET_BEGIN,
   FAV_JOB_GET_SUCCESS,
   FAV_JOB_GET_ERR,
+
+  JOB_APPLY_BEGIN,
+  JOB_APPLY_SUCCESS,
+  JOB_APPLY_ERR,
+
+  JOB_APPLICATION_CHECK_BEGIN,
+  JOB_APPLICATION_CHECK_SUCCESS,
+  JOB_APPLICATION_CHECK_ERR,
 } = actions;
 
 const initialState = {
@@ -40,6 +48,8 @@ const initialStateSingle = {
   data: null,
   loading: false,
   error: null,
+  isApplied: false,
+  jobApplyLoading: false,
 };
 
 const jobReducer = (state = initialState, action) => {
@@ -157,6 +167,40 @@ const jobSingleReducer = (state = initialStateSingle, action) => {
         ...state,
         error: err,
         loading: false,
+      };
+    case JOB_APPLY_BEGIN:
+      return {
+        ...state,
+        jobApplyLoading: true,
+      };
+    case JOB_APPLY_SUCCESS:
+      return {
+        ...state,
+        data,
+        jobApplyLoading: false,
+      };
+    case JOB_APPLY_ERR:
+      return {
+        ...state,
+        error: err,
+        jobApplyLoading: false,
+      };
+    case JOB_APPLICATION_CHECK_BEGIN:
+      return {
+        ...state,
+        jobApplyLoading: true,
+      };
+    case JOB_APPLICATION_CHECK_SUCCESS:
+      return {
+        ...state,
+        isApplied:data,
+        jobApplyLoading: false,
+      };
+    case JOB_APPLICATION_CHECK_ERR:
+      return {
+        ...state,
+        error: err,
+        jobApplyLoading: false,
       };
     default:
       return state;

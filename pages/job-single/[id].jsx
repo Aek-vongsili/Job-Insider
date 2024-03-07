@@ -18,8 +18,10 @@ import Layout from "../../components/Layout";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkIfUserApplied,
   favouriteJobAdd,
   getFavouriteJob,
+  jobApplyApplication,
   removeFavouriteJob,
 } from "../../features/jobs/actionCreator";
 
@@ -27,6 +29,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
+
   const userUid = useSelector((state) => {
     return state.firebase.auth.uid;
   });
@@ -34,10 +37,16 @@ const JobSingleDynamicV1 = ({ jobData }) => {
     return state.jobs.jobFavLoading;
   });
   const role = useSelector((state) => state.auth.role);
+
   const [like, setLike] = useState(false);
   const favJobData = useSelector((state) => {
     return state.jobs.jobFavData;
   });
+  const isApplied = useSelector((state) => {
+    return state.jobSingle.isApplied;
+  });
+  console.log(isApplied);
+
   useEffect(() => {
     dispatch(getFavouriteJob(userUid));
   }, [userUid, like]);
@@ -52,6 +61,11 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   if (!id) {
     return <div>Loading...</div>; // Or display a different component if id is not present
   }
+  useEffect(() => {
+    if (userUid) {
+      dispatch(checkIfUserApplied(userUid, id));
+    }
+  }, [dispatch, userUid, id]);
 
   const convertTimestampToDateTime = (timestampInSeconds) => {
     const timestampInMilliseconds = timestampInSeconds * 1000; // Convert to milliseconds
@@ -106,7 +120,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
         return "required";
     }
   };
-  const handleSaveFavouriteJob = async() => {
+  const handleSaveFavouriteJob = async () => {
     if (!userUid) {
       alert("not login");
       return;
@@ -124,6 +138,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
       }
     }
   };
+
   return (
     <>
       <Layout>
@@ -198,9 +213,10 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                     >
                       {"Application ends : "}
                       <strong style={{ color: "red" }}>
-                        {new Date(jobData?.deadlineDate).toLocaleDateString(
-                          "en-GB"
-                        )}
+                        {new Date(
+                          jobData?.deadlineDate.seconds * 1000 +
+                            jobData?.deadlineDate.nanoseconds / 1000000
+                        ).toLocaleDateString("en-GB")}
                       </strong>
                     </div>
                     <div
@@ -217,8 +233,13 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         data-bs-toggle="modal"
                         data-bs-target="#applyJobModal"
                         style={{ minWidth: "222px" }}
+                        disabled={isApplied}
                       >
-                        Apply now
+                        {isApplied ? (
+                          <i className="flaticon-checked">{" Applied"}</i>
+                        ) : (
+                          " Apply now"
+                        )}
                       </button>
                       <button
                         className="bookmark-btn"
@@ -267,7 +288,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         </div>
                         {/* End modal-header */}
 
-                        <ApplyJobModalContent />
+                        <ApplyJobModalContent id={id} userUid={userUid} />
                         {/* End PrivateMessageBox */}
                       </div>
                       {/* End .send-private-message-wrapper */}
@@ -314,31 +335,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                     {/* End apply for job btn */}
 
                     {/* <!-- Modal --> */}
-                    <div
-                      className="modal fade"
-                      id="applyJobModal"
-                      tabIndex="-1"
-                      aria-hidden="true"
-                    >
-                      <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                        <div className="apply-modal-content modal-content">
-                          <div className="text-center">
-                            <h3 className="title">Apply for this job</h3>
-                            <button
-                              type="button"
-                              className="closed-modal"
-                              data-bs-dismiss="modal"
-                              aria-label="Close"
-                            ></button>
-                          </div>
-                          {/* End modal-header */}
 
-                          <ApplyJobModalContent />
-                          {/* End PrivateMessageBox */}
-                        </div>
-                        {/* End .send-private-message-wrapper */}
-                      </div>
-                    </div>
                     {/* End .modal */}
 
                     <div className="sidebar-widget">

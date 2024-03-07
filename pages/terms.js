@@ -1,12 +1,15 @@
 import dynamic from "next/dynamic";
 import Seo from "../components/common/Seo";
 import Terms from "../components/pages-menu/terms";
+import Layout from "../components/Layout";
 
 const index = () => {
   return (
     <>
       <Seo pageTitle="Terms" />
-      <Terms />
+      <Layout>
+        <Terms />
+      </Layout>
     </>
   );
 };
