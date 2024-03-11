@@ -24,6 +24,7 @@ import {
   jobApplyApplication,
   removeFavouriteJob,
 } from "../../features/jobs/actionCreator";
+import { Modal } from "react-bootstrap";
 
 const JobSingleDynamicV1 = ({ jobData }) => {
   const router = useRouter();
@@ -61,6 +62,10 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   if (!id) {
     return <div>Loading...</div>; // Or display a different component if id is not present
   }
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   useEffect(() => {
     if (userUid) {
       dispatch(checkIfUserApplied(userUid, id));
@@ -230,10 +235,11 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       <button
                         href="#"
                         className="theme-btn btn-style-one"
-                        data-bs-toggle="modal"
-                        data-bs-target="#applyJobModal"
+                        // data-bs-toggle="modal"
+                        // data-bs-target="#applyJobModal"
                         style={{ minWidth: "222px" }}
                         disabled={isApplied}
+                        onClick={handleShow}
                       >
                         {isApplied ? (
                           <i className="flaticon-checked">{" Applied"}</i>
@@ -269,31 +275,27 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                   {/* End apply for job btn */}
 
                   {/* <!-- Modal --> */}
-                  <div
-                    className="modal fade"
-                    id="applyJobModal"
-                    tabIndex="-1"
-                    aria-hidden="true"
-                  >
-                    <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                      <div className="apply-modal-content modal-content">
-                        <div className="text-center">
-                          <h3 className="title">Apply for this job</h3>
-                          <button
-                            type="button"
-                            className="closed-modal"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                          ></button>
-                        </div>
-                        {/* End modal-header */}
-
-                        <ApplyJobModalContent id={id} userUid={userUid} />
-                        {/* End PrivateMessageBox */}
+                  <Modal show={show} onHide={handleClose} centered>
+                    <div className="apply-modal-content">
+                      <div className="text-center">
+                        <h3 className="title">Apply for this job</h3>
+                        <button
+                          type="button"
+                          className="closed-modal"
+                          onClick={handleClose}
+                        ></button>
                       </div>
-                      {/* End .send-private-message-wrapper */}
+                      {/* End modal-header */}
+
+                      <ApplyJobModalContent
+                        id={id}
+                        userUid={userUid}
+                        handleClose={handleClose}
+                      />
+                      {/* End PrivateMessageBox */}
                     </div>
-                  </div>
+                  </Modal>
+
                   {/* End .modal */}
                 </div>
               </div>

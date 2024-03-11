@@ -6,9 +6,8 @@ import {
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactLoading from "react-loading";
-import Swal from "sweetalert2";
 
-const ApplyJobModalContent = ({ id, userUid }) => {
+const ApplyJobModalContent = ({ id, userUid, handleClose }) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const loading = useSelector((state) => {
     return state.jobSingle.jobApplyLoading;
@@ -18,17 +17,12 @@ const ApplyJobModalContent = ({ id, userUid }) => {
     e.preventDefault();
     if (!userUid) {
       alert("not login");
+      handleClose();
       return;
     } else {
       await dispatch(jobApplyApplication(userUid, id));
-      Swal.fire({
-        title: "Success",
-        text: "You have successfully applied for the job.",
-        icon: "success",
-        confirmButtonText: "Ok",
-      }).then(async () => {
-        await dispatch(checkIfUserApplied(userUid, id));
-      });
+      await dispatch(checkIfUserApplied(userUid, id));
+      handleClose();
     }
   };
   return (

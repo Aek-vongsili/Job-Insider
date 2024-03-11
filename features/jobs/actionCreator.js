@@ -252,16 +252,37 @@ const jobApplyApplication = (userUid, jobId) => {
     try {
       dispatch(jobApplyBegin());
       const resume = await getUserResume(userUid, db);
+
+      // Check if the user is a candidate (has a resume)
       if (resume && resume?.cvUrl) {
+        // Check if the user has already applied for this job
         const userApplied = await dispatch(checkIfUserApplied(userUid, jobId));
-        console.log(userApplied);
+
+        // If the user has not applied for the job, proceed with the application
         if (!userApplied) {
           await applyJobToFirestore(userUid, jobId, db);
+          dispatch(jobApplySuccess());
+          // Show success alert
+          Swal.fire({
+            title: "Success",
+            text: "You have successfully applied for the job.",
+            icon: "success",
+            confirmButtonText: "Ok",
+          });
         } else {
+          // If the user has already applied for the job, show alert
           throw new Error("User has already applied for this job");
         }
+      } else {
+        // If the user is not a candidate, show alert
+        Swal.fire({
+          title: "Error",
+          text: "Only candidates can apply for this job.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+        console.log("Only candidates can apply job");
       }
-      dispatch(jobApplySuccess());
     } catch (err) {
       console.log(err);
       dispatch(jobApplyErr(err));
@@ -300,6 +321,7 @@ const applyJobToFirestore = async (userId, jobId, db) => {
     await jobRef.collection("applications").add({
       userId: userId,
       appliedAt: new Date(),
+      status:"pending"
     });
   } catch (err) {
     throw new Error("Error applying for the job: " + err.message);

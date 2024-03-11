@@ -4,8 +4,8 @@ const Pricing = () => {
   const pricingCotent = [
     {
       id: 1,
-      packageType: "Basic",
-      price: "199",
+      packageType: "Weekly",
+      price: "200.000",
       tag: "",
       features: [
         "30 job posting",
@@ -16,8 +16,8 @@ const Pricing = () => {
     },
     {
       id: 2,
-      packageType: "Standard",
-      price: "499",
+      packageType: "Monthly",
+      price: "800.000",
       tag: "tagged",
       features: [
         "40 job posting",
@@ -28,8 +28,8 @@ const Pricing = () => {
     },
     {
       id: 3,
-      packageType: "Extended",
-      price: "799",
+      packageType: "Yearly",
+      price: "8.000.000",
       tag: "",
       features: [
         "50 job posting",
@@ -41,7 +41,7 @@ const Pricing = () => {
   ];
 
   return (
-    <div className="pricing-tabs tabs-box wow fadeInUp">
+    <div className="pricing-tabs tabs-box wow fadeInUp" data-aos="fade-up">
       {/* <!--Tabs Container--> */}
       <div className="row">
         {pricingCotent.map((item) => (
@@ -60,7 +60,7 @@ const Pricing = () => {
 
               <div className="title">{item.packageType}</div>
               <div className="price">
-                ${item.price} <span className="duration">/ monthly</span>
+                LAK{` ${item.price}`} <span className="duration"></span>
               </div>
               <div className="table-content">
                 <ul>

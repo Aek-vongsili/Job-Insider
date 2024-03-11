@@ -1,3 +1,4 @@
+import Swal from "sweetalert2";
 import actions from "./actions";
 const {
   candidateReadBegin,
@@ -27,6 +28,14 @@ const {
   candidateResumeReadBegin,
   candidateResumeReadSuccess,
   candidateResumeReadErr,
+
+  candidateJobAppliedReadBegin,
+  candidateJobAppliedReadSuccess,
+  candidateJobAppliedReadErr,
+
+  candidateJobAppliedDeleteBegin,
+  candidateJobAppliedDeleteSuccess,
+  candidateJobAppliedDeleteErr,
 } = actions;
 
 const candidateProfileData = (uid) => {
@@ -208,10 +217,105 @@ const candidateResumeSubmit = (data, uid, type) => {
 //     }
 //   };
 // };
+const candidateGetJobApplied = (userid) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(candidateJobAppliedReadBegin());
+
+      // Fetch jobs
+      const jobsQuerySnapshot = await db.collection("jobs").get();
+      const allApplications = [];
+
+      // Fetch all applications for the user in parallel
+      const applicationPromises = jobsQuerySnapshot.docs.map(async (jobDoc) => {
+        const jobData = jobDoc.data();
+        const jobApplicationsRef = jobDoc.ref.collection("applications");
+        const applicationsSnapshot = await jobApplicationsRef
+          .where("userId", "==", userid)
+          .get();
+
+        // Fetch company data
+        const companyDataSnapshot = await db
+          .collection("employers")
+          .doc(jobData?.company)
+          .get();
+
+        // Process each application and add to allApplications array
+        applicationsSnapshot.forEach((appDoc) => {
+          const appData = appDoc.data();
+          const companyData = companyDataSnapshot.data();
+
+          allApplications.push({
+            id: appDoc.id,
+            jobId: jobDoc.id,
+            ...appData,
+            title: jobData?.jobTitle,
+            company: companyData?.profile?.company_name,
+            location: companyData?.location?.address,
+            jobLogo: companyData?.profile?.logoImage,
+          });
+        });
+      });
+
+      // Wait for all application data to be fetched
+      await Promise.all(applicationPromises);
+
+      // Dispatch action with fetched data
+      dispatch(candidateJobAppliedReadSuccess(allApplications));
+    } catch (err) {
+      // Dispatch action in case of error
+      dispatch(candidateJobAppliedReadErr(err));
+    }
+  };
+};
+
+const candidateDeleteAppliedJob = (jobId, applicantId, userId) => {
+  return async (dispatch, getState, { getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(candidateJobAppliedDeleteBegin());
+
+      // Access the specific application document
+      const applicationRef = db
+        .collection("jobs")
+        .doc(jobId)
+        .collection("applications")
+        .doc(applicantId);
+      const applicationDoc = await applicationRef.get();
+
+      // Check if the application document exists
+      if (applicationDoc.exists) {
+        // Check if the user ID associated with the application matches the provided user ID
+        const applicationData = applicationDoc.data();
+        if (applicationData.userId !== userId) {
+          throw new Error("Unauthorized access"); // User is not authorized to delete the applicant ID
+        }
+
+        // Delete the applicant ID from the sub-collection
+        await applicationRef.delete();
+        Swal.fire("Deleted!", "Your application has been deleted.", "success");
+
+        // Dispatch action indicating success
+        dispatch(candidateJobAppliedDeleteSuccess());
+      } else {
+        // Dispatch action indicating application not found
+        dispatch(candidateJobAppliedDeleteErr("Application not found"));
+        Swal.fire("Error", "Application not found.", "error");
+      }
+    } catch (err) {
+      dispatch(candidateJobAppliedDeleteErr(err));
+      Swal.fire("Error", err.message, "error");
+    }
+  };
+};
+
 export {
   candidateUpdateData,
   candidateProfileData,
   candidateUploadFile,
   candidateUploadCv,
   candidateResumeSubmit,
+  candidateGetJobApplied,
+  candidateDeleteAppliedJob,
 };

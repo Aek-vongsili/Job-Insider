@@ -7,7 +7,9 @@ import CopyrightFooter from "../../CopyrightFooter";
 import JobListingsTable from "./components/JobListingsTable";
 import MenuToggler from "../../MenuToggler";
 
+
 const index = () => {
+
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>
@@ -16,7 +18,7 @@ const index = () => {
       <LoginPopup />
       {/* End Login Popup Modal */}
 
-      <DashboardCandidatesHeader />
+      {/* <DashboardCandidatesHeader /> */}
       {/* End Header */}
 
       <MobileMenu />

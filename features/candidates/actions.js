@@ -27,6 +27,14 @@ const actions = {
   CANDIDATE_RESUME_READ_SUCCESS: "CANDIDATE_RESUME_READ_SUCCESS",
   CANDIDATE_RESUME_READ_ERR: "CANDIDATE_RESUME_READ_ERR",
 
+  CANDIDATE_JOB_APPLIED_BEGIN: "CANDIDATE_JOB_APPLIED_BEGIN",
+  CANDIDATE_JOB_APPLIED_SUCCESS: "CANDIDATE_JOB_APPLIED_SUCCESS",
+  CANDIDATE_JOB_APPLIED_ERR: "CANDIDATE_JOB_APPLIED_ERR",
+
+  
+  CANDIDATE_JOB_APPLIED_DELETE_BEGIN: "CANDIDATE_JOB_APPLIED_DELETE_BEGIN",
+  CANDIDATE_JOB_APPLIED_DELETE_SUCCESS: "CANDIDATE_JOB_APPLIED_DELETE_SUCCESS",
+  CANDIDATE_JOB_APPLIED_DELETE_ERR: "CANDIDATE_JOB_APPLIED_DELETE_ERR",
   candidateUpdateBegin: () => {
     return {
       type: actions.CANDIDATE_UPDATE_BEGIN,
@@ -148,6 +156,41 @@ const actions = {
   candidateResumeReadErr: (err) => {
     return {
       type: actions.CANDIDATE_RESUME_READ_ERR,
+      err,
+    };
+  },
+
+  candidateJobAppliedReadBegin: () => {
+    return {
+      type: actions.CANDIDATE_JOB_APPLIED_BEGIN,
+    };
+  },
+  candidateJobAppliedReadSuccess: (data) => {
+    return {
+      type: actions.CANDIDATE_JOB_APPLIED_SUCCESS,
+      data,
+    };
+  },
+  candidateJobAppliedReadErr: (err) => {
+    return {
+      type: actions.CANDIDATE_JOB_APPLIED_ERR,
+      err,
+    };
+  },
+  candidateJobAppliedDeleteBegin: () => {
+    return {
+      type: actions.CANDIDATE_JOB_APPLIED_DELETE_BEGIN,
+    };
+  },
+  candidateJobAppliedDeleteSuccess: (data) => {
+    return {
+      type: actions.CANDIDATE_JOB_APPLIED_DELETE_SUCCESS,
+      data,
+    };
+  },
+  candidateJobAppliedDeleteErr: (err) => {
+    return {
+      type: actions.CANDIDATE_JOB_APPLIED_DELETE_ERR,
       err,
     };
   },

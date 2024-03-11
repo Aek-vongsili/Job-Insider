@@ -1,10 +1,8 @@
 import Breadcrumb from "../../common/Breadcrumb";
 import LoginPopup from "../../common/form/login/LoginPopup";
-import FooterDefault from "../../footer/common-footer";
-import DefaulHeader from "../../header/DefaulHeader";
 import MobileMenu from "../../header/MobileMenu";
+import Customprice from "../../pricing/Customprice";
 import Pricing from "../../pricing/Pricing";
-
 const index = () => {
   return (
     <>
@@ -22,13 +20,24 @@ const index = () => {
 
       <Breadcrumb title="Pricing" meta="Pricing" />
       {/* <!--End Page Title--> */}
+      <section className="pricing-section">
+        <div className="auto-container">
+          <div className="sec-title text-center">
+            <h2>Job posting</h2>
+            <div className="text">
+            </div>
+          </div>
+          {/* End title */}
+          <Customprice />
+          {/* End .{/* <!--Pricing Tabs--> */}
+        </div>
+      </section>
 
       <section className="pricing-section">
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>Pricing Packages</h2>
+            <h2>Price Package</h2>
             <div className="text">
-              Lorem ipsum dolor sit amet elit, sed do eiusmod tempor.
             </div>
           </div>
           {/* End title */}

@@ -18,17 +18,23 @@ import {
 import { useRouter } from "next/router";
 import mobileMenuData2 from "../../../data/mobileMenuData2";
 // import { auth } from "../../../firebase/clientApp";
-import axios from "axios";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fbAuthLogout } from "../../../features/auth/actionCreator";
 
 const Index = () => {
   const router = useRouter();
-
+  const dispatch = useDispatch();
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
   const handleSignOut = async () => {
- 
+    try {
+      await dispatch(fbAuthLogout(() => router.push("/")));
+    } catch (error) {
+      // Handle any errors here
+      console.error("Logout error:", error);
+    }
   };
-  const isLogin = useSelector((state) => state.user.isLoggedIn);
 
   return (
     <div
@@ -56,7 +62,7 @@ const Index = () => {
                 {item.label}
               </MenuItem>
             ))}
-            {isLogin && <MenuItem onClick={handleSignOut}>Log out</MenuItem>}
+            {userUid && <MenuItem onClick={handleSignOut}>Log out</MenuItem>}
           </Menu>
         </Sidebar>
       </ProSidebarProvider>

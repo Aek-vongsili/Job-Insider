@@ -679,7 +679,8 @@
 	.main-header .dashboard-option .dropdown-menu,
 	.main-header .dashboard-option .dropdown-toggle::after,
 	.main-header .dashboard-option .name {
-		display: none;
+		top: 35px !important;
+		right: -30px !important;
 	}
 
 	.main-header .menu-btn:first-child {
@@ -1806,7 +1807,7 @@
 
 	.job-block-two .bookmark-btn,
 	.job-block .bookmark-btn {
-		display: none;
+		right: -10px;
 	}
 
 	.banner-section-two .count-employers {

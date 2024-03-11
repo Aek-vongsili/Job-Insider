@@ -1,24 +1,43 @@
 import Link from "next/link";
 import MobileSidebar from "./mobile-sidebar";
 import { useSelector } from "react-redux";
+import candidatesMenuData from "../../data/candidatesMenuData";
+import employerMenuData from "../../data/employerMenuData";
+import { useMemo } from "react";
+import { isActiveLink } from "../../utils/linkActiveChecker";
+import { useRouter } from "next/router";
 
 const MobileMenu = () => {
-  const isLogin = useSelector((state) => state.user.isLoggedIn);
-  const role = useSelector(state =>state.user.role)
-  const RolePath = ()=>{
-    switch(role){
+  const router = useRouter();
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  const role = useSelector((state) => state.auth.role);
+  const RolePath = () => {
+    switch (role) {
       case "Employer":
-        return "/employers-dashboard/dashboard"
+        return "/employers-dashboard/dashboard";
       case "Candidate":
-        return "/candidates-dashboard/dashboard"
+        return "/candidates-dashboard/dashboard";
       default:
-        return "/"
+        return "/";
     }
-  }
+  };
+  const checkRole = (role) => {
+    switch (role) {
+      case "Candidate":
+        return candidatesMenuData;
+      case "Employer":
+        return employerMenuData;
+      default:
+        return candidatesMenuData;
+    }
+  };
+  const menuData = useMemo(() => checkRole(role), [role]);
   return (
     // <!-- Main Header-->
     <header className="main-header main-header-mobile">
-      <div className="auto-container" style={{height:100,display:"grid"}}>
+      <div className="auto-container" style={{ height: 100, display: "grid" }}>
         {/* <!-- Main box --> */}
         <div className="inner-box">
           <div className="nav-outer">
@@ -38,21 +57,45 @@ const MobileMenu = () => {
 
           <div className="outer-box">
             <div className="login-box">
-              {isLogin ? (
-                <Link
-                  href={RolePath()}
-                  className="call-modal"
-                //   data-bs-toggle="modal"
-                //   data-bs-target="#loginPopupModal"
-                >
-                  <span className="icon icon-user"></span>
-                </Link>
+              {userUid ? (
+                <div className="dropdown dashboard-option">
+                  <a
+                    className="icon icon-user"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  ></a>
+
+                  <ul className="dropdown-menu slideDown">
+                    {menuData?.map((item) => (
+                      <li
+                        className={`${
+                          isActiveLink(item.routePath, router.asPath)
+                            ? "active"
+                            : ""
+                        } mb-1`}
+                        key={item.id}
+                      >
+                        <Link href={item.routePath}>
+                          <i className={`la ${item.icon}`}></i> {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                    {/* <li
+                      className={`${
+                        isActiveLink("", router.asPath) ? "active" : ""
+                      } mb-1`}
+                    >
+                      <a onClick={Logout}>
+                        <i className={`la la-sign-out`}></i> Log out
+                      </a>
+                    </li> */}
+                  </ul>
+                </div>
               ) : (
                 <Link
                   href="/login"
                   className="theme-btn btn-style-three call-modal login-btn"
-                  // data-bs-toggle="modal"
-                  // data-bs-target="#loginPopupModal"
                 >
                   Login / Register
                 </Link>

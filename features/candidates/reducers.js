@@ -28,6 +28,14 @@ const {
   CANDIDATE_RESUME_READ_BEGIN,
   CANDIDATE_RESUME_READ_SUCCESS,
   CANDIDATE_RESUME_READ_ERR,
+
+  CANDIDATE_JOB_APPLIED_BEGIN,
+  CANDIDATE_JOB_APPLIED_SUCCESS,
+  CANDIDATE_JOB_APPLIED_ERR,
+
+  CANDIDATE_JOB_APPLIED_DELETE_BEGIN,
+  CANDIDATE_JOB_APPLIED_DELETE_SUCCESS,
+  CANDIDATE_JOB_APPLIED_DELETE_ERR,
 } = actions;
 
 const initialState = {
@@ -44,6 +52,8 @@ const initialSingleState = {
   fileLoading: false,
   error: null,
   fileError: null,
+  applieJob: [],
+  applieJobLoading: false,
 };
 
 const candidateReducer = (state = initialState, action) => {
@@ -176,7 +186,41 @@ const candidateSingleReducer = (state = initialSingleState, action) => {
         error: err,
         loading: false,
       };
+    case CANDIDATE_JOB_APPLIED_BEGIN:
+      return {
+        ...state,
+        applieJobLoading: true,
+      };
+    case CANDIDATE_JOB_APPLIED_SUCCESS:
+      return {
+        ...state,
+        applieJob: data,
+        applieJobLoading: false,
+      };
 
+    case CANDIDATE_JOB_APPLIED_ERR:
+      return {
+        ...state,
+        error: err,
+        applieJobLoading: false,
+      };
+    case CANDIDATE_JOB_APPLIED_DELETE_BEGIN:
+      return {
+        ...state,
+        applieJobLoading: true,
+      };
+    case CANDIDATE_JOB_APPLIED_DELETE_SUCCESS:
+      return {
+        ...state,
+        applieJobLoading: false,
+      };
+
+    case CANDIDATE_JOB_APPLIED_DELETE_ERR:
+      return {
+        ...state,
+        error: err,
+        applieJobLoading: false,
+      };
     default:
       return state;
   }

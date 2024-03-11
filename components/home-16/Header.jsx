@@ -61,7 +61,7 @@ const Header = () => {
     };
   }, [dispatch]);
   const fetchProfileData = useCallback(() => {
-    console.log("dd")
+    console.log("dd");
     if (role === "Candidate") {
       dispatch(candidateProfileData(userUid));
     } else if (role === "Employer") {
