@@ -17,6 +17,7 @@ const JobListingsTable = () => {
   const jobsData = useSelector((state) => {
     return state.employerSingle.jobData;
   });
+  console.log(jobsData);
   const loading = useSelector((state) => {
     return state.employerSingle.jobLoading;
   });
@@ -130,8 +131,16 @@ const JobListingsTable = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="applied">
-                      <a href="#">3+ Applied</a>
+                    <td>
+                      <p
+                        style={{
+                          color: "#1967D2",
+                          fontSize: 15,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {item?.applicants.length} Applicant(s)
+                      </p>
                     </td>
                     <td>
                       <div style={{ marginBottom: "20px" }}>

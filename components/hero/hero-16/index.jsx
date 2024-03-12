@@ -1,7 +1,8 @@
 import { Carousel } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation, Autoplay } from "swiper/modules";
 const index = () => {
   const [index, setIndex] = useState(0);
   const imagePath = [
@@ -23,11 +24,8 @@ const index = () => {
     return () => clearInterval(interval);
   }, [imagePath.length]);
   return (
-    <section
-      className="banner-section-four -type-16"
-      style={{ marginTop: 100 }}
-    >
-      <Carousel
+    <section className="-type-16" style={{ marginTop: 100 }}>
+      {/* <Carousel
         data-bs-theme="dark"
         style={{ width: "100%" }}
         activeIndex={index}
@@ -49,7 +47,35 @@ const index = () => {
             />
           </Carousel.Item>
         ))}
-      </Carousel>
+      </Carousel> */}
+      <Swiper
+        slidesPerView={1}
+        loop={true}
+        pagination={{
+          clickable: true,
+        }}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        navigation={true}
+        modules={[Pagination, Navigation, Autoplay]}
+        className="mySwiper"
+      >
+        {imagePath.map((i, index) => (
+          <SwiperSlide key={i.id}>
+            <Image
+              className="d-block w-100"
+              src={i.path}
+              alt="First slide"
+              width={1500}
+              height={1500}
+              quality={100}
+              priority
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </section>
     // <!-- End Banner Section-->
   );

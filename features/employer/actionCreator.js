@@ -165,26 +165,54 @@ const employerLocationSubmit = (data) => {
   };
 };
 const employerJobListRead = (uid) => {
-  return async (dispatch, getState, { getFirebase, getFirestore }) => {
-    const db = getFirestore();
+  return async (dispatch, getState, { getFirestore }) => {
+    const firestore = getFirestore();
     try {
       dispatch(employerJobListReadBegin());
-      const jobsQuerySnapshot = await db
-        .collection("jobs")
-        .where("company", "==", uid)
-        .get();
+      const jobRef = firestore.collection("jobs");
+      const jobsQuerySnapshot = await jobRef.where("company", "==", uid).get(); // Await the query snapshot
       const jobsData = [];
-      jobsQuerySnapshot.forEach((doc) => {
-        jobsData.push({ id: doc.id, ...doc.data() });
-      });
+      for (const jobDoc of jobsQuerySnapshot.docs) {
+        const jobId = jobDoc.id;
+        const jobData = jobDoc.data();
+        // Create a reference to applicants for this job
+        const applicantsQuerySnapshot = await jobRef
+          .doc(jobId)
+          .collection("applications")
+          .get();
+
+        const applicantsData = [];
+        for (const applicantDoc of applicantsQuerySnapshot.docs) {
+          const applicantId = applicantDoc.id;
+          const applicantData = applicantDoc.data();
+          // Get candidate data using the userId from applicantData
+          const candidateDoc = await firestore
+            .collection("candidates")
+            .doc(applicantData.userId)
+            .get();
+          const candidateData = candidateDoc.exists
+            ? candidateDoc.data()
+            : null;
+          applicantsData.push({
+            id: applicantId,
+            ...applicantData,
+            candidate: candidateData,
+          });
+        }
+        console.log(applicantsData);
+        // Push job data along with applicants to jobsData array
+        jobsData.push({ id: jobId, ...jobData, applicants: applicantsData });
+      }
       if (jobsData.length === 0) {
         // If no data is found, dispatch an empty array
         dispatch(employerJobListReadSuccess([]));
       } else {
         // Dispatch the retrieved job data
+        console.log(jobsData);
         dispatch(employerJobListReadSuccess(jobsData));
       }
     } catch (err) {
+      console.log(err);
       dispatch(employerJobListReadErr(err));
     }
   };
@@ -238,7 +266,7 @@ const employerEditJob = (uid, jobId, updateData) => {
           .doc(jobId)
           .update({ ...updateData, updatedAt: new Date() });
       }
-      dispatch(employerEditJobSuccess())
+      dispatch(employerEditJobSuccess());
     } catch (err) {
       dispatch(employerEditJobErr(err));
     }
@@ -251,5 +279,5 @@ export {
   employerLocationSubmit,
   employerJobListRead,
   employerJobDelete,
-  employerEditJob
+  employerEditJob,
 };

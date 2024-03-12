@@ -11,6 +11,10 @@ import firebase from "firebase/compat/app";
 import LoadingLayout from "../components/layouts/LoadingLayout";
 import { createFirestoreInstance } from "redux-firestore";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
 import Head from "next/head";
 if (typeof window !== "undefined") {
   require("bootstrap/dist/js/bootstrap");

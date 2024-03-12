@@ -35,6 +35,7 @@ const actions = {
   EMPLOYER_DELETE_JOB_SUCCESS: "EMPLOYER_DELETE_JOB_SUCCESS",
   EMPLOYER_DELETE_JOB_ERR: "EMPLOYER_DELETE_JOB_ERR",
 
+
   employerUpdateBegin: () => {
     return {
       type: actions.EMPLOYER_UPDATE_BEGIN,

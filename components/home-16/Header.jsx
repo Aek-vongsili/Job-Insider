@@ -34,6 +34,9 @@ const Header = () => {
   });
 
   useEffect(() => {
+    const db = firebase.firestore();
+    const usersRef = db.collection("candidates");
+
     const updateUserImage = () => {
       switch (role) {
         case "Employer":
@@ -47,7 +50,15 @@ const Header = () => {
       }
     };
 
-    updateUserImage();
+    const unsubscribe = usersRef.onSnapshot((snapshot) => {
+      // Update image based on role
+      updateUserImage();
+    });
+
+    return () => {
+      // Unsubscribe from Firestore changes when component unmounts or dependencies change
+      unsubscribe();
+    };
   }, [role, employerSingle, candidateData, dispatch]);
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -61,7 +72,6 @@ const Header = () => {
     };
   }, [dispatch]);
   const fetchProfileData = useCallback(() => {
-    console.log("dd");
     if (role === "Candidate") {
       dispatch(candidateProfileData(userUid));
     } else if (role === "Employer") {

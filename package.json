@@ -68,6 +68,7 @@
     "sharp": "^0.31.3",
     "slick-carousel": "^1.8.1",
     "sweetalert2": "^11.7.12",
+    "swiper": "^11.0.7",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
