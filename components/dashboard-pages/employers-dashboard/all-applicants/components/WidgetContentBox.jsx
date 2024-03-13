@@ -29,7 +29,7 @@ const WidgetContentBox = () => {
               <TabList className="aplicantion-status tab-buttons clearfix">
                 <Tab className="tab-btn totals">
                   {" "}
-                  Total(s) : {jobsData?.length}
+                  Total(s) : {item?.applicants?.length}
                 </Tab>
                 <Tab className="tab-btn approved"> Approved: 2</Tab>
                 <Tab className="tab-btn rejected"> Rejected(s): 4</Tab>

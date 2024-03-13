@@ -10,6 +10,12 @@ const EditModal = ({
   errors,
 }) => {
   const [editData, setEditData] = useState(data);
+  const currentYear = new Date().getFullYear();
+  const yearsArray = Array.from(
+    { length: currentYear - 1900 + 1 },
+    (_, i) => currentYear - i
+  );
+
   const handleInputEdit = (e) => {
     const { name, value } = e.target;
     setEditData({ ...editData, [name]: value });
@@ -75,7 +81,11 @@ const EditModal = ({
                       <option value="" disabled selected>
                         select year
                       </option>
-                      <option value="2000">2000</option>
+                      {yearsArray.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
                     </select>
                     to
                     <select
@@ -87,7 +97,11 @@ const EditModal = ({
                       <option value="" disabled selected>
                         select year
                       </option>
-                      <option value="2010">2010</option>
+                      {yearsArray.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   {errors?.start && (
@@ -135,6 +149,12 @@ const AddExperience = ({
   handleSave,
   errors,
 }) => {
+  const currentYear = new Date().getFullYear();
+  const yearsArray = Array.from(
+    { length: currentYear - 1900 + 1 },
+    (_, i) => currentYear - i
+  );
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -180,7 +200,11 @@ const AddExperience = ({
                       <option value="" disabled selected>
                         select year
                       </option>
-                      <option value="2000">2000</option>
+                      {yearsArray.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
                     </select>
                     to
                     <select
@@ -191,7 +215,11 @@ const AddExperience = ({
                       <option value="" disabled selected>
                         select year
                       </option>
-                      <option value="2010">2010</option>
+                      {yearsArray.map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
                     </select>
                   </div>
                   {errors?.start && (

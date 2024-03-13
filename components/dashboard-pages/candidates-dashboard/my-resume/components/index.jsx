@@ -24,10 +24,10 @@ const index = () => {
   const [experiences, setExperiences] = useState([]);
   const [language, setLanguage] = useState([]);
   const [loading, setLoading] = useState(false);
+    
   const candidateData = useSelector((state) => {
     return state.candidateSingle.data;
   });
-  console.log(education);
   const userUid = useSelector((state) => {
     return state.firebase.auth.uid;
   });
@@ -81,14 +81,39 @@ const index = () => {
   };
   const handleSave = async (event) => {
     event.preventDefault();
-    if (getManager) {
-      dispatch(candidateUploadCv(getManager, userUid));
+
+    try {
+      setLoading(true);
+      if (getManager) {
+        await dispatch(candidateUploadCv(getManager, userUid));
+      }
+
+      await dispatch(candidateResumeSubmit(education, userUid, "education"));
+      await dispatch(
+        candidateResumeSubmit(experiences, userUid, "experiences")
+      );
+      await dispatch(candidateResumeSubmit(language, userUid, "languages"));
+
+      // Show success alert after all submissions are successful
+      setLoading(false);
+      Swal.fire({
+        title: "Success",
+        text: "Data updated successfully.",
+        icon: "success",
+        confirmButtonText: "Ok",
+      });
+    } catch (error) {
+      // Handle any errors that might occur during data submission
+      console.error("Error updating data:", error);
+      setLoading(false);
+      // Show error alert if needed
+      Swal.fire({
+        title: "Error",
+        text: "An error occurred while updating data.",
+        icon: "error",
+        confirmButtonText: "Ok",
+      });
     }
-
-    await dispatch(candidateResumeSubmit(education, userUid, "education"));
-
-    await dispatch(candidateResumeSubmit(experiences, userUid, "experiences"));
-    await dispatch(candidateResumeSubmit(language, userUid, "languages"));
   };
   const getUserResume = async () => {
     if (candidateData?.resume) {

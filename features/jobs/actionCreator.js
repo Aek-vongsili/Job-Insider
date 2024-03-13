@@ -251,10 +251,37 @@ const jobApplyApplication = (userUid, jobId) => {
     const db = getFirestore();
     try {
       dispatch(jobApplyBegin());
-      const resume = await getUserResume(userUid, db);
+      const userData = await getUserResume(userUid, db);
 
       // Check if the user is a candidate (has a resume)
-      if (resume && resume?.cvUrl) {
+      if (!userData) {
+        // Show alert that only candidates can apply for jobs
+        Swal.fire({
+          title: "Error",
+          text: "Only candidates can apply for jobs.",
+          icon: "error",
+          confirmButtonText: "Ok",
+        });
+      } else if (!userData.profile || !userData.resume?.cvUrl) {
+        // Check if profile data or resume data is missing
+        if (!userData.profile) {
+          // Show alert that user should fill profile data
+          Swal.fire({
+            title: "Error",
+            text: "Please fill your profile data before applying for jobs.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+        } else if (!userData.resume?.cvUrl) {
+          // Show alert that user should upload resume data
+          Swal.fire({
+            title: "Error",
+            text: "Please upload your resume before applying for jobs.",
+            icon: "error",
+            confirmButtonText: "Ok",
+          });
+        }
+      } else {
         // Check if the user has already applied for this job
         const userApplied = await dispatch(checkIfUserApplied(userUid, jobId));
 
@@ -273,15 +300,6 @@ const jobApplyApplication = (userUid, jobId) => {
           // If the user has already applied for the job, show alert
           throw new Error("User has already applied for this job");
         }
-      } else {
-        // If the user is not a candidate, show alert
-        Swal.fire({
-          title: "Error",
-          text: "Only candidates can apply for this job.",
-          icon: "error",
-          confirmButtonText: "Ok",
-        });
-        console.log("Only candidates can apply job");
       }
     } catch (err) {
       console.log(err);
@@ -295,8 +313,8 @@ const getUserResume = async (userUid, db) => {
     const cvDoc = await db.collection("candidates").doc(userUid).get();
     if (cvDoc.exists) {
       const userData = cvDoc.data();
-      if (userData.resume) {
-        return userData.resume; // Return the resume if it exists and is truthy
+      if (userData) {
+        return userData; // Return the resume if it exists and is truthy
       } else {
         return null; // Return null if the resume field is falsy or doesn't exist
       }
@@ -321,7 +339,7 @@ const applyJobToFirestore = async (userId, jobId, db) => {
     await jobRef.collection("applications").add({
       userId: userId,
       appliedAt: new Date(),
-      status:"pending"
+      status: "pending",
     });
   } catch (err) {
     throw new Error("Error applying for the job: " + err.message);
