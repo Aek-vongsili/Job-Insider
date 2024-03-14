@@ -36,6 +36,14 @@ const {
   EMPLOYER_DELETE_JOB_BEGIN,
   EMPLOYER_DELETE_JOB_SUCCESS,
   EMPLOYER_DELETE_JOB_ERR,
+
+  EMPLOYER_APPROVE_APPLICANT_BEGIN,
+  EMPLOYER_APPROVE_APPLICANT_SUCCESS,
+  EMPLOYER_APPROVE_APPLICANT_ERR,
+
+  EMPLOYER_REJECT_APPLICANT_BEGIN,
+  EMPLOYER_REJECT_APPLICANT_SUCCESS,
+  EMPLOYER_REJECT_APPLICANT_ERR,
 } = actions;
 
 const initialState = {
@@ -77,6 +85,39 @@ const employerReducer = (state = initialState, action) => {
         error: err,
         loading: false,
       };
+    case EMPLOYER_APPROVE_APPLICANT_BEGIN:
+      return {
+        ...state,
+        loading: true,
+      };
+    case EMPLOYER_APPROVE_APPLICANT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case EMPLOYER_APPROVE_APPLICANT_ERR:
+      return {
+        ...state,
+        error: err,
+        loading: false,
+      };
+    case EMPLOYER_REJECT_APPLICANT_BEGIN:
+      return {
+        ...state,
+        loading: true,
+      };
+    case EMPLOYER_REJECT_APPLICANT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case EMPLOYER_REJECT_APPLICANT_ERR:
+      return {
+        ...state,
+        error: err,
+        loading: false,
+      };
+
     default:
       return state;
   }

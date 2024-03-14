@@ -106,16 +106,16 @@ const Header = () => {
     // <!-- Main Header-->
     <header className="main-header header-style-four -type-16 fixed-header">
       <div className="container-fluid">
-        <div className="main-box">
+        <div className="main-box" style={{ height: "100px" }}>
           {/* <!--Nav Outer --> */}
           <div className="nav-outer">
             <div className="logo-box">
               <div className="logo">
                 <Link href="/">
                   <img
-                    src="/images/Artboard 6 white.svg"
+                    src="/images/HUBJOB_LOGO_WHITE.svg"
                     alt="brand"
-                    style={{ width: "9rem" }}
+                    style={{ width: "6.5rem" }}
                   />
                 </Link>
               </div>

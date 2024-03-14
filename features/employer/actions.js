@@ -35,6 +35,13 @@ const actions = {
   EMPLOYER_DELETE_JOB_SUCCESS: "EMPLOYER_DELETE_JOB_SUCCESS",
   EMPLOYER_DELETE_JOB_ERR: "EMPLOYER_DELETE_JOB_ERR",
 
+  EMPLOYER_APPROVE_APPLICANT_BEGIN: "EMPLOYER_APPROVE_APPLICANT_BEGIN",
+  EMPLOYER_APPROVE_APPLICANT_SUCCESS: "EMPLOYER_APPROVE_APPLICANT_SUCCESS",
+  EMPLOYER_APPROVE_APPLICANT_ERR: "EMPLOYER_APPROVE_APPLICANT_ERR",
+
+  EMPLOYER_REJECT_APPLICANT_BEGIN: "EMPLOYER_REJECT_APPLICANT_BEGIN",
+  EMPLOYER_REJECT_APPLICANT_SUCCESS: "EMPLOYER_REJECT_APPLICANT_SUCCESS",
+  EMPLOYER_REJECT_APPLICANT_ERR: "EMPLOYER_REJECT_APPLICANT_ERR",
 
   employerUpdateBegin: () => {
     return {
@@ -203,6 +210,44 @@ const actions = {
   employerDeleteJobErr: (err) => {
     return {
       type: actions.EMPLOYER_DELETE_JOB_ERR,
+      err,
+    };
+  },
+  //EMPLOYER APPROVE APPLICANT
+  employerApproveApplicantBegin: () => {
+    return {
+      type: actions.EMPLOYER_APPROVE_APPLICANT_BEGIN,
+    };
+  },
+  employerApproveApplicantSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_APPROVE_APPLICANT_SUCCESS,
+      data,
+    };
+  },
+
+  employerApproveApplicantErr: (err) => {
+    return {
+      type: actions.EMPLOYER_APPROVE_APPLICANT_ERR,
+      err,
+    };
+  },
+   //EMPLOYER REJECT APPLICANT
+   employerRejectApplicantBegin: () => {
+    return {
+      type: actions.EMPLOYER_REJECT_APPLICANT_BEGIN,
+    };
+  },
+  employerRejectApplicantSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_REJECT_APPLICANT_SUCCESS,
+      data,
+    };
+  },
+
+  employerRejectApplicantErr: (err) => {
+    return {
+      type: actions.EMPLOYER_REJECT_APPLICANT_ERR,
       err,
     };
   },

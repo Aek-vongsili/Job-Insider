@@ -1,7 +1,49 @@
 import Link from "next/link";
-import candidatesData from "../../../../../data/candidates";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  employerApproveApplicant,
+  employerJobListRead,
+  employerRejectApplicant,
+} from "../../../../../features/employer/actionCreator";
 
-const Applicants = ({ candidate, appliedAt }) => {
+const Applicants = ({ data, appliedAt, jobId, applicantId }) => {
+  const dispatch = useDispatch();
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+  const handleApproveApplicant = async () => {
+    await dispatch(employerApproveApplicant(userUid, jobId, applicantId));
+    await dispatch(employerJobListRead(userUid));
+  };
+  const handleRejectApplicant = async () => {
+    await dispatch(employerRejectApplicant(userUid, jobId, applicantId));
+    await dispatch(employerJobListRead(userUid));
+  };
+  const { candidate } = data;
+  const styles = {
+    display: "inline",
+    padding: "0.2em 0.6em 0.3em",
+    fontSize: "75%",
+    fontWeight: "bold",
+    lineHeight: "1",
+    color: "#fff",
+    textAlign: "center",
+    whiteSpace: "nowrap",
+    verticalAlign: "baseline",
+    borderRadius: "0.25em",
+    marginLeft: "10px",
+  };
+  const getBackgroundColor = (status) => {
+    if (status === "approved") {
+      return "#79b530"; // Green for approve
+    } else if (status === "rejected") {
+      return "#d93025"; // Red for reject
+    } else if (status === "pending") {
+      return "#27ceb4"; // Blue for pending
+    } else {
+      return "#000"; // Default color
+    }
+  };
   return (
     <>
       <div className="candidate-block-three col-lg-6 col-md-12 col-sm-12">
@@ -16,11 +58,20 @@ const Applicants = ({ candidate, appliedAt }) => {
                 alt="candidates"
               />
             </figure>
-            <h4 className="name">
-              <Link href={`/candidates-single-v1/${candidate.id}`}>
+            <div className="name">
+              <Link href={`/candidates-single/${data?.id}`}>
                 {candidate?.profile?.firstname} {candidate?.profile?.lastname}
               </Link>
-            </h4>
+              <span
+                style={{
+                  ...styles,
+                  backgroundColor: getBackgroundColor(data?.status),
+                }}
+              >
+                {data?.status &&
+                  data.status.charAt(0).toUpperCase() + data.status.slice(1)}
+              </span>
+            </div>
 
             <ul className="candidate-info">
               <li>
@@ -69,12 +120,30 @@ const Applicants = ({ candidate, appliedAt }) => {
                 </button>
               </li>
               <li>
-                <button data-text="Approve Aplication">
+                <a
+                  href={candidate?.resume?.cvUrl}
+                  download="Your_CV.pdf"
+                  target="_blank"
+                >
+                  <button data-text="View Cv">
+                    <span className="la la-file"></span>
+                  </button>
+                </a>
+              </li>
+              <li>
+                <button
+                  data-text="Approve Aplication"
+                  onClick={handleApproveApplicant}
+                >
                   <span className="la la-check"></span>
                 </button>
               </li>
+
               <li>
-                <button data-text="Reject Aplication">
+                <button
+                  data-text="Reject Aplication"
+                  onClick={handleRejectApplicant}
+                >
                   <span className="la la-times-circle"></span>
                 </button>
               </li>

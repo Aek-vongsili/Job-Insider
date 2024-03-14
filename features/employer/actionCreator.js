@@ -36,6 +36,14 @@ const {
   employerEditJobBegin,
   employerEditJobSuccess,
   employerEditJobErr,
+
+  employerApproveApplicantBegin,
+  employerApproveApplicantSuccess,
+  employerApproveApplicantErr,
+
+  employerRejectApplicantBegin,
+  employerRejectApplicantSuccess,
+  employerRejectApplicantErr,
 } = actions;
 
 const employerUploadFile = (imageAsString, path) => {
@@ -272,6 +280,112 @@ const employerEditJob = (uid, jobId, updateData) => {
     }
   };
 };
+import Swal from "sweetalert2"; // Import SweetAlert library
+
+const employerApproveApplicant = (uid, jobId, applicantId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerApproveApplicantBegin());
+
+      const jobRef = db.collection("jobs");
+      const jobDoc = await jobRef.doc(jobId).get();
+      const jobData = jobDoc.data();
+
+      if (jobData.company === uid) {
+        const confirmResult = await Swal.fire({
+          title: "Are you sure?",
+          text: "You are about to approve this applicant.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, approve it!",
+        });
+
+        if (confirmResult.isConfirmed) {
+          const applicantDocRef = jobRef
+            .doc(jobId)
+            .collection("applications")
+            .doc(applicantId);
+          const applicantDocSnapshot = await applicantDocRef.get();
+          if (applicantDocSnapshot.exists) {
+            await applicantDocRef.update({ status: "approved" });
+            dispatch(employerApproveApplicantSuccess());
+            // Show success message
+            Swal.fire({
+              title: "Success!",
+              text: "Applicant has been approved.",
+              icon: "success",
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      dispatch(employerApproveApplicantErr(err));
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to update applicant status.",
+        icon: "error",
+      });
+    }
+  };
+};
+
+const employerRejectApplicant = (uid, jobId, applicantId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerRejectApplicantBegin());
+
+      const jobRef = db.collection("jobs");
+      const jobDoc = await jobRef.doc(jobId).get();
+      const jobData = jobDoc.data();
+
+      if (jobData.company === uid) {
+        const confirmResult = await Swal.fire({
+          title: "Are you sure?",
+          text: "You are about to reject this applicant.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, reject it!",
+        });
+
+        if (confirmResult.isConfirmed) {
+          const applicantDocRef = jobRef
+            .doc(jobId)
+            .collection("applications")
+            .doc(applicantId);
+          const applicantDocSnapshot = await applicantDocRef.get();
+          if (applicantDocSnapshot.exists) {
+            await applicantDocRef.update({ status: "rejected" });
+            dispatch(employerRejectApplicantSuccess());
+            // Show success message
+            Swal.fire({
+              title: "Success!",
+              text: "Applicant has been reject.",
+              icon: "success",
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      dispatch(employerRejectApplicantErr(err));
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to update applicant status.",
+        icon: "error",
+      });
+    }
+  };
+};
+
+export default employerApproveApplicant;
+
 export {
   employerUploadFile,
   employersUpdateData,
@@ -280,4 +394,6 @@ export {
   employerJobListRead,
   employerJobDelete,
   employerEditJob,
+  employerApproveApplicant,
+  employerRejectApplicant
 };

@@ -317,17 +317,17 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                   </div>
                   {/* <!-- Other Options --> */}
 
-                  <div className="related-jobs">
+                  {/* <div className="related-jobs">
                     <div className="title-box">
                       <h3>Related Jobs</h3>
                       <div className="text">
                         2020 jobs live - 293 added today.
                       </div>
                     </div>
-                    {/* End title box */}
+                  
 
                     <RelatedJobs />
-                  </div>
+                  </div> */}
                   {/* <!-- Related Jobs --> */}
                 </div>
                 {/* End .content-column */}
