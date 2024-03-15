@@ -4,6 +4,7 @@ import {
   employerApproveApplicant,
   employerJobListRead,
   employerRejectApplicant,
+  employerUndoApplicant,
 } from "../../../../../features/employer/actionCreator";
 
 const Applicants = ({ data, appliedAt, jobId, applicantId }) => {
@@ -17,6 +18,10 @@ const Applicants = ({ data, appliedAt, jobId, applicantId }) => {
   };
   const handleRejectApplicant = async () => {
     await dispatch(employerRejectApplicant(userUid, jobId, applicantId));
+    await dispatch(employerJobListRead(userUid));
+  };
+  const handleUndoActiontApplicant = async () => {
+    await dispatch(employerUndoApplicant(userUid, jobId, applicantId));
     await dispatch(employerJobListRead(userUid));
   };
   const { candidate } = data;
@@ -119,34 +124,61 @@ const Applicants = ({ data, appliedAt, jobId, applicantId }) => {
                   <span className="la la-eye"></span>
                 </button>
               </li>
-              <li>
-                <a
-                  href={candidate?.resume?.cvUrl}
-                  download="Your_CV.pdf"
-                  target="_blank"
-                >
-                  <button data-text="View Cv">
-                    <span className="la la-file"></span>
+              {(data?.status === "pending" || data?.status === "approved") && (
+                <li>
+                  <a
+                    href={candidate?.resume?.cvUrl}
+                    download="Your_CV.pdf"
+                    target="_blank"
+                  >
+                    <button data-text="View Cv">
+                      <span className="la la-file"></span>
+                    </button>
+                  </a>
+                </li>
+              )}
+              {data?.status !== "approved" && data?.status !== "rejected" && (
+                <li>
+                  <button
+                    data-text="Approve Aplication"
+                    onClick={handleApproveApplicant}
+                  >
+                    <span className="la la-check"></span>
                   </button>
-                </a>
-              </li>
-              <li>
-                <button
-                  data-text="Approve Aplication"
-                  onClick={handleApproveApplicant}
-                >
-                  <span className="la la-check"></span>
-                </button>
-              </li>
+                </li>
+              )}
+              {data?.status !== "rejected" && data?.status !== "approved" && (
+                <li>
+                  <button
+                    data-text="Reject Application"
+                    onClick={handleRejectApplicant}
+                  >
+                    <span className="la la-times-circle"></span>
+                  </button>
+                </li>
+              )}
 
-              <li>
-                <button
-                  data-text="Reject Aplication"
-                  onClick={handleRejectApplicant}
-                >
-                  <span className="la la-times-circle"></span>
-                </button>
-              </li>
+              {data?.status === "rejected" && (
+                <li>
+                  <button
+                    data-text="Undo reject"
+                    onClick={handleUndoActiontApplicant}
+                  >
+                    <span className="la la-undo-alt"></span>
+                  </button>
+                </li>
+              )}
+
+              {data?.status === "approved" && (
+                <li>
+                  <button
+                    data-text="Undo approve"
+                    onClick={handleUndoActiontApplicant}
+                  >
+                    <span className="la la-undo-alt"></span>
+                  </button>
+                </li>
+              )}
               <li>
                 <button data-text="Delete Aplication">
                   <span className="la la-trash"></span>

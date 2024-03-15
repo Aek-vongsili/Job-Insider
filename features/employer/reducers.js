@@ -44,6 +44,10 @@ const {
   EMPLOYER_REJECT_APPLICANT_BEGIN,
   EMPLOYER_REJECT_APPLICANT_SUCCESS,
   EMPLOYER_REJECT_APPLICANT_ERR,
+
+  EMPLOYER_UNDO_APPLICANT_BEGIN,
+  EMPLOYER_UNDO_APPLICANT_SUCCESS,
+  EMPLOYER_UNDO_APPLICANT_ERR,
 } = actions;
 
 const initialState = {
@@ -112,6 +116,22 @@ const employerReducer = (state = initialState, action) => {
         loading: false,
       };
     case EMPLOYER_REJECT_APPLICANT_ERR:
+      return {
+        ...state,
+        error: err,
+        loading: false,
+      };
+    case EMPLOYER_UNDO_APPLICANT_BEGIN:
+      return {
+        ...state,
+        loading: true,
+      };
+    case EMPLOYER_UNDO_APPLICANT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case EMPLOYER_UNDO_APPLICANT_ERR:
       return {
         ...state,
         error: err,

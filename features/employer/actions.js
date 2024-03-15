@@ -43,6 +43,10 @@ const actions = {
   EMPLOYER_REJECT_APPLICANT_SUCCESS: "EMPLOYER_REJECT_APPLICANT_SUCCESS",
   EMPLOYER_REJECT_APPLICANT_ERR: "EMPLOYER_REJECT_APPLICANT_ERR",
 
+  EMPLOYER_UNDO_APPLICANT_BEGIN: "EMPLOYER_UNDO_APPLICANT_BEGIN",
+  EMPLOYER_UNDO_APPLICANT_SUCCESS: "EMPLOYER_UNDO_APPLICANT_SUCCESS",
+  EMPLOYER_UNDO_APPLICANT_ERR: "EMPLOYER_UNDO_APPLICANT_ERR",
+
   employerUpdateBegin: () => {
     return {
       type: actions.EMPLOYER_UPDATE_BEGIN,
@@ -232,8 +236,8 @@ const actions = {
       err,
     };
   },
-   //EMPLOYER REJECT APPLICANT
-   employerRejectApplicantBegin: () => {
+  //EMPLOYER REJECT APPLICANT
+  employerRejectApplicantBegin: () => {
     return {
       type: actions.EMPLOYER_REJECT_APPLICANT_BEGIN,
     };
@@ -248,6 +252,25 @@ const actions = {
   employerRejectApplicantErr: (err) => {
     return {
       type: actions.EMPLOYER_REJECT_APPLICANT_ERR,
+      err,
+    };
+  },
+
+  employerUndoApplicantBegin: () => {
+    return {
+      type: actions.EMPLOYER_UNDO_APPLICANT_BEGIN,
+    };
+  },
+  employerUndoApplicantSuccess: (data) => {
+    return {
+      type: actions.EMPLOYER_UNDO_APPLICANT_SUCCESS,
+      data,
+    };
+  },
+
+  employerUndoApplicantErr: (err) => {
+    return {
+      type: actions.EMPLOYER_UNDO_APPLICANT_ERR,
       err,
     };
   },

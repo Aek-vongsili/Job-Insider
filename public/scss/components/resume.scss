@@ -213,9 +213,18 @@
   color: inherit;
 }
 
-.manage-job-table .status {
-  color: #34a853;
+.manage-job-table .approved {
+  color: #34a853; /* Green color for approved status */
 }
+
+.manage-job-table .rejected {
+  color: #ea4335; /* Red color for rejected status */
+}
+
+.manage-job-table .pending {
+  color: #fbbc05; /* Yellow color for pending status */
+}
+
 
 .aplicants-upper-bar {
   position: relative;

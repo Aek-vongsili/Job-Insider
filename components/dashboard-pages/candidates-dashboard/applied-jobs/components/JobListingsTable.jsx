@@ -125,8 +125,7 @@ const JobListingsTable = () => {
                           </>
                         )}
                       </td>
-                      <td className="status">
-                        {" "}
+                      <td className={`${item?.status}`}>
                         {item?.status &&
                           item.status.charAt(0).toUpperCase() +
                             item.status.slice(1)}

@@ -1,28 +1,13 @@
-import { Carousel } from "react-bootstrap";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 const index = () => {
-  const [index, setIndex] = useState(0);
   const imagePath = [
-    { id: 1, path: "/images/index-16/header/bg4.png" },
     { id: 2, path: "/images/index-16/header/bg4.png" },
-    { id: 3, path: "/images/index-16/header/bg4.png" },
+    { id: 3, path: "/images/index-16/header/bg5.png" },
+    { id: 4, path: "/images/index-16/header/bg6.jpeg" },
   ];
-  const handleSelect = (selectedIndex, e) => {
-    setIndex(selectedIndex);
-  };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIndex((prevIndex) =>
-        prevIndex === imagePath.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 4500);
-
-    return () => clearInterval(interval);
-  }, [imagePath.length]);
   return (
     <section className="-type-16" style={{ marginTop: 100 }}>
       {/* <Carousel
@@ -65,7 +50,7 @@ const index = () => {
         {imagePath.map((i, index) => (
           <SwiperSlide key={i.id}>
             <Image
-              className="d-block w-100"
+              className="d-block w-100 h-100"
               src={i.path}
               alt="First slide"
               width={1500}

@@ -120,7 +120,7 @@ const JobListingsTable = () => {
                       <div className="job-block">
                         <div className="inner-box">
                           <div className="content">
-                            <span className="company-logo" style={profileContainerStyle}>
+                            <span className="company-logo" >
                               <img
                                 src={company_profile?.logoImage}
                                 alt="logo"

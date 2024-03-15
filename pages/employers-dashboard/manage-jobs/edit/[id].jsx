@@ -352,6 +352,7 @@ const EditJob = () => {
                               <option value="">Select</option>
 
                               <option value="Certificate">Certificate</option>
+                              <option value="Not specific">Not specific</option>
                               <option value="Associate Degree">
                                 Associate Degree
                               </option>

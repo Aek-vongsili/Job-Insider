@@ -44,6 +44,10 @@ const {
   employerRejectApplicantBegin,
   employerRejectApplicantSuccess,
   employerRejectApplicantErr,
+
+  employerUndoApplicantBegin,
+  employerUndoApplicantSuccess,
+  employerUndoApplicantErr,
 } = actions;
 
 const employerUploadFile = (imageAsString, path) => {
@@ -384,6 +388,57 @@ const employerRejectApplicant = (uid, jobId, applicantId) => {
   };
 };
 
+const employerUndoApplicant = (uid, jobId, applicantId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerUndoApplicantBegin());
+
+      const jobRef = db.collection("jobs");
+      const jobDoc = await jobRef.doc(jobId).get();
+      const jobData = jobDoc.data();
+
+      if (jobData.company === uid) {
+        const confirmResult = await Swal.fire({
+          title: "Are you sure?",
+          text: "You are about to undo some action",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Yes, undo it!",
+        });
+
+        if (confirmResult.isConfirmed) {
+          const applicantDocRef = jobRef
+            .doc(jobId)
+            .collection("applications")
+            .doc(applicantId);
+          const applicantDocSnapshot = await applicantDocRef.get();
+          if (applicantDocSnapshot.exists) {
+            await applicantDocRef.update({ status: "pending" });
+            dispatch(employerUndoApplicantSuccess());
+            // Show success message
+            Swal.fire({
+              title: "Success!",
+              text: "Undo applicant success",
+              icon: "success",
+            });
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      dispatch(employerUndoApplicantErr(err));
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to update applicant status.",
+        icon: "error",
+      });
+    }
+  };
+};
+
 export default employerApproveApplicant;
 
 export {
@@ -395,5 +450,6 @@ export {
   employerJobDelete,
   employerEditJob,
   employerApproveApplicant,
-  employerRejectApplicant
+  employerRejectApplicant,
+  employerUndoApplicant,
 };
