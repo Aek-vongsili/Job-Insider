@@ -83,32 +83,53 @@ const JobSingleDynamicV1 = ({ jobData }) => {
     return `${day}/${month}/${year}`;
   };
   // console.log(jobData?.createdAt?.seconds);
-  const calculateTimeDistanceFromNow = (timestampInSeconds) => {
-    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-    const timeDifferenceInSeconds = currentTimeInSeconds - timestampInSeconds;
+  const calculateTimeDistanceFromNow = (timestampInSeconds, nanoseconds) => {
+    // Convert nanoseconds to milliseconds and add to timestampInSeconds
+    const timestampInMillis =
+      timestampInSeconds * 1000 + Math.floor(nanoseconds / 1e6);
 
+    const currentTimeInMillis = Date.now();
+    const timeDifferenceInMillis = currentTimeInMillis - timestampInMillis;
+
+    const millisecondsInSecond = 1000;
     const secondsInMinute = 60;
     const secondsInHour = 60 * secondsInMinute;
     const secondsInDay = 24 * secondsInHour;
     const secondsInMonth = 30 * secondsInDay;
     const secondsInYear = 365 * secondsInDay;
 
-    if (timeDifferenceInSeconds < secondsInMinute) {
-      return `${timeDifferenceInSeconds} seconds ago`;
-    } else if (timeDifferenceInSeconds < secondsInHour) {
-      const minutes = Math.floor(timeDifferenceInSeconds / secondsInMinute);
+    if (timeDifferenceInMillis < millisecondsInSecond) {
+      return `${timeDifferenceInMillis} milliseconds ago`;
+    } else if (
+      timeDifferenceInMillis <
+      secondsInMinute * millisecondsInSecond
+    ) {
+      const seconds = Math.floor(timeDifferenceInMillis / millisecondsInSecond);
+      return `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
+    } else if (timeDifferenceInMillis < secondsInHour * millisecondsInSecond) {
+      const minutes = Math.floor(
+        timeDifferenceInMillis / (secondsInMinute * millisecondsInSecond)
+      );
       return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
-    } else if (timeDifferenceInSeconds < secondsInDay) {
-      const hours = Math.floor(timeDifferenceInSeconds / secondsInHour);
+    } else if (timeDifferenceInMillis < secondsInDay * millisecondsInSecond) {
+      const hours = Math.floor(
+        timeDifferenceInMillis / (secondsInHour * millisecondsInSecond)
+      );
       return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-    } else if (timeDifferenceInSeconds < secondsInMonth) {
-      const days = Math.floor(timeDifferenceInSeconds / secondsInDay);
+    } else if (timeDifferenceInMillis < secondsInMonth * millisecondsInSecond) {
+      const days = Math.floor(
+        timeDifferenceInMillis / (secondsInDay * millisecondsInSecond)
+      );
       return `${days} ${days === 1 ? "day" : "days"} ago`;
-    } else if (timeDifferenceInSeconds < secondsInYear) {
-      const months = Math.floor(timeDifferenceInSeconds / secondsInMonth);
+    } else if (timeDifferenceInMillis < secondsInYear * millisecondsInSecond) {
+      const months = Math.floor(
+        timeDifferenceInMillis / (secondsInMonth * millisecondsInSecond)
+      );
       return `${months} ${months === 1 ? "month" : "months"} ago`;
     } else {
-      const years = Math.floor(timeDifferenceInSeconds / secondsInYear);
+      const years = Math.floor(
+        timeDifferenceInMillis / (secondsInYear * millisecondsInSecond)
+      );
       return `${years} ${years === 1 ? "year" : "years"} ago`;
     }
   };
@@ -185,7 +206,8 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       <li>
                         <span className="icon flaticon-clock-3"></span>{" "}
                         {calculateTimeDistanceFromNow(
-                          jobData?.createdAt?.seconds
+                          jobData?.createdAt?.seconds,
+                          jobData?.createdAt?.nanoseconds
                         )}
                       </li>
                       {/* time info */}
@@ -399,7 +421,10 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         </div>
                         {/* End company title */}
 
-                        <CompanyInfo company={jobData?.profile} />
+                        <CompanyInfo
+                          company={jobData?.profile}
+                          location={jobData?.location}
+                        />
 
                         <div className="btn-box">
                           {/* <a

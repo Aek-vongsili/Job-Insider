@@ -100,8 +100,8 @@ const FormInfoBox = () => {
       errors.company_website = "Company website is required";
     }
 
-    if (!values.company_est) {
-      errors.company_est = "Company Est is required";
+    if (!values.founded_date) {
+      errors.company_est = "Founded date is required";
     }
 
     if (!values.company_cat || values.company_cat.length === 0) {
@@ -332,14 +332,14 @@ const FormInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>Est. Since</label>
+          <label>Founded date</label>
           <input
-            type="date"
-            name="company_est"
-            placeholder="06.04.2020"
+            type="number"
+            name="founded_date"
+            placeholder="2xxx"
             onChange={handleInputChange}
-            value={formData.company_est || ""}
-            style={{ border: `${errors?.company_est ? borderStyle : ""}` }}
+            value={formData.founded_date || ""}
+            style={{ border: `${errors?.founded_date ? borderStyle : ""}` }}
           />
           {errors?.company_est && (
             <p className="err-message">{errors?.company_est}</p>

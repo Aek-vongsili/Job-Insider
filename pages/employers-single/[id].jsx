@@ -13,36 +13,33 @@ import MapJobFinder from "../../components/job-listing-pages/components/MapJobFi
 import Social from "../../components/employer-single-pages/social/Social";
 import PrivateMessageBox from "../../components/employer-single-pages/shared-components/PrivateMessageBox";
 import Layout from "../../components/Layout";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
-// import { db } from "../../firebase/clientApp";
+import { wrapper } from "../../app/store";
+import { useDispatch, useSelector } from "react-redux";
+import { employerJobListRead } from "../../features/employer/actionCreator";
 
 const EmployersSingleV1 = ({ employerData, openJobs }) => {
   const router = useRouter();
-  const [employer, setEmployersInfo] = useState({});
-  const id = router.query.id;
-  console.log(employerData);
-  const formatDate = (date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-  const dateObj = new Date(employerData?.company_info?.company_est);
-  const companyEst = formatDate(dateObj);
+  const dispatch = useDispatch();
+  const { id } = router.query;
+  useEffect(() => {
+    if (id) {
+      dispatch(employerJobListRead(id));
+    }
+  }, [id, dispatch]);
+  const jobsData = useSelector((state) => {
+    return state.employerSingle.jobData;
+  });
+  console.log(jobsData);
+  const loading = useSelector((state) => {
+    return state.employerSingle.jobLoading;
+  });
   // useEffect(() => {
   //   if (!id) <h1>Loading...</h1>;
   //   else setEmployersInfo(employersInfo.find((item) => item.id == id));
 
   //   return () => {};
   // }, [id]);
-
+  const { profile, location } = employerData;
   return (
     <>
       <Layout>
@@ -69,12 +66,9 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
                 <div className="inner-box">
                   <div className="content">
                     <span className="company-logo">
-                      <img
-                        src={employerData?.company_info?.logoImage}
-                        alt="logo"
-                      />
+                      <img src={profile?.logoImage} alt="logo" />
                     </span>
-                    <h4>{employerData?.company_info?.company_name}</h4>
+                    <h4>{profile.company_name}</h4>
 
                     <ul className="job-info">
                       <li>
@@ -84,24 +78,24 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
                       {/* compnay info */}
                       <li>
                         <span className="icon flaticon-briefcase"></span>
-                        {employerData?.company_info?.company_cat?.join(" / ")}
+                        {profile?.company_cat?.join(" / ")}
                       </li>
                       {/* location info */}
                       <li>
                         <span className="icon flaticon-telephone-1"></span>
-                        {employerData?.company_info?.company_phone}
+                        {profile?.company_phone}
                       </li>
                       {/* time info */}
                       <li>
                         <span className="icon flaticon-mail"></span>
-                        {employerData?.company_info?.company_email}
+                        {profile?.company_email}
                       </li>
                       {/* salary info */}
                     </ul>
                     {/* End .job-info */}
 
                     <ul className="job-other-info">
-                      <li className="time">Open Jobs – {openJobs}</li>
+                      <li className="time">Open Jobs – {jobsData?.length}</li>
                     </ul>
                     {/* End .job-other-info */}
                   </div>
@@ -165,23 +159,28 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
                 <div className="content-column col-lg-8 col-md-12 col-sm-12">
                   {/*  job-detail */}
                   <JobDetailsDescriptions
-                    employerDescription={
-                      employerData?.company_info?.company_about
-                    }
+                    employerDescription={profile?.company_about}
                   />
                   {/* End job-detail */}
 
                   {/* <!-- Related Jobs --> */}
                   <div className="related-jobs">
                     <div className="title-box">
-                      <h3>3 Others jobs available</h3>
-                      <div className="text">
+                      <h3>Open position</h3>
+                      {/* <div className="text">
                         2020 jobs live - 293 added today.
-                      </div>
+                      </div> */}
                     </div>
                     {/* End .title-box */}
+                    {jobsData?.map((i, index) => (
+                      <RelatedJobs
+                        item={i}
+                        key={index}
+                        profile={profile}
+                        location={location}
+                      />
+                    ))}
 
-                    <RelatedJobs />
                     {/* End RelatedJobs */}
                   </div>
                   {/* <!-- Related Jobs --> */}
@@ -201,23 +200,16 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
                             Company size: <span>501-1,000</span>
                           </li>
                           <li>
-                            Founded in: <span>{companyEst}</span>
+                            Founded in: <span>{profile?.founded_date}</span>
                           </li>
                           <li>
-                            Phone:{" "}
-                            <span>
-                              {employerData?.company_info?.company_phone}
-                            </span>
+                            Phone: <span>{profile?.company_phone}</span>
                           </li>
                           <li>
-                            Email:{" "}
-                            <span>
-                              {employerData?.company_info?.company_email}
-                            </span>
+                            Email: <span>{profile?.company_email}</span>
                           </li>
                           <li>
-                            Location:{" "}
-                            <span>{employerData?.location?.address}</span>
+                            Location: <span>{location?.address}</span>
                           </li>
                           <li>
                             Social media:
@@ -228,12 +220,12 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
 
                         <div className="btn-box">
                           <a
-                            href={`https://${employerData?.company_info?.company_website}`}
+                            href={`https://${profile?.company_website}`}
                             className="theme-btn btn-style-three"
                             style={{ textTransform: "lowercase" }}
                             target="_blank"
                           >
-                            {employerData?.company_info?.company_website}
+                            {profile?.company_website}
                           </a>
                         </div>
                         {/* btn-box */}
@@ -269,45 +261,32 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
     </>
   );
 };
-// export async function getServerSideProps(context) {
-//   const { params } = context;
-//   console.log(params.id);
-//   let employerData;
-//   let openJobs;
-//   try {
-//     const docRef = doc(db, "employers", `${params.id}`);
-//     const docSnap = await getDoc(docRef);
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ query }) => {
+      const employerData = await store.firestore
+        .collection("employers")
+        .doc(query.id)
+        .get();
+      if (!employerData.data()) {
+        return {
+          notFound: true,
+        };
+      }
 
-//     // console.log(docSnap.data().profile)
-//     if (docSnap.exists()) {
-//       const q = query(
-//         collection(db, "job_features"),
-//         where("company", "==", params.id)
-//       );
-//       const querySnapshot = await getDocs(q);
-//       // console.log(querySnapshot.size);
-//       openJobs = querySnapshot.size;
-//       // querySnapshot.forEach((doc) => {
-//       //   // doc.data() is never undefined for query doc snapshots
-//       //   console.log(doc.id, " => ", doc.data());
-//       // });
-//       employerData = docSnap.data().profile;
-//     } else {
-//       return {
-//         notFound: true,
-//       };
-//     }
-//   } catch (err) {
-//     throw err;
-//   }
+      // Check if jobData or employerData is undefined and handle accordingly
 
-//   return {
-//     props: {
-//       employerData: employerData,
-//       openJobs: openJobs,
-//     },
-//   };
-// }
+      const serializedEmployerData = employerData.data()
+        ? JSON.parse(JSON.stringify(employerData.data()))
+        : null;
+
+      return {
+        props: {
+          employerData: serializedEmployerData,
+        },
+      };
+    }
+);
 export default dynamic(() => Promise.resolve(EmployersSingleV1), {
   ssr: false,
 });

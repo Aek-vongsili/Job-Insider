@@ -72,21 +72,25 @@
 .upload-image-btn {
   height: 43vh !important;
   width: 58vw !important;
+
   // @include media-below(lg) {
   //   background-color: black;
   // }
   @include media-below(md) {
     height: 32vh !important;
   }
+
   @include media-below(sm) {
     height: auto !important;
     min-height: 230px;
     min-width: 260px !important;
   }
+
   .upload-img {
     object-fit: cover;
     object-position: center;
   }
+
   p {
     text-align: center;
     margin-bottom: 0;
@@ -214,15 +218,28 @@
 }
 
 .manage-job-table .approved {
-  color: #34a853; /* Green color for approved status */
+  color: #34a853;
+  /* Green color for approved status */
 }
 
 .manage-job-table .rejected {
-  color: #ea4335; /* Red color for rejected status */
+  color: #ea4335;
+  /* Red color for rejected status */
 }
 
 .manage-job-table .pending {
-  color: #fbbc05; /* Yellow color for pending status */
+  color: #fbbc05;
+  /* Yellow color for pending status */
+}
+
+.manage-job-table .active {
+  color: #34a853;
+  /* Yellow color for pending status */
+}
+
+.manage-job-table .expired {
+  color: #ea4335;
+  /* Yellow color for pending status */
 }
 
 
@@ -284,8 +301,7 @@
   color: #d93025;
 }
 
-.applicants-widget .candidate-block-three {
-}
+.applicants-widget .candidate-block-three {}
 
 .manage-job-table .job-block {
   margin-bottom: 0;
@@ -477,6 +493,7 @@
   min-width: auto;
   color: rgba(25, 103, 210, 1);
 }
+
 .resume-block .edit-btns button:hover {
   background: var(--primary-color);
   color: #ffffff;

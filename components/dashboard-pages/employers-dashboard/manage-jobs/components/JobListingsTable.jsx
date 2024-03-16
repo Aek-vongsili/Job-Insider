@@ -53,18 +53,18 @@ const JobListingsTable = () => {
     });
   };
   const profileContainerStyle = {
-    width: '100px', // Adjust the size as needed
-    height: '100px', // Adjust the size as needed
-    borderRadius: '50%',
-    overflow: 'hidden',
-    border: '2px solid #fff', // Optional: Add a border
-    boxShadow: '0px 0px 5px rgba(0, 0, 0, 0.3)' // Optional: Add a shadow
+    width: "100px", // Adjust the size as needed
+    height: "100px", // Adjust the size as needed
+    borderRadius: "50%",
+    overflow: "hidden",
+    border: "2px solid #fff", // Optional: Add a border
+    boxShadow: "0px 0px 5px rgba(0, 0, 0, 0.3)", // Optional: Add a shadow
   };
 
   const profileImageStyle = {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover' // Ensures the image covers the entire circle
+    width: "100%",
+    height: "100%",
+    objectFit: "cover", // Ensures the image covers the entire circle
   };
   return (
     <div className="tabs-box">
@@ -120,11 +120,11 @@ const JobListingsTable = () => {
                       <div className="job-block">
                         <div className="inner-box">
                           <div className="content">
-                            <span className="company-logo" >
+                            <span className="company-logo">
                               <img
                                 src={company_profile?.logoImage}
                                 alt="logo"
-                                style={{profileImageStyle}}
+                                style={{ profileImageStyle }}
                               />
                             </span>
                             <h4>
@@ -185,7 +185,7 @@ const JobListingsTable = () => {
                         )}
                       </div>
                     </td>
-                    <td className="status">
+                    <td className={item?.status}>
                       {" "}
                       {item?.status &&
                         item.status.charAt(0).toUpperCase() +

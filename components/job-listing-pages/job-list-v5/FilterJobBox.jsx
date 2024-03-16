@@ -170,35 +170,56 @@ const FilterJobBox = () => {
   // sort filter
   const sortFilter = (a, b) =>
     sort === "des" ? a.id > b.id && -1 : a.id < b.id && -1;
-  const calculateTimeDistanceFromNow = (timestampInSeconds) => {
-    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-    const timeDifferenceInSeconds = currentTimeInSeconds - timestampInSeconds;
-
-    const secondsInMinute = 60;
-    const secondsInHour = 60 * secondsInMinute;
-    const secondsInDay = 24 * secondsInHour;
-    const secondsInMonth = 30 * secondsInDay;
-    const secondsInYear = 365 * secondsInDay;
-
-    if (timeDifferenceInSeconds < secondsInMinute) {
-      return `${timeDifferenceInSeconds} seconds ago`;
-    } else if (timeDifferenceInSeconds < secondsInHour) {
-      const minutes = Math.floor(timeDifferenceInSeconds / secondsInMinute);
-      return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
-    } else if (timeDifferenceInSeconds < secondsInDay) {
-      const hours = Math.floor(timeDifferenceInSeconds / secondsInHour);
-      return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-    } else if (timeDifferenceInSeconds < secondsInMonth) {
-      const days = Math.floor(timeDifferenceInSeconds / secondsInDay);
-      return `${days} ${days === 1 ? "day" : "days"} ago`;
-    } else if (timeDifferenceInSeconds < secondsInYear) {
-      const months = Math.floor(timeDifferenceInSeconds / secondsInMonth);
-      return `${months} ${months === 1 ? "month" : "months"} ago`;
-    } else {
-      const years = Math.floor(timeDifferenceInSeconds / secondsInYear);
-      return `${years} ${years === 1 ? "year" : "years"} ago`;
-    }
-  };
+    const calculateTimeDistanceFromNow = (timestampInSeconds, nanoseconds) => {
+      // Convert nanoseconds to milliseconds and add to timestampInSeconds
+      const timestampInMillis =
+        timestampInSeconds * 1000 + Math.floor(nanoseconds / 1e6);
+  
+      const currentTimeInMillis = Date.now();
+      const timeDifferenceInMillis = currentTimeInMillis - timestampInMillis;
+  
+      const millisecondsInSecond = 1000;
+      const secondsInMinute = 60;
+      const secondsInHour = 60 * secondsInMinute;
+      const secondsInDay = 24 * secondsInHour;
+      const secondsInMonth = 30 * secondsInDay;
+      const secondsInYear = 365 * secondsInDay;
+  
+      if (timeDifferenceInMillis < millisecondsInSecond) {
+        return `${timeDifferenceInMillis} milliseconds ago`;
+      } else if (
+        timeDifferenceInMillis <
+        secondsInMinute * millisecondsInSecond
+      ) {
+        const seconds = Math.floor(timeDifferenceInMillis / millisecondsInSecond);
+        return `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
+      } else if (timeDifferenceInMillis < secondsInHour * millisecondsInSecond) {
+        const minutes = Math.floor(
+          timeDifferenceInMillis / (secondsInMinute * millisecondsInSecond)
+        );
+        return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+      } else if (timeDifferenceInMillis < secondsInDay * millisecondsInSecond) {
+        const hours = Math.floor(
+          timeDifferenceInMillis / (secondsInHour * millisecondsInSecond)
+        );
+        return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+      } else if (timeDifferenceInMillis < secondsInMonth * millisecondsInSecond) {
+        const days = Math.floor(
+          timeDifferenceInMillis / (secondsInDay * millisecondsInSecond)
+        );
+        return `${days} ${days === 1 ? "day" : "days"} ago`;
+      } else if (timeDifferenceInMillis < secondsInYear * millisecondsInSecond) {
+        const months = Math.floor(
+          timeDifferenceInMillis / (secondsInMonth * millisecondsInSecond)
+        );
+        return `${months} ${months === 1 ? "month" : "months"} ago`;
+      } else {
+        const years = Math.floor(
+          timeDifferenceInMillis / (secondsInYear * millisecondsInSecond)
+        );
+        return `${years} ${years === 1 ? "year" : "years"} ago`;
+      }
+    };
   const styleClass = (jobType) => {
     switch (jobType) {
       case "Full-Time":
@@ -255,7 +276,7 @@ const FilterJobBox = () => {
               {/* location info */}
               <li>
                 <span className="icon flaticon-clock-3"></span>
-                {calculateTimeDistanceFromNow(item?.createdAt?.seconds)}
+                {calculateTimeDistanceFromNow(item?.createdAt?.seconds,item?.createdAt?.nanoseconds)}
               </li>
               {/* time info */}
               {/* <li>

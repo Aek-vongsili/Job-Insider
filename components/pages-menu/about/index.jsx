@@ -54,15 +54,14 @@ const index = () => {
           <div className="testimonial-left">
             <img src="images/resource/testimonial-left.png" alt="testimonial" />
           </div>
-          {/* End left img group */}
-
+        
           <div className="testimonial-right">
             <img
               src="/images/resource/testimonial-right.png"
               alt="testimonial"
             />
           </div>
-          {/* End right img group */}
+        
 
           <div className="sec-title text-center">
             <h2>Testimonials From Our Customers</h2>
@@ -70,13 +69,13 @@ const index = () => {
               Lorem ipsum dolor sit amet elit, sed do eiusmod tempor
             </div>
           </div>
-          {/* <!-- Sec Title --> */}
+      
 
           <div className="carousel-outer" data-aos="fade-up">
             <div className="testimonial-carousel">
               <Testimonial2 />
             </div>
-            {/* <!-- Testimonial Carousel --> */}
+          
           </div>
         </div>
       </section>
