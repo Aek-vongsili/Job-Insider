@@ -12,12 +12,14 @@ import {
   addSort,
 } from "../../../features/filter/employerFilterSlice";
 import { useRouter } from "next/router";
-
+import { useEffect } from "react";
+import { employersListRead } from "../../../features/employer/actionCreator";
+import ReactLoading from "react-loading";
 const FilterTopBox = () => {
   const companyData = useSelector((state) => state?.employer?.employersList);
   const {
     keyword,
-    location,
+    // location,
     destination,
     category,
     foundationDate,
@@ -25,6 +27,17 @@ const FilterTopBox = () => {
     perPage,
   } = useSelector((state) => state.employerFilter) || {};
   const dispatch = useDispatch();
+  const employerData = useSelector((state) => {
+    return state.employerData.data;
+  });
+  const loading = useSelector((state) => {
+    return state.employerData.loading;
+  });
+  console.log(employerData);
+
+  useEffect(() => {
+    dispatch(employersListRead());
+  }, []);
   const companyDataFilter = (item) => item.company_info != null;
   // keyword filter
   const keywordFilter = (item) =>
@@ -58,7 +71,7 @@ const FilterTopBox = () => {
   const sortFilter = (a, b) =>
     sort === "des" ? a.id > b.id && -1 : a.id < b.id && -1;
 
-  let content = companyData
+  let content = employerData
     // ?.slice(perPage.start !== 0 && 12, perPage.end !== 0 ? perPage.end : 24)
     // ?.filter(keywordFilter)
     // ?.filter(locationFilter)
@@ -74,23 +87,23 @@ const FilterTopBox = () => {
         key={index}
       >
         <div className="inner-box">
-          <button className="bookmark-btn">
+          <button className="bookmark-btn" onClick={() => alert(company?.id)}>
             <span className="flaticon-bookmark"></span>
           </button>
 
           <div className="content-inner">
             <span className="featured">Featured</span>
             <span className="company-logo">
-              <img src={company?.company_info?.logoImage} alt="company brand" />
+              <img src={company?.profile?.logoImage} alt="company brand" />
             </span>
             <h4>
               <Link
                 href={{
                   pathname: "/employers-single/[id]/",
-                  query: { id: company?.emp_id },
+                  query: { id: company?.id },
                 }}
               >
-                {company?.company_info?.company_name}
+                {company?.profile?.company_name}
               </Link>
             </h4>
             <ul className="job-info flex-column">
@@ -100,12 +113,14 @@ const FilterTopBox = () => {
               </li>
               <li className="me-0">
                 <span className="icon flaticon-briefcase"></span>
-                {company?.company_info?.company_cat?.join(" / ")}
+                {company?.profile?.company_cat?.join(" / ")}
               </li>
             </ul>
           </div>
 
-          <div className="job-type me-0">Open Jobs – {company?.openJobs}</div>
+          <div className="job-type me-0">
+            Open Jobs – {company?.jobs.length}
+          </div>
         </div>
       </div>
     ));
@@ -136,13 +151,13 @@ const FilterTopBox = () => {
       <div className="ls-switcher">
         <div className="showing-result">
           <div className="text">
-            <strong>{content?.length}</strong> jobs
+            {/* <strong>{content?.length}</strong> jobs */}
           </div>
         </div>
         {/* End showing-result */}
         <div className="sort-by">
           {keyword !== "" ||
-          location !== "" ||
+          // location !== "" ||
           destination.min !== 0 ||
           destination.max !== 100 ||
           category !== "" ||
@@ -217,7 +232,26 @@ const FilterTopBox = () => {
       </div>
       {/* End top filter bar box */}
 
-      <div className="row">{content}</div>
+      <div className="row">
+        {!!loading ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "300px",
+            }}
+          >
+            <ReactLoading type="bars" color="#1967d2" height={75} width={75} />
+          </div>
+        ) : employerData.length > 0 ? (
+          content
+        ) : (
+          <p style={{ textAlign: "center", margin: "auto", padding: 120 }}>
+            No job found
+          </p>
+        )}
+      </div>
       {/* End .row */}
 
       <Pagination />

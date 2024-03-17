@@ -438,8 +438,48 @@ const employerUndoApplicant = (uid, jobId, applicantId) => {
     }
   };
 };
+const employersListRead = () => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      dispatch(employerReadBegin());
 
-export default employerApproveApplicant;
+      const employersSnapshot = await db.collection("employers").get();
+      if (employersSnapshot.empty) {
+        dispatch(employerReadSuccess([]));
+      } else {
+        const employersDataPromises = employersSnapshot.docs.map(
+          async (doc) => {
+            const employerData = { id: doc.id, ...doc.data() };
+
+            // Fetch job data where companyId matches doc.id
+            const jobsSnapshot = await db
+              .collection("jobs")
+              .where("company", "==", doc.id)
+              .get();
+
+            // Convert job snapshot to an array of job data
+            const jobsData = jobsSnapshot.docs.map((jobDoc) => ({
+              id: jobDoc.id,
+              ...jobDoc.data(),
+            }));
+
+            // Add jobsData to employerData
+            employerData.jobs = jobsData;
+
+            return employerData;
+          }
+        );
+
+        // Resolve all promises in employersDataPromises array
+        const resolvedEmployersData = await Promise.all(employersDataPromises);
+        dispatch(employerReadSuccess(resolvedEmployersData));
+      }
+    } catch (err) {
+      dispatch(employerReadErr(err));
+    }
+  };
+};
 
 export {
   employerUploadFile,
@@ -452,4 +492,5 @@ export {
   employerApproveApplicant,
   employerRejectApplicant,
   employerUndoApplicant,
+  employersListRead,
 };

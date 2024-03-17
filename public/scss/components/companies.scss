@@ -497,12 +497,12 @@ Top Companies
   width: 30px;
   line-height: 30px;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   border-radius: 50%;
   cursor: pointer;
   background: #ffffff;
-  opacity: 0;
-  visibility: hidden;
+  opacity: 1;
+  // visibility: hidden;
   -webkit-transition: all 300ms ease;
   -o-transition: all 300ms ease;
   transition: all 300ms ease;

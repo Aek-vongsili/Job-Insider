@@ -24,7 +24,6 @@ import {
   jobReadData,
   removeFavouriteJob,
 } from "../../../features/jobs/actionCreator";
-import Swal from "sweetalert2";
 
 const Loading = () => {
   return (
