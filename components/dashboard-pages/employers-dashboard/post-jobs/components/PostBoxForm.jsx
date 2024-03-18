@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
 import { jobInsertData } from "../../../../../features/jobs/actionCreator";
+import TextEditor from "./TextEditor";
+
 const PostBoxForm = () => {
   const dispatch = useDispatch();
   const initialFormData = {
@@ -350,6 +352,9 @@ const PostBoxForm = () => {
           )}
         </div>
         <div className="form-group col-lg-12 col-md-12">
+          <TextEditor />
+        </div>
+        <div className="form-group col-lg-12 col-md-12">
           <label>Key Responsibilities</label>
           {keylist.map((singleKey, index) => (
             <div className="add-key" key={index}>
@@ -403,6 +408,7 @@ const PostBoxForm = () => {
                   </button>
                 )}
               </div>
+
               <div className="remove-key_btn">
                 {skill.length !== 1 && (
                   <button

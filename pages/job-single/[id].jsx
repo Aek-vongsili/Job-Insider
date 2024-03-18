@@ -368,7 +368,8 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       <JobOverView
                         jobData={jobData}
                         timeDistance={calculateTimeDistanceFromNow(
-                          jobData?.createdAt?.seconds
+                          jobData?.createdAt?.seconds,
+                          jobData?.createdAt?.nanoseconds
                         )}
                       />
 

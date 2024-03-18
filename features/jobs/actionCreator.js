@@ -71,13 +71,21 @@ const jobInsertData = (jobData) => {
     }
   };
 };
-const jobReadData = () => {
+const jobReadData = (jobCategory) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
     try {
       dispatch(jobReadBegin());
       const jobsData = [];
-      const querySnapshot = await db.collection("jobs").get();
+      let query = db.collection("jobs");
+
+      // If a job category is specified, add a filter to the query
+      if (jobCategory) {
+        query = query.where("jobType", "array-contains", jobCategory);
+      }
+
+      const querySnapshot = await query.get();
+
       // Iterate over each job document
       for (const doc of querySnapshot.docs) {
         const jobData = doc.data();

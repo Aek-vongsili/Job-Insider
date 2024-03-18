@@ -1,13 +1,39 @@
 import Link from "next/link";
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
 import jobFeatured from "../../data/job-featured";
+import { jobReadData } from "../../features/jobs/actionCreator";
+import { useDispatch, useSelector } from "react-redux";
 
 const JobFeatured11 = () => {
+  const dispatch = useDispatch();
   const [active, setActive] = useState("1");
+  const jobData = useSelector((state) => {
+    return state.jobs.data;
+  });
+  const loading = useSelector((state) => {
+    return state.jobs.loading;
+  });
+  const styleClass = (jobType) => {
+    switch (jobType) {
+      case "Full-Time":
+      case "Part-Time":
+      case "Contract/Freelance":
+        return "time";
+      case "Temporary":
+      case "Internship":
+        return "privacy";
+      case "Remote/Telecommute":
+      case "Urgent":
+        return "required";
+    }
+  };
   const handleClick = (event) => {
     setActive(event.target.id);
   };
+  console.log(jobData);
+  useEffect(() => {
+    dispatch(jobReadData());
+  }, []);
   return (
     <>
       <div className="tab-buttons-wrap">
@@ -41,40 +67,38 @@ const JobFeatured11 = () => {
       {/* <!--Tabs Box--> */}
 
       <div className="row pt-50">
-        {jobFeatured.slice(11, 20).map((item) => (
+        {jobData?.map((item, index) => (
           <div
             className="job-block-three col-lg-4 col-md-6 col-sm-12"
-            key={item.id}
+            key={index}
           >
             <div className="inner-box">
               <div className="content">
                 <span className="company-logo">
-                  <img src={item.logo} alt="item brand" />
+                  <img src={item?.profile?.logoImage} alt="item brand" />
                 </span>
                 <h4>
-                  <Link href={`/job-single-v5/${item.id}`}>
-                    {item.jobTitle}
-                  </Link>
+                  <Link href={`/job-single/${item?.id}`}>{item?.jobTitle}</Link>
                 </h4>
 
                 <ul className="job-info">
                   <li>
                     <span className="icon flaticon-briefcase"></span>
-                    {item.company}
+                    {item?.profile?.company_name}
                   </li>
                   {/* compnay info */}
                   <li>
                     <span className="icon flaticon-map-locator"></span>
-                    {item.location}
+                    {item?.location?.address}
                   </li>
                   {/* location info */}
                 </ul>
                 {/* End .job-info */}
 
                 <ul className="job-other-info">
-                  {item.jobType.map((val, i) => (
-                    <li key={i} className={`${val.styleClass}`}>
-                      {val.type}
+                  {item?.jobType?.map((val, i) => (
+                    <li key={i} className={`${styleClass(val)}`}>
+                      {val}
                     </li>
                   ))}
                 </ul>

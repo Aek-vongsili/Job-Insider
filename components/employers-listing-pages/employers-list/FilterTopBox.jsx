@@ -244,7 +244,7 @@ const FilterTopBox = () => {
           >
             <ReactLoading type="bars" color="#1967d2" height={75} width={75} />
           </div>
-        ) : employerData.length > 0 ? (
+        ) : employerData?.length > 0 ? (
           content
         ) : (
           <p style={{ textAlign: "center", margin: "auto", padding: 120 }}>
