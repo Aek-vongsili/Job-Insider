@@ -49,7 +49,7 @@ const index = () => {
       <CallToAction2 />
       {/* <!-- End CallToAction2 --> */}
 
-      <section className="testimonial-section-two">
+      {/* <section className="testimonial-section-two">
         <div className="container-fluid">
           <div className="testimonial-left">
             <img src="images/resource/testimonial-left.png" alt="testimonial" />
@@ -78,7 +78,7 @@ const index = () => {
           
           </div>
         </div>
-      </section>
+      </section> */}
       {/* <!-- End Testimonial Section --> */}
 
       {/* <section className="work-section style-two">

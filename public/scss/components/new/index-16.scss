@@ -1,3 +1,98 @@
+/* styles/fonts.css */
+@font-face {
+  font-family: 'Saysettha OT';
+  src: url('/fonts/saysettha_ot.woff') format('woff');
+  /* Additional font properties like weight, style, etc. can be added here */
+}
+
+@font-face {
+  font-family: 'Phetsarath_OT';
+  /* Choose a name for your font */
+  src: url('/fonts/Phetsarath OT.ttf') format('truetype');
+  /* Specify the path to your TTF font */
+  /* Additional font properties like weight, style, etc. can be added here */
+}
+
+@font-face {
+  font-family: 'Times-New-Roman';
+  /* Font family name */
+  src: local('Times New Roman'), serif;
+  /* Use system's Times New Roman font */
+  /* Additional font properties like weight, style, etc. can be added here */
+}
+
+.ql-picker.ql-font {
+  .ql-picker-item {
+    font-size: 0;
+
+    &:before {
+      content: attr(data-value) !important;
+      font-size: 14px;
+    }
+  }
+}
+
+.ql-picker.ql-font {
+  .ql-active {
+    &:before {
+      content: attr(data-value) !important;
+      font-size: 14px;
+    }
+  }
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="Saysettha_OT"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="Saysettha_OT"]::before {
+  font-family: "Saysettha OT" cursive;
+  content: "Saysettha_OT" !important;
+}
+
+.ql-picker.ql-font .ql-picker-label[data-value="Phetsarath_OT"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="Phetsarath_OT"]::before {
+  font-family: "Phetsarath_OT" cursive;
+
+  content: "Phetsarath_OT" !important;
+}
+
+
+.ql-picker.ql-font .ql-picker-label[data-value="Times-New-Roman"]::before,
+.ql-picker.ql-font .ql-picker-item[data-value="Times-New-Roman"]::before {
+  font-family: "Times-New-Roman" cursive;
+
+  content: "Times-New-Roman" !important;
+}
+
+
+/* Set content font-families */
+.ql-font-Saysettha_OT {
+  font-family: "Saysettha OT";
+}
+
+.ql-font-Phetsarath_OT {
+  font-family: "Phetsarath_OT";
+}
+
+.ql-font-Times-New-Roman {
+  font-family: "Times-New-Roman";
+}
+
+
+// .ql-font-Raleway {
+//   font-family: "Raleway";
+// }
+
+// .ql-font-Montserrat {
+//   font-family: "Montserrat";
+// }
+
+// .ql-font-Lato {
+//   font-family: "Lato";
+// }
+
+// .ql-font-Rubik {
+//   font-family: "Rubik";
+// }
+
 .main-header.header-style-four.-type-16 {
   .main-menu {
     margin-left: 15px;
@@ -79,12 +174,15 @@
     .swiper-button-prev:after,
     .swiper-button-next:after {
       font-size: 30px;
+
       @media (max-width: 992px) {
         font-size: 22px;
       }
+
       @media (max-width: 768px) {
         font-size: 18px;
       }
+
       @media (max-width: 576px) {
         font-size: 12px;
       }

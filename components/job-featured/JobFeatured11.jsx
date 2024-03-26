@@ -96,11 +96,14 @@ const JobFeatured11 = () => {
                 {/* End .job-info */}
 
                 <ul className="job-other-info">
-                  {item?.jobType?.map((val, i) => (
-                    <li key={i} className={`${styleClass(val)}`}>
-                      {val}
+                  <li className={`${styleClass(item?.jobType)}`}>
+                    {item?.jobType}
+                  </li>
+                  {item.jobType2 && (
+                    <li className={`${styleClass(item.jobType2)}`}>
+                      {item.jobType2}
                     </li>
-                  ))}
+                  )}
                 </ul>
                 {/* End .job-other-info */}
 

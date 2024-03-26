@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 
 const Customprice = () => {
-  const [subTotal, setSubTotal] = useState(0);
+  const [subTotal, setSubTotal] = useState(200000);
   const [selectedWeek, setSelectedWeek] = useState({
     id: 1,
     week: "1 week / post",
     weekNum: 1,
   });
-  const [jobPosting, setJobPosting] = useState(0);
+  const [jobPosting, setJobPosting] = useState(1);
   const week = [
     {
       id: 1,
@@ -115,7 +115,7 @@ const Customprice = () => {
                 <label>Job Posting</label>
                 <input
                   type="number"
-                  min={0}
+                  min={1}
                   max={100}
                   value={jobPosting}
                   onChange={handleJobPostingChange}

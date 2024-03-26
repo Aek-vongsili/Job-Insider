@@ -1,13 +1,14 @@
 import Slider from "react-slick";
-
+import React, { useRef } from "react";
 const Partner = () => {
   const settings = {
     dots: false,
     slidesToShow: 6,
     slidesToScroll: 1,
-    autoplay: false,
-    speed: 1200,
-
+    autoplay: true,
+    speed: 1000,
+    autoplaySpeed: 1000,
+    infinite: true,
     responsive: [
       {
         breakpoint: 1400,
@@ -56,6 +57,12 @@ const Partner = () => {
     { id: 4, link: "#", imgNumber: "64BIT_LOGO" },
     { id: 5, link: "#", imgNumber: "POST64-LOGO-03" },
     { id: 6, link: "#", imgNumber: "purer" },
+    { id: 7, link: "#", imgNumber: "64BIT_LOGO" },
+    { id: 8, link: "#", imgNumber: "POST64-LOGO-03" },
+    { id: 9, link: "#", imgNumber: "purer" },
+    { id: 10, link: "#", imgNumber: "64BIT_LOGO" },
+    { id: 11, link: "#", imgNumber: "POST64-LOGO-03" },
+    { id: 12, link: "#", imgNumber: "purer" },
   ];
 
   return (

@@ -250,7 +250,11 @@ const FilterJobBox = () => {
         <div className="inner-box">
           <div className="content">
             <span className="company-logo">
-              <img src={item?.profile?.logoImage} alt="item brand" />
+              <img
+                src={item?.profile?.logoImage}
+                alt="item brand"
+                style={{ borderRadius: "50%", objectFit: "cover" }}
+              />
             </span>
             <h4>
               <Link
@@ -290,11 +294,12 @@ const FilterJobBox = () => {
             {/* End .job-info */}
 
             <ul className="job-other-info">
-              {item.jobType.map((i, index) => (
-                <li className={`${styleClass(i)}`} key={index}>
-                  {i}
+              <li className={`${styleClass(item.jobType)}`}>{item.jobType}</li>
+              {item.jobType2 && (
+                <li className={`${styleClass(item.jobType2)}`}>
+                  {item.jobType2}
                 </li>
-              ))}
+              )}
             </ul>
             {/* End .job-other-info */}
             <BookmarkIcon jobId={item?.id} setLoading={setLoading} />

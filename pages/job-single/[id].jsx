@@ -143,6 +143,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
       case "Internship":
         return "privacy";
       case "Remote/Telecommute":
+      case "Urgent":
         return "required";
     }
   };
@@ -220,11 +221,14 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                     {/* End .job-info */}
 
                     <ul className="job-other-info">
-                      {/* {company?.jobType?.map((val, i) => ( */}
                       <li className={`${styleClass(jobData?.jobType)}`}>
                         {jobData?.jobType}
                       </li>
-                      {/* ))} */}
+                      {jobData?.jobType2 && (
+                        <li className={`${styleClass(jobData?.jobType2)}`}>
+                          {jobData?.jobType2}
+                        </li>
+                      )}
                     </ul>
                     {/* End .job-other-info */}
                   </div>

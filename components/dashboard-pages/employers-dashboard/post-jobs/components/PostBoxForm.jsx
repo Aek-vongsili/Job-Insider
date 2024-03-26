@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
 import { jobInsertData } from "../../../../../features/jobs/actionCreator";
-import TextEditor from "./TextEditor";
+import dynamic from "next/dynamic";
+const TextEditor = dynamic(
+  () => import('./TextEditor'),
+  { ssr: false } // This will make the component only rendered on client-side
+);
 
 const PostBoxForm = () => {
   const dispatch = useDispatch();
@@ -351,9 +355,9 @@ const PostBoxForm = () => {
             <p className="err-message">{errors?.deadlineDate}</p>
           )}
         </div>
-        <div className="form-group col-lg-12 col-md-12">
+        {/* <div className="form-group col-lg-12 col-md-12">
           <TextEditor />
-        </div>
+        </div> */}
         <div className="form-group col-lg-12 col-md-12">
           <label>Key Responsibilities</label>
           {keylist.map((singleKey, index) => (

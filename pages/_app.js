@@ -71,4 +71,4 @@ function MyApp({ Component, ...rest }) {
     </Provider>
   );
 }
-export default wrapper.withRedux(MyApp);
+export default MyApp;

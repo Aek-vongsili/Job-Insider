@@ -14,10 +14,15 @@ export default [
     label: "Employers",
     routePath: "/employers-list",
   },
+  // {
+  //   id: 4,
+  //   label: "Candidates",
+  //   routePath: "/candidates-list",
+  // },
   {
-    id: 4,
-    label: "Candidates",
-    routePath: "/candidates-list",
+    id: 7,
+    label: "Consultant work",
+    routePath: "/consultant",
   },
   {
     id: 5,
@@ -29,4 +34,5 @@ export default [
     label: "About",
     routePath: "/about",
   },
+  
 ];
