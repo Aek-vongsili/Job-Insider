@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { wrapper, newStore } from "../app/store";
 import firebase from "firebase/compat/app";
+import fbConfig from "../firebase/fbConfig";
 import LoadingLayout from "../components/layouts/LoadingLayout";
 import { createFirestoreInstance } from "redux-firestore";
 import { ReactReduxFirebaseProvider } from "react-redux-firebase";
@@ -27,6 +28,10 @@ function MyApp({ Component, ...rest }) {
       once: true,
     });
   }, []);
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(fbConfig);
+  }
 
   const { store, props } = wrapper.useWrappedStore(rest);
   const rrfConfig = { userProfile: "users", useFirestoreForProfile: true };
