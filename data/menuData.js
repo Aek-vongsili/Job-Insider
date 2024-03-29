@@ -21,7 +21,7 @@ export default [
   // },
   {
     id: 7,
-    label: "Consultant work",
+    label: "Consultant",
     routePath: "/consultant",
   },
   {

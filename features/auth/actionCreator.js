@@ -53,6 +53,30 @@ const fbAuthLogin = (data, callback) => {
     }
   };
 };
+// const fbAuthLogin = (data, callback) => {
+//   return async (dispatch, getState, { getFirebase }) => {
+//     const fb = getFirebase();
+//     try {
+//       await dispatch(fbLoginBegin());
+//       await fb.auth().signInWithEmailAndPassword(data.email, data.password);
+
+//       // Get the currently authenticated user
+//       const user = fb.auth().currentUser;
+
+//       // Check if user's email is verified
+//       if (user && user.emailVerified) {
+//         await dispatch(fbLoginSuccess());
+//         callback(); // Call the callback function (if provided)
+//       } else {
+//         // If email is not verified, sign out the user and dispatch an error action
+//         await fb.auth().signOut();
+//         throw new Error('Email is not verified');
+//       }
+//     } catch (err) {
+//       await dispatch(fbLoginErr(err));
+//     }
+//   };
+// };
 
 const fbLoginCheck = () => {
   return async (dispatch, getState, { getFirebase }) => {
@@ -115,27 +139,23 @@ const fbAuthSignUp = (newUser, type, colName, callback) => {
       const response = await fb
         .auth()
         .createUserWithEmailAndPassword(newUser.email, newUser.password);
+
+      // Send email verification
+      await response.user.sendEmailVerification();
+
       const idToken = await response.user.getIdToken();
       const userData = {
         user: {
           displayName:
-            response.user.displayName === null
-              ? response.user.email.substring(
-                  0,
-                  response.user.email.indexOf("@")
-                )
-              : response.user.displayName,
+            response.user.displayName ||
+            newUser.displayName ||
+            newUser.email.substring(0, newUser.email.indexOf("@")),
           role: type,
           email: response.user.email,
           createAt: new Date(),
         },
       };
-      await db
-        .collection(colName)
-        .doc(response.user.uid)
-        .set({
-          ...userData,
-        });
+      await db.collection(colName).doc(response.user.uid).set(userData);
       const stt = await axios.post(
         "/api/customClaims",
         {
@@ -149,9 +169,8 @@ const fbAuthSignUp = (newUser, type, colName, callback) => {
         }
       );
       await dispatch(fbSignUpSuccess());
-      showSuccessNotification("Register Success", () => {
-        callback();
-      });
+      dispatch(fbAuthLogout());
+      showSuccessNotification("Register Success");
     } catch (err) {
       await dispatch(fbSignUpErr(err));
     }

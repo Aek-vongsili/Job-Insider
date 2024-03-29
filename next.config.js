@@ -24,4 +24,12 @@ module.exports = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/__/auth/:path(.*)",
+        destination: "https://hubjob.la/__/auth/:path*",
+      },
+    ];
+  },
 };
