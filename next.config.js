@@ -24,12 +24,4 @@ module.exports = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: "/__/auth/:path(.*)",
-        destination: "https://job-insider-b06ee.firebaseapp.com/__/auth/:path*",
-      },
-    ];
-  },
 };
