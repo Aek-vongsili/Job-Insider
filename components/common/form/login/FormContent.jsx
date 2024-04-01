@@ -34,11 +34,11 @@ const FormContent = () => {
       {/* <!--Login Form--> */}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label>Username</label>
+          <label>Email</label>
           <input
             type="text"
             name="username"
-            placeholder="Username"
+            placeholder="Email"
             required
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -81,7 +81,7 @@ const FormContent = () => {
                 <span className="custom-checkbox"></span> Remember me
               </label>
             </div>
-            <a href="#" className="pwd">
+            <a href="/forgot-password" className="pwd">
               Forgot password?
             </a>
           </div>
@@ -115,12 +115,6 @@ const FormContent = () => {
             Signup
           </Link>
         </div>
-
-        <div className="divider">
-          <span>or</span>
-        </div>
-
-        <LoginWithSocial />
       </div>
       {/* End bottom-box LoginWithSocial */}
     </div>

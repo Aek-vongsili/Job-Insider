@@ -8,7 +8,7 @@ const Register = () => {
   const [userType, setUserType] = useState("Candidate");
   return (
     <div className="form-inner">
-      <h3>Create a Job Insider Account</h3>
+      <h3>Create a Hubjob Account</h3>
 
       <Tabs
         defaultIndex={0}
@@ -59,12 +59,12 @@ const Register = () => {
         </div>
       </div>
 
-      <div className="bottom-box">
+      {/* <div className="bottom-box">
         <div className="divider">
           <span>or</span>
         </div>
         <LoginWithSocial />
-      </div>
+      </div> */}
       {/* End bottom-box LoginWithSocial */}
     </div>
   );

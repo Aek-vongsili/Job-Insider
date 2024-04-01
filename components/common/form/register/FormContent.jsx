@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 // import { auth, db } from "../../../../firebase/clientApp";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
@@ -12,8 +12,11 @@ import { fbAuthSignUp } from "../../../../features/auth/actionCreator";
 const FormContent = ({ userType }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
   const dispatch = useDispatch();
   const [showpass, setShowPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
   const isLoading = useSelector((state) => {
     return state.firebaseAuth.isSignUpLoading;
   });
@@ -74,8 +77,35 @@ const FormContent = ({ userType }) => {
     //   // Handle errors here
     // }
   };
+  useEffect(() => {
+    if (error) {
+      switch (error.code) {
+        case "auth/email-already-in-use":
+          setErrorMessage("Email is already in use.");
+          break;
+        case "auth/weak-password":
+          setErrorMessage("Password is too weak.");
+          break;
+        // Add more cases as needed for different Firebase errors
+        default:
+          setErrorMessage("An error occurred during sign up.");
+          break;
+      }
+    } else {
+      setErrorMessage("");
+    }
+  }, [error]);
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
+      return;
+    }
+    if (password.length < 8) {
+      setErrorMessage("Password must be at least 8 characters long.");
+      return;
+    }
+    setErrorMessage(null);
     switch (userType) {
       case "Candidate":
         createAccount("Candidate", "candidates");
@@ -122,7 +152,33 @@ const FormContent = ({ userType }) => {
             ></i>
           )}
         </div>
-        {error && <p className="err-message">{error.message}</p>}
+      </div>
+      <div className="form-group">
+        <label>Confirm password</label>
+        <div className="password-input-wrapper">
+          <input
+            type={showConfirmPass ? "text" : "password"}
+            name="confirm"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+          {showConfirmPass ? (
+            <i
+              className="fa fa-eye eye-open"
+              aria-hidden="true"
+              onClick={() => setShowConfirmPass((prev) => !prev)}
+            ></i>
+          ) : (
+            <i
+              className="fa fa-eye-slash eye-close"
+              aria-hidden="true"
+              onClick={() => setShowConfirmPass((prev) => !prev)}
+            ></i>
+          )}
+        </div>
+
+        {errorMessage && <p className="err-message">{errorMessage}</p>}
       </div>
       {/* password */}
 

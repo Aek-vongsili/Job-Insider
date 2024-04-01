@@ -7,11 +7,9 @@ import candidateAction from "../candidates/actions";
 const showSuccessNotification = (text, callback) => {
   Swal.fire({
     icon: "success",
-    title: "Success!",
+    title: "Sign up Success!",
     text: text || "Operation completed successfully!",
-    confirmButtonText: "Accept",
-    timer: 2000,
-    timerProgressBar: true,
+    confirmButtonText: "Proceed",
   }).then((result) => {
     if (typeof callback === "function") {
       callback();
@@ -170,7 +168,9 @@ const fbAuthSignUp = (newUser, type, colName, callback) => {
       );
       await dispatch(fbSignUpSuccess());
       dispatch(fbAuthLogout());
-      showSuccessNotification("Register Success");
+      showSuccessNotification(
+        "An email with your account confirmation link has been sent to your email"
+      );
     } catch (err) {
       await dispatch(fbSignUpErr(err));
     }
