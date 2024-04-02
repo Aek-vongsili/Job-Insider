@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import VerifyEmail from "../components/verify/VerifyEmail";
+import ResetPassword from "../components/verify/ResetPassword";
 
 const index = () => {
   const searchParams = useSearchParams();
