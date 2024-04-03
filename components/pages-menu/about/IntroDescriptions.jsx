@@ -13,7 +13,7 @@ const IntroDescriptions = () => {
         reaching a wide range of target audiences.
       </p>
       <p>
-        Our team is composited of different fields, inspiration, energy, and
+        Our team is consited of different fields, inspiration, energy, and
         young graduates who have completed an academic in related to computer
         science from the faculty of computer science, (major in mobile
         application and website development) at NUOL, plus the management, who
@@ -27,7 +27,7 @@ const IntroDescriptions = () => {
         high-quality and professional services to all clients, customers and
         business partners as much as possible. Our team believes that
         maintaining a good relationship with business partners, clients, and
-        customers, including making an own unit, making a difference, and
+        customers, including being unique, making a difference, and
         continuing to improve the website's functions and services to meet the
         wants and needs of customers, are the keys that will lead to
         sustainability and success.
@@ -54,15 +54,15 @@ const IntroDescriptions = () => {
       </p>
       <h4>Our Services</h4>
       <p>
-        1. Provide a service for job posting and advertising online on our
-        webpage. <br />
+        1. Provide services for job posting and advertising online on our
+        website/facebook <br />
         2. Provide consulting services on hiring and selection as well as
         support to create a workable resume and cover letter, including some
-        strategies for our gentle customers. For instance, give a useful
-        strategy for job interview preparation to be an outstanding candidate.{" "}
+        effective strategies for our gentle customers. For instance, give a useful
+        strategy for job interview preparation to be a stand candidate.{" "}
         <br />
-        3. Provide a service for data collection and analysis by utilizing
-        various surveys, which will be our long-term project.
+        3. Provide services for data collection and analysis and surveys by utilizing
+        various platform, which will be our long-term project.
       </p>
       <p></p>
     </div>

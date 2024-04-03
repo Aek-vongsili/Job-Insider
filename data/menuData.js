@@ -31,7 +31,7 @@ export default [
   },
   {
     id: 6,
-    label: "About",
+    label: "About Us",
     routePath: "/about",
   },
   

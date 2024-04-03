@@ -20,10 +20,10 @@ const LoginRegBanner = () => {
 
               <div className="content">
                 <div className="title">I&apos;m an Employer</div>
-                <div className="text">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry but also the leap into electronic
-                  typesetting
+                <div className="text" style={{ wordBreak: "break-word" }}>
+                  As the employer, I tend to be looking for candidates who can
+                  handle multitasking, including flexibility, always being
+                  active, and effective contribution .
                 </div>
               </div>
               {/* End content */}
@@ -34,11 +34,10 @@ const LoginRegBanner = () => {
           <div className="col-lg-5 col-md-6">
             <div className="cta-item -blue">
               <div className="content">
-                <div className="title">I&apos;m an Candidates</div>
-                <div className="text">
-                  Lorem Ipsum is simply dummy text of the printing and
-                  typesetting industry but also the leap into electronic
-                  typesetting
+                <div className="title">I&apos;m an Candidate</div>
+                <div className="text" style={{ wordBreak: "break-word" }}>
+                  As the candidate, I seek opportunities or companies where I can independently
+                  apply and share my ideas at work sometimes .
                 </div>
               </div>
               {/* End .content */}

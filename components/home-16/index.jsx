@@ -46,10 +46,7 @@ const index = () => {
         <div className="auto-container">
           <div className="sec-title text-center">
             <h2>How It Works</h2>
-            <div className="text">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-              eiusmod
-            </div>
+            
           </div>
           {/* End sec-title */}
 

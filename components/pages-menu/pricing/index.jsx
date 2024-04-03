@@ -14,9 +14,7 @@ const index = () => {
   ]);
   useLayoutEffect(() => {
     const handleScroll = () => {
-      const offset = window.scrollY;
-      console.log(offset);
-      if (offset > 200) {
+      if (window.scrollY > 190) {
         setSticky(true);
       } else {
         setSticky(false);
@@ -64,8 +62,8 @@ const index = () => {
       <Breadcrumb title="Pricing" meta="Pricing" />
       {/* <!--End Page Title--> */}
       <div
-        style={{ marginTop: 40, position: "sticky" }}
-        className={`tab-buttons-wrap ${sticky ? "sticky" : ""}`}
+        style={{ marginTop: 40 }}
+        className={`tab-buttons-wrap`}
       >
         <ul className="tab-buttons -pills-condensed -blue">
           {tabs?.map((tab) => (

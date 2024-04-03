@@ -21,7 +21,7 @@ const Block8 = () => {
     {
       id: 4,
       icon: "icon-one-finger-click",
-      title: "Now Take a Rest",
+      title: "Get access",
       text: `The latest design trends meet hand-crafted templates in Sassio Collection.`,
     },
   ];
@@ -35,7 +35,6 @@ const Block8 = () => {
             </div>
 
             <h5 className="title">{item.title}</h5>
-            <p className="text">{item.text}</p>
           </div>
         </div>
       ))}

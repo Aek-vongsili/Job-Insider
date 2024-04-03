@@ -2,7 +2,7 @@ import Link from "next/link";
 import CopyrightFooter from "../footer/common-footer/CopyrightFooter";
 import FooterApps2 from "../footer/FooterApps2";
 import FooterContent3 from "../footer/FooterContent3";
-import Image from 'next/image'
+import Image from "next/image";
 const Footer = () => {
   return (
     <footer className="main-footer style-five">
@@ -13,7 +13,12 @@ const Footer = () => {
               <div className="footer-column about-widget">
                 <div className="logo">
                   <Link href="/">
-                    <Image src="/images/HUBJOB_LOGO_BLUE.svg" alt="brand" width={110} height={110}/>
+                    <Image
+                      src="/images/HUBJOB_LOGO_BLUE.svg"
+                      alt="brand"
+                      width={110}
+                      height={110}
+                    />
                   </Link>
                 </div>
                 <p className="phone-num">
@@ -22,9 +27,9 @@ const Footer = () => {
                 </p>
                 <p className="address">
                   Phaxay, Sixattanak, Vientiane, Laos
-                <br />
-                  <a href="mailto:kettakoun8899@gmail.com" className="email">
-                   Hubjob@gmail.com
+                  <br />
+                  <a href="mailto: Sale@hubjob.la" className="email" style={{color:"#1967d2"}}>
+                    Sale@hubjob.la
                   </a>
                 </p>
               </div>
