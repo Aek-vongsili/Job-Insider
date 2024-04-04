@@ -17,7 +17,7 @@ const Pricing = () => {
     {
       id: 2,
       packageType: "Monthly",
-      price: "800.000",
+      price: "1.000.000",
       tag: "tagged",
       features: [
         "40 job posting",

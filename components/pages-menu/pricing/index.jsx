@@ -105,7 +105,7 @@ const index = () => {
       <section className="pricing-section" id="3">
         <div className="auto-container">
           <div className="sec-title text-center">
-            <h2>Price Package</h2>
+            <h2>Job post / member</h2>
             <div className="text"></div>
           </div>
           {/* End title */}

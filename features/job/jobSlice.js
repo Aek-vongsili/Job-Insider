@@ -4,6 +4,35 @@ const initialState = {
   latestJob: [],
   jobList: [],
   jobSingle: {},
+  educationList: [
+    { id: 1, name: "Not specific", value: "not-specific", isChecked: false },
+    { id: 2, name: "Certificate", value: "certificate", isChecked: false },
+
+    {
+      id: 3,
+      name: "Associate Degree",
+      value: "associate-degree",
+      isChecked: false,
+    },
+    {
+      id: 4,
+      name: "Bachelor Degree",
+      value: "bachelor-degree",
+      isChecked: false,
+    },
+    {
+      id: 5,
+      name: "Master's Degree",
+      value: "master's-degree",
+      isChecked: false,
+    },
+    {
+      id: 6,
+      name: "Doctorate Degree",
+      value: "doctorate-degree",
+      isChecked: false,
+    },
+  ],
   category: [
     {
       id: 1,
@@ -30,7 +59,7 @@ const initialState = {
     {
       id: 1,
       name: "Freelancer",
-      value: "contract/freelance",
+      value: "freelance",
       isChecked: false,
     },
     {
@@ -186,6 +215,20 @@ export const jobSlice = createSlice({
         };
       });
     },
+    educationCheck: (state, { payload }) => {
+      state.educationList.map((item) => {
+        if (item.id === payload) {
+          if (item.isChecked) {
+            item.isChecked = false;
+          } else {
+            item.isChecked = true;
+          }
+        }
+        return {
+          ...item,
+        };
+      });
+    },
     experienceLavelCheck: (state, { payload }) => {
       state?.experienceLavel?.map((item) => {
         if (item.id === payload) {
@@ -223,6 +266,7 @@ export const {
   experienceLavelCheck,
   clearExperienceToggle,
   ListJob,
+  educationCheck,
 } = jobSlice.actions;
 // export const selectJobById = (state, jobId) => {
 //   console.log(jobId);

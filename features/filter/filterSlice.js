@@ -13,6 +13,7 @@ const initialState = {
         jobTypeSelect: "",
         datePosted: "",
         experience: [],
+        educationSelect:"",
         experienceSelect: "",
         salary: {
             min: 0,
@@ -61,6 +62,9 @@ export const filterSlice = createSlice({
         },
         addJobTypeSelect: (state, { payload }) => {
             state.jobList.jobTypeSelect = payload;
+        },
+        addEducationSelect: (state, { payload }) => {
+            state.jobList.educationSelect = payload;
         },
         addDatePosted: (state, { payload }) => {
             state.jobList.datePosted = payload;
@@ -114,5 +118,6 @@ export const {
     addTag,
     addSort,
     addPerPage,
+    addEducationSelect
 } = filterSlice.actions;
 export default filterSlice.reducer;

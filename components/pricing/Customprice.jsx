@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const Customprice = () => {
-  const [subTotal, setSubTotal] = useState(200000);
+  const [subTotal, setSubTotal] = useState(250000);
   const [selectedWeek, setSelectedWeek] = useState({
     id: 1,
     week: "1 week / post",
@@ -96,7 +96,7 @@ const Customprice = () => {
   // Function to calculate subtotal
   const calculateSubTotal = (jobPosting, selectedWeek) => {
     if (jobPosting > 0 && selectedWeek) {
-      const totalPrice = jobPosting * selectedWeek.weekNum * 200000;
+      const totalPrice = jobPosting * selectedWeek.weekNum * 250000;
       setSubTotal(totalPrice);
     } else {
       setSubTotal(0);

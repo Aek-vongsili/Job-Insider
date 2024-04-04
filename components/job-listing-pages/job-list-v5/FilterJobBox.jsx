@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addCategory,
   addDatePosted,
+  addEducationSelect,
   addExperienceSelect,
   addJobTypeSelect,
   addKeyword,
@@ -17,6 +18,7 @@ import {
 } from "../../../features/filter/filterSlice";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+
 import { setLoading } from "../../../features/user/userSlice";
 import {
   favouriteJobAdd,
@@ -102,11 +104,12 @@ const FilterJobBox = () => {
     datePosted,
     jobTypeSelect,
     experienceSelect,
+    educationSelect,
     salary,
   } = jobList || {};
 
   const { sort, perPage } = jobSort;
-
+  console.log(educationSelect);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(jobReadData());
@@ -138,11 +141,19 @@ const FilterJobBox = () => {
       : item;
 
   // job-type filter
-  const jobTypeFilter = (item) =>
-    item.jobType !== undefined && jobTypeSelect !== ""
+  const jobTypeFilter = (item) => {
+    return item.jobType !== undefined && jobTypeSelect !== ""
       ? item?.jobType.toLocaleLowerCase().split(" ").join("-") ===
           jobTypeSelect && item
       : item;
+  };
+
+  const educationFilter = (item) => {
+    return item.qualification !== undefined && educationSelect !== ""
+      ? item?.qualification.toLocaleLowerCase().split(" ").join("-") ===
+          educationSelect && item
+      : item;
+  };
 
   // date-posted filter
   const datePostedFilter = (item) =>
@@ -241,6 +252,7 @@ const FilterJobBox = () => {
     // ?.filter(categoryFilter)
     ?.filter(jobTypeFilter)
     ?.filter(datePostedFilter)
+    ?.filter(educationFilter)
     // ?.filter(experienceFilter)
     // ?.filter(salaryFilter)
     // ?.sort(sortFilter)
@@ -326,11 +338,13 @@ const FilterJobBox = () => {
     dispatch(addLocation(""));
     dispatch(addCategory(""));
     dispatch(addJobTypeSelect(""));
+    dispatch(addEducationSelect(""));
     dispatch(addDatePosted(""));
     dispatch(addExperienceSelect(""));
     dispatch(addSalary({ min: 0, max: 20000 }));
     dispatch(addSort(""));
     dispatch(addPerPage({ start: 0, end: 0 }));
+    window.history.replaceState(null, "", "/job-list");
   };
   return (
     <>
@@ -343,6 +357,7 @@ const FilterJobBox = () => {
           location !== "" ||
           category !== "" ||
           jobTypeSelect !== "" ||
+          educationSelect !== "" ||
           datePosted !== "" ||
           experienceSelect !== "" ||
           salary?.min !== 0 ||
