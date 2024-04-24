@@ -334,6 +334,7 @@ const FilterJobBox = () => {
 
   // clear all filters
   const clearAll = () => {
+    router.replace("/job-list", undefined, { shallow: true });
     dispatch(addKeyword(""));
     dispatch(addLocation(""));
     dispatch(addCategory(""));
@@ -344,7 +345,6 @@ const FilterJobBox = () => {
     dispatch(addSalary({ min: 0, max: 20000 }));
     dispatch(addSort(""));
     dispatch(addPerPage({ start: 0, end: 0 }));
-    window.history.replaceState(null, "", "/job-list");
   };
   return (
     <>

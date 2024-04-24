@@ -6,7 +6,7 @@ import Loading from "../../../../Loading/Loading";
 import { jobInsertData } from "../../../../../features/jobs/actionCreator";
 import dynamic from "next/dynamic";
 const TextEditor = dynamic(
-  () => import('./TextEditor'),
+  () => import("./TextEditor"),
   { ssr: false } // This will make the component only rendered on client-side
 );
 
@@ -291,9 +291,8 @@ const PostBoxForm = () => {
             style={{ border: `${errors?.qualification ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
-
-            <option value="Certificate">Certificate</option>
             <option value="Not specific">Not specific</option>
+            <option value="Certificate">Certificate</option>
             <option value="Associate Degree">Associate Degree</option>
             <option value="Bachelor Degree">Bachelor Degree</option>
             <option value="Master's Degree">Master's Degree</option>
@@ -314,12 +313,18 @@ const PostBoxForm = () => {
             style={{ border: `${errors?.salary ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
-            <option>$1500</option>
-            <option>$2000</option>
-            <option>$2500</option>
-            <option>$3500</option>
-            <option>$4500</option>
-            <option>$5000</option>
+            <option value="neogitiable">Neogitiable</option>
+            <option value="< 2.000.000"> less than 2.000.000</option>
+            <option value="2.000.000 - 3.000.0000">
+              2.000.000 - 3.000.0000
+            </option>
+            <option value="3.000.000 - 5.000.0000">
+              3.000.000 - 5.000.0000
+            </option>
+            <option value="5.000.000 - 7.000.0000">
+              5.000.000 - 7.000.0000
+            </option>
+            <option value="> 7.000.000">more than 7.000.000</option>
           </select>
           {errors?.salary && <p className="err-message">{errors?.salary}</p>}
         </div>

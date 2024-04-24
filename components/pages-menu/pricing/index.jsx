@@ -10,7 +10,7 @@ const index = () => {
   const [tabs, setTab] = useState([
     { id: 1, name: "Job posting", isActive: true },
     { id: 2, name: "Banner", isActive: false },
-    { id: 3, name: "Facebook posting", isActive: false },
+    { id: 3, name: "Facebook", isActive: false },
   ]);
   useLayoutEffect(() => {
     const handleScroll = () => {
@@ -61,10 +61,7 @@ const index = () => {
 
       <Breadcrumb title="Pricing" meta="Pricing" />
       {/* <!--End Page Title--> */}
-      <div
-        style={{ marginTop: 40 }}
-        className={`tab-buttons-wrap`}
-      >
+      <div style={{ marginTop: 40 }} className={`tab-buttons-wrap`}>
         <ul className="tab-buttons -pills-condensed -blue">
           {tabs?.map((tab) => (
             <li

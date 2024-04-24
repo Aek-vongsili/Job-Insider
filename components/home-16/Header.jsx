@@ -32,34 +32,52 @@ const Header = () => {
   const userUid = useSelector((state) => {
     return state.firebase.auth.uid;
   });
+  const userImage = (role) => {
+    switch (role) {
+      case "Employer":
+        return employerSingle?.profile?.logoImage;
+      case "Candidate":
+        return candidateData?.profile?.profileImage;
+      default:
+        // Handle default case or return early if necessary
+        return "/images/resource/company-6.png";
+    }
+  };
+  // useEffect(() => {
+  //   if (!role || !userUid) {
+  //     return; // If role or currentUser is not available, return early
+  //   }
+  //   const db = firebase.firestore();
+  //   let userDocRef;
 
-  useEffect(() => {
-    const db = firebase.firestore();
-    const usersRef = db.collection("candidates");
+  //   // Get the correct document reference based on the user's role
+  //   switch (role) {
+  //     case "Employer":
+  //       userDocRef = db.collection("employers").doc(userUid);
+  //       break;
+  //     case "Candidate":
+  //       userDocRef = db.collection("candidates").doc(userUid);
+  //       break;
+  //     default:
+  //       // Handle default case or return early if necessary
+  //       return;
+  //   }
 
-    const updateUserImage = () => {
-      switch (role) {
-        case "Employer":
-          setImage(employerSingle?.profile?.logoImage);
-          break;
-        case "Candidate":
-          setImage(candidateData?.profile?.profileImage);
-          break;
-        default:
-          setImage(undefined);
-      }
-    };
+  //   // Subscribe to the user document snapshot
+  //   const unsubscribe = userDocRef.onSnapshot((doc) => {
+  //     // Update image based on role
+  //     setImage(
+  //       doc.data()?.profile?.logoImage ||
+  //         doc.data()?.profile?.profileImage ||
+  //         undefined
+  //     );
+  //   });
 
-    const unsubscribe = usersRef.onSnapshot((snapshot) => {
-      // Update image based on role
-      updateUserImage();
-    });
-
-    return () => {
-      // Unsubscribe from Firestore changes when component unmounts or dependencies change
-      unsubscribe();
-    };
-  }, [role, employerSingle, candidateData, dispatch]);
+  //   return () => {
+  //     // Unsubscribe from Firestore changes when component unmounts or dependencies change
+  //     unsubscribe();
+  //   };
+  // }, [role, userUid]);
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -144,7 +162,7 @@ const Header = () => {
                     <Image
                       alt="avatar"
                       className="fill-image"
-                      src={image || "/images/resource/company-6.png"}
+                      src={userImage(role) || "/images/resource/company-6.png"}
                       width={50}
                       height={50}
                       quality={100}

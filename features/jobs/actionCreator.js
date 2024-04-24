@@ -77,11 +77,11 @@ const jobReadData = (jobCategory) => {
     try {
       dispatch(jobReadBegin());
       const jobsData = [];
-      let query = db.collection("jobs");
+      let query = db.collection("jobs").where('status', '!=', 'expired');;
 
       // If a job category is specified, add a filter to the query
       if (jobCategory) {
-        query = query.where("jobType", "array-contains", jobCategory);
+        query = query.where("jobType", "==", jobCategory);
       }
 
       const querySnapshot = await query.get();
