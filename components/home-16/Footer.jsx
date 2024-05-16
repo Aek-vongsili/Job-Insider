@@ -14,10 +14,10 @@ const Footer = () => {
                 <div className="logo">
                   <Link href="/">
                     <Image
-                      src="/images/HUBJOB_LOGO_BLUE.svg"
+                      src="/images/Artboard 6.svg"
                       alt="brand"
-                      width={110}
-                      height={110}
+                      width={150}
+                      height={150}
                     />
                   </Link>
                 </div>
@@ -26,11 +26,15 @@ const Footer = () => {
                   <a href="thebeehost@support.com">+856 20 55969965</a>
                 </p>
                 <p className="address">
-                  Phaxay, Sixattanak, Vientiane, Laos
-                  <br />
-                  <a href="mailto: Sale@hubjob.la" className="email" style={{color:"#1967d2"}}>
+                  <a
+                    href="mailto: Sale@hubjob.la"
+                    className="email"
+                    style={{ color: "#1967d2" }}
+                  >
                     Sale@hubjob.la
                   </a>
+                  <br />
+                  Phaxay, Sixattanak, Vientiane, Laos
                 </p>
               </div>
             </div>

@@ -4,6 +4,7 @@ import LoginPopup from "../../common/form/login/LoginPopup";
 import MobileMenu from "../../header/MobileMenu";
 import Customprice from "../../pricing/Customprice";
 import Pricing from "../../pricing/Pricing";
+import CustompriceFacebook from "../../pricing/CustompriceFacebook";
 const index = () => {
   const [tabId, setTabId] = useState(1);
   const [sticky, setSticky] = useState(false);
@@ -99,14 +100,25 @@ const index = () => {
         </div>
       </section>
 
-      <section className="pricing-section" id="3">
+      {/* <section className="pricing-section" id="3">
         <div className="auto-container">
           <div className="sec-title text-center">
             <h2>Job post / member</h2>
             <div className="text"></div>
           </div>
-          {/* End title */}
+          
           <Pricing />
+       
+        </div>
+      </section> */}
+      <section className="pricing-section" id="3">
+        <div className="auto-container">
+          <div className="sec-title text-center">
+            <h2>Facebook post</h2>
+            <div className="text"></div>
+          </div>
+          {/* End title */}
+          <CustompriceFacebook />
           {/* End .{/* <!--Pricing Tabs--> */}
         </div>
       </section>
