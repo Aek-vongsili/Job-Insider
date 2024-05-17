@@ -120,7 +120,7 @@ Pricing Section
     -webkit-transition: all 300ms ease;
     -o-transition: all 300ms ease;
     transition: all 300ms ease;
-    height: 700px;
+    height: 720px;
 }
 
 .pricing-table-facebook .post-container {
@@ -293,7 +293,7 @@ Pricing Section
             /* Center vertically */
             left: 50%;
             /* Center horizontally */
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, 0%);
             /* Adjust for the button's dimensions */
             width: 100%;
             border-radius: 40px;
