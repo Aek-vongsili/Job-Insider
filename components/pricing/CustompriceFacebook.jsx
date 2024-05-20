@@ -13,7 +13,7 @@ const CustompriceFacebook = () => {
     {
       id: 2,
       packageType: "Standard",
-      price: "1.000.000",
+      price: "550.000",
       title: "3 PICTURES",
       image: "/images/fb-post2.png",
       bgClass: "standard",
@@ -21,7 +21,7 @@ const CustompriceFacebook = () => {
     {
       id: 3,
       packageType: "Pro",
-      price: "8.000.000",
+      price: "850.000",
       title: "6 PICTURES",
       image: "/images/fb-post3.png",
       bgClass: "pro",
