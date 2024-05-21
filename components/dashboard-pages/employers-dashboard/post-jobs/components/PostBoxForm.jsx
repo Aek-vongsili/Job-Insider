@@ -169,42 +169,8 @@ const PostBoxForm = () => {
         });
       });
     }
-    // if (validate(formData)) {
-    //   try {
-    //     console.log(formData);
-    //     const data = { ...formData, skill, keylist };
-    //     // console.log({ ...formData, skill, keylist });
-    //     addDoc(collection(db, "job_features"), {
-    //       ...data,
-    //       company: userUid,
-    //       createdAt: serverTimestamp(),
-    //       status:"active"
-    //     }).then((rs) => {
-    //       setLoading(false);
-    //       Swal.fire({
-    //         title: "Success",
-    //         text: "Your Job has been posted",
-    //         icon: "success",
-    //         confirmButtonText: "Accept",
-    //         timer: 3000,
-    //         timerProgressBar: true,
-    //       });
-    //     });
-    //   } catch (err) {
-    //     setLoading(false);
-    //     console.log(err);
-    //   }
-    // } else {
-
-    //   setLoading(false);
-    // }
   };
-  // useEffect(() => {
-  //   console.log(errors);
-  //   if (Object.keys(errors).length === 0) {
-  //     console.log(formData);
-  //   }
-  // }, [errors]);
+
   const borderStyle = "1px solid red";
   return (
     <form className="default-form" onSubmit={handleSubmit}>

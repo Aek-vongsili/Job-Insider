@@ -8,7 +8,6 @@ import PostJobSteps from "./components/PostJobSteps";
 import PostBoxForm from "./components/PostBoxForm";
 import MenuToggler from "../../MenuToggler";
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
 // import { db } from "../../../../firebase/clientApp";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -19,43 +18,7 @@ const index = () => {
   const userUid = useSelector((state) => state.user?.user?.uid);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const companyProfile = async () => {
-      // try {
-      //   if (userUid) {
-      //     const collectionRef = doc(db, "employers", userUid);
-      //     const docSnap = await getDoc(collectionRef);
-      //     if (docSnap.exists()) {
-      //       const profile = docSnap.data()?.profile;
 
-      //       if (
-      //         profile?.company_info === undefined ||
-      //         profile?.location === undefined ||
-      //         profile?.social === undefined ||
-      //         profile?.company_info === null ||
-      //         profile?.location === null ||
-      //         profile?.social === null
-      //       ) {
-      //         Swal.fire({
-      //           icon: "warning",
-      //           title: "Can't access this page",
-      //           text: "Fill infomation in Company profile!",
-      //           footer: '<a href="">Why do I have this issue?</a>',
-      //           confirmButtonText: "Access",
-      //           timerProgressBar: true,
-      //           timer: 2000,
-      //         }).then(() => {
-      //           router.back();
-      //         });
-      //       }
-      //     }
-      //   }
-      // } catch (err) {
-      //   console.log(err);
-      // }
-    };
-    companyProfile();
-  }, [userUid, router]);
   // if (isLoading) {
   //   return <div>Loading...</div>;
   // }
