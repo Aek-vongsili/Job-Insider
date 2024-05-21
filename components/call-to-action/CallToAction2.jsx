@@ -10,12 +10,12 @@ const CallToAction2 = () => {
         <div className="sec-title light text-center">
           <h2>Your Dream Jobs Are Waiting</h2>
           <div className="text">
-            Over 1 million interactions, 50,000 success stories Make yours now.
+            {/* Over 1 million interactions, 50,000 success stories Make yours now. */}
           </div>
         </div>
 
         <div className="btn-box">
-          <Link href="/job-list-v6" className="theme-btn btn-style-three">
+          <Link href="/job-list" className="theme-btn btn-style-three">
             Search Job
           </Link>
           <Link href="/register" className="theme-btn btn-style-two">

@@ -1,14 +1,7 @@
 import { NextResponse } from "next/server";
-
 import type { NextRequest } from "next/server";
 
-// import { auth } from "firebase-admin";
-
-// const secret_key: string = process.env.NEXT_PUBLIC_PRIVATE_KEY!
-// const alg = 'RS256'
 export default async function middleware(req: NextRequest) {
-  // const key = await importPKCS8(secret_key, alg)
-
   const { cookies } = req;
   const jwt = cookies.get("token")?.value;
 
@@ -25,10 +18,9 @@ export default async function middleware(req: NextRequest) {
     } else if (req.nextUrl.pathname.startsWith("/register")) {
       return NextResponse.redirect(new URL("/", req.url));
     }
-    return NextResponse.next();
   }
 
-  return NextResponse.next();
+  return NextResponse.next(); // This line should only execute if none of the redirection conditions are met.
 }
 export const config = {
   matcher: [
