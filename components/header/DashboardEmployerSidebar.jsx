@@ -54,9 +54,8 @@ const DashboardEmployerSidebar = () => {
             className={`${
               isActiveLink("", router.asPath) ? "active" : ""
             } mb-1`}
-            onClick={handleLogout}
           >
-            <Link href="" onClick={handleLogout}>
+            <Link href="#" onClick={handleLogout}>
               <i className="la la-sign-out"></i> Logout
             </Link>
           </li>
