@@ -9,13 +9,13 @@ export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   switch (true) {
-    case !token &&
-      (pathname.startsWith("/employers-dashboard") ||
-        pathname.startsWith("/candidates-dashboard")):
-      return NextResponse.redirect(new URL(LOGIN_URL, req.url), 307);
-    // case token &&
-    //   (pathname.startsWith("/login") || pathname.startsWith("/register")):
-    //   return NextResponse.redirect(new URL(HOME_URL, req.url), 307);
+    // case !token &&
+    //   (pathname.startsWith("/employers-dashboard") ||
+    //     pathname.startsWith("/candidates-dashboard")):
+    //   return NextResponse.redirect(new URL(LOGIN_URL, req.url), 307);
+    case token &&
+      (pathname.startsWith("/login") || pathname.startsWith("/register")):
+      return NextResponse.redirect(new URL(HOME_URL, req.url), 307);
     default:
       return NextResponse.next();
   }
