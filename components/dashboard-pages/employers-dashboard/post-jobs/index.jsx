@@ -7,21 +7,8 @@ import CopyrightFooter from "../../CopyrightFooter";
 import PostJobSteps from "./components/PostJobSteps";
 import PostBoxForm from "./components/PostBoxForm";
 import MenuToggler from "../../MenuToggler";
-import { useEffect, useState } from "react";
-// import { db } from "../../../../firebase/clientApp";
-import { useSelector } from "react-redux";
-import Swal from "sweetalert2";
-import { useRouter } from "next/router";
-import { setLoading } from "../../../../features/user/userSlice";
 
 const index = () => {
-  const userUid = useSelector((state) => state.user?.user?.uid);
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>

@@ -24,8 +24,11 @@ const FormContent = () => {
   const dispatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(fbAuthLogin({ email, password }, () => router.push("/")));
-    // router.push("/");
+    await dispatch(
+      fbAuthLogin({ email, password }, () => {
+        router.push("/");
+      })
+    );
   };
   return (
     <div className="form-inner">

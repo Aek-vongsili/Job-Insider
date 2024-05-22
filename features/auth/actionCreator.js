@@ -45,12 +45,14 @@ const fbAuthLogin = (data, callback) => {
       await dispatch(fbLoginBegin());
       await fb.auth().signInWithEmailAndPassword(data.email, data.password);
       await dispatch(fbLoginSuccess());
+      // Move the callback inside the asynchronous function
       callback();
     } catch (err) {
       await dispatch(fbLoginErr(err));
     }
   };
 };
+
 // const fbAuthLogin = (data, callback) => {
 //   return async (dispatch, getState, { getFirebase }) => {
 //     const fb = getFirebase();

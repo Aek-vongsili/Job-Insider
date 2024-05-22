@@ -15,7 +15,7 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL(LOGIN_URL, req.url), 307);
     case token &&
       (pathname.startsWith("/login") || pathname.startsWith("/register")):
-      return NextResponse.redirect(new URL(HOME_URL, req.url), 301);
+      return NextResponse.redirect(new URL(HOME_URL, req.url), 307);
     default:
       return NextResponse.next();
   }
