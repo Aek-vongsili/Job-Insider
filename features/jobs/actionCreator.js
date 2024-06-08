@@ -35,7 +35,7 @@ const {
   jobApplicationCheckErr,
 } = actions;
 
-const jobInsertData = (jobData) => {
+const jobInsertData = (jobData, quotaId) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const fb = getFirebase();
     const db = getFirestore();
@@ -65,10 +65,39 @@ const jobInsertData = (jobData) => {
         createdAt: new Date(),
         status: "active",
       });
-      dispatch(jobInsertSuccess());
+      const employerData = userDoc.data();
+      const postQuotas = employerData.postQuotas || [];
+      const updatedPostQuotas = postQuotas.map((quota) => {
+        if (quota.quotaId === quotaId) {
+          return {
+            ...quota,
+            postedJobs: (quota.postedJobs || 0) + 1,
+          };
+        }
+        return quota;
+      });
+
+      await db.collection("employers").doc(uid).update({
+        postQuotas: updatedPostQuotas,
+      });
+      Swal.fire({
+        title: "Success",
+        text: "Your Job has been posted",
+        icon: "success",
+        confirmButtonText: "Accept",
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      dispatch(jobInsertSuccess(true));
     } catch (err) {
       dispatch(jobInsertErr(err));
     }
+  };
+};
+
+const resetInsertStatus = () => {
+  return async (dispatch) => {
+    dispatch(jobInsertSuccess(false));
   };
 };
 const jobReadData = (jobCategory) => {
@@ -77,7 +106,7 @@ const jobReadData = (jobCategory) => {
     try {
       dispatch(jobReadBegin());
       const jobsData = [];
-      let query = db.collection("jobs").where('status', '!=', 'expired');;
+      let query = db.collection("jobs").where("status", "!=", "expired");
 
       // If a job category is specified, add a filter to the query
       if (jobCategory) {
@@ -390,4 +419,5 @@ export {
   removeFavouriteJob,
   jobApplyApplication,
   checkIfUserApplied,
+  resetInsertStatus
 };

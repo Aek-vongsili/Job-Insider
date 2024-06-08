@@ -29,7 +29,12 @@ const Header = () => {
             <div className="logo-box">
               <div className="logo">
                 <Link href="/" className="noSticky">
-                  <img src="/images/Artboard 6 white.svg" alt="logo" title="brand" style={{ width: "11rem" }}/>
+                  <img
+                    src="/images/Artboard 6 white.svg"
+                    alt="logo"
+                    title="brand"
+                    style={{ width: "11rem" }}
+                  />
                 </Link>
                 <Link href="/" className="isSticky">
                   <img src="images/logo.svg" alt="logo" title="brand" />
@@ -39,17 +44,6 @@ const Header = () => {
           </div>
           {/* End nav-outer */}
 
-          <div className="outer-box">
-            {/* <!-- Login/Register --> */}
-            <div className="btn-box">
-              <Link
-                href="/employers-dashboard/post-jobs"
-                className="theme-btn btn-style-one"
-              >
-                <span className="btn-title">Job Post</span>
-              </Link>
-            </div>
-          </div>
           {/* End outer-box */}
         </div>
       </div>

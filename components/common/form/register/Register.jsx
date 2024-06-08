@@ -46,26 +46,11 @@ const Register = () => {
       {/* End form-group */}
       <div className="bottom-box">
         <div className="text">
-          Already have an account?{" "}
-          <Link
-            href="/login"
-            // className="call-modal signup"
-            // data-bs-dismiss="modal"
-            // data-bs-target="#registerModal"
-            // data-bs-toggle="modal"
-          >
-            Login
-          </Link>
+          Already have an account? <Link href="/login">Login</Link>
         </div>
       </div>
 
-      {/* <div className="bottom-box">
-        <div className="divider">
-          <span>or</span>
-        </div>
-        <LoginWithSocial />
-      </div> */}
-      {/* End bottom-box LoginWithSocial */}
+   
     </div>
   );
 };

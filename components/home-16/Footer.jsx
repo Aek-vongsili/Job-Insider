@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer className="main-footer style-five">
       <div className="auto-container">
-        <div className="widgets-section" data-aos="fade-up">
+        <div className="widgets-section">
           <div className="row">
             <div className="big-column col-xl-4 col-lg-6 col-md-12">
               <div className="footer-column about-widget">

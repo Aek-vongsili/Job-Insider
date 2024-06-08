@@ -202,17 +202,8 @@ const Header = () => {
               </div>
             ) : (
               <div className="btn-box">
-                <Link
-                  href="/login"
-                  className="theme-btn btn-style-six call-modal"
-                >
+                <Link href="/login" className="theme-btn btn-style-five">
                   Login / Register
-                </Link>
-                <Link
-                  href="/employers-dashboard/post-jobs"
-                  className="theme-btn btn-style-five"
-                >
-                  Job Post
                 </Link>
               </div>
             )}

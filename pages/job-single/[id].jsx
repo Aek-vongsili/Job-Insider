@@ -259,18 +259,15 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       }}
                     >
                       <button
-                        href="#"
                         className="theme-btn btn-style-one"
-                        // data-bs-toggle="modal"
-                        // data-bs-target="#applyJobModal"
                         style={{ minWidth: "222px" }}
                         disabled={isApplied}
                         onClick={handleShow}
                       >
                         {isApplied ? (
-                          <i className="flaticon-checked">{" Applied"}</i>
+                          <i className="flaticon-checked">{"Applied"}</i>
                         ) : (
-                          " Apply now"
+                          "Apply now"
                         )}
                       </button>
                       <button
@@ -342,19 +339,6 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                     </div>
                   </div>
                   {/* <!-- Other Options --> */}
-
-                  {/* <div className="related-jobs">
-                    <div className="title-box">
-                      <h3>Related Jobs</h3>
-                      <div className="text">
-                        2020 jobs live - 293 added today.
-                      </div>
-                    </div>
-                  
-
-                    <RelatedJobs />
-                  </div> */}
-                  {/* <!-- Related Jobs --> */}
                 </div>
                 {/* End .content-column */}
 

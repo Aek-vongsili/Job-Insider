@@ -310,6 +310,9 @@ Login Section
   position: relative;
   padding-top: 12px;
   text-align: center;
+  a:hover{
+    color: var(--primary-color);
+  }
 }
 
 .login-form .text {

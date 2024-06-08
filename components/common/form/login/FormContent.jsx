@@ -78,12 +78,7 @@ const FormContent = () => {
 
         <div className="form-group">
           <div className="field-outer">
-            <div className="input-group checkboxes square">
-              <input type="checkbox" name="remember-me" id="remember" />
-              <label htmlFor="remember" className="remember">
-                <span className="custom-checkbox"></span> Remember me
-              </label>
-            </div>
+            <div className="input-group checkboxes square"></div>
             <a href="/forgot-password" className="pwd">
               Forgot password?
             </a>
@@ -107,16 +102,7 @@ const FormContent = () => {
 
       <div className="bottom-box">
         <div className="text">
-          Don&apos;t have an account?{" "}
-          <Link
-            href="/register"
-            // className="call-modal signup"
-            // data-bs-dismiss="modal"
-            // data-bs-target="#registerModal"
-            // data-bs-toggle="modal"
-          >
-            Signup
-          </Link>
+          Don&apos;t have an account? <Link href="/register">Signup</Link>
         </div>
       </div>
       {/* End bottom-box LoginWithSocial */}

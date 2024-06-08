@@ -42,6 +42,7 @@ const initialState = {
   jobFavData: [],
   jobFavLoading: false,
   jobFavGetLoading: false,
+  insertStatus: false,
 };
 
 const initialStateSingle = {
@@ -81,7 +82,7 @@ const jobReducer = (state = initialState, action) => {
     case JOB_INSERT_SUCCESS:
       return {
         ...state,
-        data,
+        insertStatus: data,
         loading: false,
       };
     case JOB_INSERT_ERR:
@@ -193,7 +194,7 @@ const jobSingleReducer = (state = initialStateSingle, action) => {
     case JOB_APPLICATION_CHECK_SUCCESS:
       return {
         ...state,
-        isApplied:data,
+        isApplied: data,
         jobApplyLoading: false,
       };
     case JOB_APPLICATION_CHECK_ERR:

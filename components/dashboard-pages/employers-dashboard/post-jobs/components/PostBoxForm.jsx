@@ -3,15 +3,19 @@ import Map from "../../../Map";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import Loading from "../../../../Loading/Loading";
-import { jobInsertData } from "../../../../../features/jobs/actionCreator";
+import {
+  jobInsertData,
+  resetInsertStatus,
+} from "../../../../../features/jobs/actionCreator";
 import dynamic from "next/dynamic";
 const TextEditor = dynamic(
   () => import("./TextEditor"),
   { ssr: false } // This will make the component only rendered on client-side
 );
 
-const PostBoxForm = () => {
+const PostBoxForm = ({ pkgData }) => {
   const dispatch = useDispatch();
+  const { durationDays, quotaId } = pkgData;
   const initialFormData = {
     deadlineDate: "",
     jobCategories: "",
@@ -20,7 +24,8 @@ const PostBoxForm = () => {
     jobType: "",
     salary: "",
     gender: "",
-    // ... other fields
+    qualification: "",
+    // Add other fields as needed
   };
   const [skill, setSkill] = useState([{ skillList: "" }]);
   const [keylist, setKeylist] = useState([{ keyList: "" }]);
@@ -30,6 +35,10 @@ const PostBoxForm = () => {
   const loading = useSelector((state) => {
     return state.jobs.loading;
   });
+  const insertStatus = useSelector((state) => {
+    return state.jobs.insertStatus;
+  });
+
   const specialisms = [
     { value: "Banking", label: "Banking" },
     { value: "Digital & Creative", label: "Digital & Creative" },
@@ -68,7 +77,15 @@ const PostBoxForm = () => {
     { id: 15, name: "Cook" },
     { id: 16, name: "Internships" },
   ];
-
+  useEffect(() => {
+    if (insertStatus) {
+      setFormData(initialFormData);
+      setSkill([{ skillList: "" }]);
+      setKeylist([{ keyList: "" }]);
+      dispatch(resetInsertStatus());
+      // Reset quotaId if needed
+    }
+  }, [insertStatus]);
   const handleSkillChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...skill];
@@ -77,11 +94,8 @@ const PostBoxForm = () => {
   };
 
   const handleSkillRemove = (index) => {
-    console.log("Removing skill at index:", index);
-
     // Filter out the skill at the specified index
     const updatedSkill = skill.filter((_, i) => i !== index);
-    console.log("Updated skill array:", updatedSkill);
 
     setSkill(updatedSkill);
   };
@@ -109,7 +123,7 @@ const PostBoxForm = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
+
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
   const validate = (values) => {
@@ -132,9 +146,6 @@ const PostBoxForm = () => {
       errors.jobCategories = "Please Select job categories";
     }
 
-    if (!values.deadlineDate) {
-      errors.deadlineDate = "Deadline date is required";
-    }
     if (!values.gender) {
       errors.gender = "Select gender";
     }
@@ -155,19 +166,16 @@ const PostBoxForm = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ ...formData, skill, keylist });
     if (validate({ ...formData, skill, keylist })) {
-      const data = { ...formData, skill, keylist };
-      dispatch(jobInsertData(data)).then(() => {
-        Swal.fire({
-          title: "Success",
-          text: "Your Job has been posted",
-          icon: "success",
-          confirmButtonText: "Accept",
-          timer: 3000,
-          timerProgressBar: true,
-        });
-      });
+      const data = {
+        ...formData,
+        deadlineDate: new Date(
+          new Date().getTime() + durationDays * 24 * 60 * 60 * 1000
+        ), // Add durationDays to current date
+        skill,
+        keylist,
+      };
+      dispatch(jobInsertData(data, quotaId));
     }
   };
 
@@ -183,6 +191,7 @@ const PostBoxForm = () => {
             name="jobTitle"
             placeholder="Title"
             onChange={handleInputChange}
+            value={formData.jobTitle}
             style={{ border: `${errors?.jobTitle ? borderStyle : ""}` }}
           />
           {errors?.jobTitle && (
@@ -197,6 +206,7 @@ const PostBoxForm = () => {
             onChange={handleInputChange}
             name="jobDescription"
             style={{ border: `${errors?.jobDescription ? borderStyle : ""}` }}
+            value={formData.jobDescription}
             placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
           ></textarea>
           {errors?.jobDescription && (
@@ -204,25 +214,13 @@ const PostBoxForm = () => {
           )}
         </div>
 
-        {/* <!-- Search Select --> */}
-        {/* <div className="form-group col-lg-6 col-md-12">
-          <label>Specialisms </label>
-          <Select
-            defaultValue={[specialisms[2]]}
-            isMulti
-            name="colors"
-            options={specialisms}
-            className="basic-multi-select"
-            classNamePrefix="select"
-          />
-        </div> */}
-
         <div className="form-group col-lg-6 col-md-12">
           <label>Job Type</label>
           <select
             className="chosen-single form-select"
             name="jobType"
             onChange={handleInputChange}
+            value={formData.jobType}
             style={{ border: `${errors?.jobType ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
@@ -238,6 +236,7 @@ const PostBoxForm = () => {
             className="chosen-single form-select"
             name="gender"
             onChange={handleInputChange}
+            value={formData.gender}
             style={{ border: `${errors?.gender ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
@@ -254,6 +253,7 @@ const PostBoxForm = () => {
             className="chosen-single form-select"
             name="qualification"
             onChange={handleInputChange}
+            value={formData.qualification}
             style={{ border: `${errors?.qualification ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
@@ -276,6 +276,7 @@ const PostBoxForm = () => {
             className="chosen-single form-select"
             name="salary"
             onChange={handleInputChange}
+            value={formData.salary}
             style={{ border: `${errors?.salary ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
@@ -301,6 +302,7 @@ const PostBoxForm = () => {
             className="chosen-single form-select"
             name="jobCategories"
             onChange={handleInputChange}
+            value={formData.jobCategories}
             style={{ border: `${errors?.jobCategories ? borderStyle : ""}` }}
           >
             <option value="">Select option</option>
@@ -315,16 +317,13 @@ const PostBoxForm = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-6 col-md-12">
-          <label>Application Deadline Date</label>
+          <label>Deadline Days</label>
           <input
-            type="date"
+            type="text"
             name="deadlineDate"
-            onChange={handleInputChange}
-            style={{ border: `${errors?.jobCategories ? borderStyle : ""}` }}
+            value={`${durationDays} days`}
+            disabled
           />
-          {errors?.deadlineDate && (
-            <p className="err-message">{errors?.deadlineDate}</p>
-          )}
         </div>
         {/* <div className="form-group col-lg-12 col-md-12">
           <TextEditor />
