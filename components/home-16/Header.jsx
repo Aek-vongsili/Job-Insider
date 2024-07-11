@@ -131,9 +131,9 @@ const Header = () => {
               <div className="logo">
                 <Link href="/">
                   <img
-                    src="/images/Artboard 6 white.svg"
+                    src="/images/HUBJOB LOGO_WHITE.svg"
                     alt="brand"
-                    style={{ width: "10rem" }}
+                    style={{ width: "13rem" }}
                   />
                 </Link>
               </div>

@@ -13,12 +13,7 @@ const Footer = () => {
               <div className="footer-column about-widget">
                 <div className="logo">
                   <Link href="/">
-                    <Image
-                      src="/images/Artboard 6.svg"
-                      alt="brand"
-                      width={150}
-                      height={150}
-                    />
+                    <img src="/images/HUBJOB LOGO_BLUE.svg" alt="brand" style={{padding:0,width:"15rem",marginTop:"-100px"}}/>
                   </Link>
                 </div>
                 <p className="phone-num">

@@ -133,8 +133,8 @@ const index = () => {
                                 width={50}
                               />
                             </div>
-                          ) : (
-                            data?.map((pkg, index) => (
+                          ) : data?.length ? (
+                            data.map((pkg, index) => (
                               <div
                                 key={index}
                                 className="form-group col-lg-12 col-md-12"
@@ -164,6 +164,10 @@ const index = () => {
                                 </label>
                               </div>
                             ))
+                          ) : (
+                            <div style={{ marginBottom: 50, fontSize: 18 }}>
+                              Quota not found!
+                            </div>
                           )}
                           {error && <p style={{ color: "red" }}>{error}</p>}{" "}
                           {/* Display error message */}

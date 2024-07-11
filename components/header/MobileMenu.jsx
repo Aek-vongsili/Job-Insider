@@ -44,7 +44,7 @@ const MobileMenu = () => {
             <div className="logo-box">
               <div className="logo">
                 <Link href="/">
-                  <img src="/images/Artboard 6.svg" alt="brand" />
+                  <img src="/images/HUBJOB LOGO_BLUE.svg" alt="brand" style={{width:"100px",height:"auto",marginTop:"-20px"}}/>
                 </Link>
               </div>
             </div>
