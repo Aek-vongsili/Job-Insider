@@ -3,9 +3,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 const index = () => {
   const imagePath = [
-    { id: 2, path: "/images/index-16/header/bg4.png" },
-    { id: 3, path: "/images/index-16/header/bg5.png" },
-    { id: 4, path: "/images/index-16/header/bg7.jpeg" },
+    { id: 2, path: "/images/index-16/header/bg7.jpeg" },
+    { id: 2, path: "/images/index-16/header/bg8.jpeg" },
+    { id: 3, path: "/images/index-16/header/bg9.jpeg" },
+    { id: 4, path: "/images/index-16/header/bg10.jpeg" },
   ];
 
   return (
