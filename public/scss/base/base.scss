@@ -1,5 +1,5 @@
 :root {
-  --primary-color: #1967d2;
+  --primary-color: #2730CD;
   --primary-hover-bg-color: #0146a6;
   --primary-2nd-color: #f9ab00;
   --primary-2nd-hover-bg-color: #e9a000;
@@ -85,7 +85,10 @@ button {
   cursor: pointer;
   min-width: auto;
 }
-
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev {
+  color:#E24563 /* Change to your desired color */
+}
 p,
 .text {
   font-size: 15px;
