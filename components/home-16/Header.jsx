@@ -128,12 +128,12 @@ const Header = () => {
           {/* <!--Nav Outer --> */}
           <div className="nav-outer">
             <div className="logo-box">
-              <div className="logo">
+              <div className="logo" style={{ width: "13rem" }}>
                 <Link href="/">
                   <img
                     src="/images/HUBJOB LOGO_WHITE.svg"
                     alt="brand"
-                    style={{ width: "13rem" }}
+                    
                   />
                 </Link>
               </div>
