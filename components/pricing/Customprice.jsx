@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 const Customprice = () => {
   const [subTotal, setSubTotal] = useState(250000);
+  const [discount,setDiscount] = useState(0.2)
   const [selectedWeek, setSelectedWeek] = useState({
     id: 1,
     week: "1 week / post",
@@ -148,6 +149,12 @@ const Customprice = () => {
                       <span class="col">Subtotal</span>
                       <span class="col price">
                         LAK {subTotal.toLocaleString()}
+                      </span>
+                    </li>
+                    <li style={{ paddingBottom: 0 }}>
+                      <span class="col">discount (20%)</span>
+                      <span class="col price">
+                        LAK {(subTotal*discount).toLocaleString()}
                       </span>
                     </li>
                     <li style={{ paddingBottom: 0 }}>

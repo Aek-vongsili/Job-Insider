@@ -51,18 +51,16 @@ const Partner = () => {
   };
 
   const sliderGallery = [
-    { id: 1, link: "#", imgNumber: "64BIT_LOGO" },
-    { id: 2, link: "#", imgNumber: "POST64-LOGO-03" },
-    { id: 3, link: "#", imgNumber: "purer" },
-    { id: 4, link: "#", imgNumber: "64BIT_LOGO" },
-    { id: 5, link: "#", imgNumber: "POST64-LOGO-03" },
-    { id: 6, link: "#", imgNumber: "purer" },
-    { id: 7, link: "#", imgNumber: "64BIT_LOGO" },
-    { id: 8, link: "#", imgNumber: "POST64-LOGO-03" },
-    { id: 9, link: "#", imgNumber: "purer" },
-    { id: 10, link: "#", imgNumber: "64BIT_LOGO" },
-    { id: 11, link: "#", imgNumber: "POST64-LOGO-03" },
-    { id: 12, link: "#", imgNumber: "purer" },
+    { id: 1, link: "#", imgNumber: "64BIT_LOGO.png" },
+    { id: 2, link: "#", imgNumber: "POST64-LOGO-03.png" },
+    { id: 3, link: "#", imgNumber: "purer.png" },
+    { id: 4, link: "#", imgNumber: "FoodPanda.jpeg" },
+    { id: 5, link: "#", imgNumber: "GpsLao.jpeg" },
+    { id: 6, link: "#", imgNumber: "KxBroker.jpeg" },
+    { id: 7, link: "#", imgNumber: "Systory.jpeg" },
+    { id: 8, link: "#", imgNumber: "WallStreet.jpeg" },
+    { id: 9, link: "#", imgNumber: "WWFLao.jpeg" },
+    { id: 10, link: "#", imgNumber: "ZCom.jpeg" },
   ];
 
   return (
@@ -72,7 +70,7 @@ const Partner = () => {
           <li className="slide-item" key={item.id}>
             <figure className="image-box">
               <a href={item.link}>
-                <img src={`images/clients/${item.imgNumber}.png`} alt="brand" />
+                <img src={`images/clients/${item.imgNumber}`} alt="brand" />
               </a>
             </figure>
           </li>
