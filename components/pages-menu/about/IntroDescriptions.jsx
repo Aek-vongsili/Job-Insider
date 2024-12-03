@@ -3,67 +3,68 @@ const IntroDescriptions = () => {
     <div className="text-box">
       <h4>About HubJob</h4>
       <p>
-        <b>“HubJob Company Limited”</b> founded on August 8, 2023, and is
-        co-owned by three of the Lao best friends who are passionate about
-        advertising, job posting online, freelance/consulting connections, and
-        mobile application development. It provides professional support for
-        clients and customers to have potential access to all types of careers
-        and job prospects. Its prioritized goal is to support private firms,
-        INGOs, UN agencies, and embassies in Laos/offshore business partners in
-        reaching a wide range of target audiences.
+        <b>
+          Seeking the talent staff and placing them in suitable positions can be
+          a bit challenging, especially when there are limited applications for
+          specific roles. To support in addressing this issue with innovative
+          approaches and mechanisms, Hubjob Company Limited was established –
+          the company was officially founded on August 8, 2023{" "}
+        </b>{" "}
+        by three best friends from Laos who are passionate about advertising,
+        job postings online, consulting services, and mobile application
+        development. The primary goal of our company is to provide professional
+        support that gives clients and customers access to various talent
+        application. We focus on assisting private firms, INGOs, UN agencies,
+        and embassies in Laos, as well as offshore business partners, to
+        effectively reach broaden application.
       </p>
       <p>
-        Our team is consited of different fields, inspiration, energy, and
-        young graduates who have completed an academic in related to computer
-        science from the faculty of computer science, (major in mobile
-        application and website development) at NUOL, plus the management, who
-        has been working in the field of human resources functions for over 10
-        years in private companies, INGOs, and consulting firms in Lao PDR.
-        Therefore, we are confident, flexible and can respond rapidly in terms
-        of helping and providing services to meet our customers’ objectives.
-      </p>
-      <p>
-        In addition, our company is now operating and we are trying to provide
-        high-quality and professional services to all clients, customers and
-        business partners as much as possible. Our team believes that
-        maintaining a good relationship with business partners, clients, and
-        customers, including being unique, making a difference, and
-        continuing to improve the website's functions and services to meet the
-        wants and needs of customers, are the keys that will lead to
-        sustainability and success.
+        <b>Hubjob’s </b>
+        team is consisted of a dynamic mix of young graduates with diverse
+        backgrounds and energy, all of whom have studied computer science at the
+        National University of Laos (NUOL), specializing in mobile application
+        and website development. Our management team has been served over ten
+        years of experience in human resources across private companies, UN
+        agency, INGOs, and consulting firms in Laos. This combination of skills
+        ensures we can respond quickly and effectively to meet our clients’
+        objectives. In addition, we establish our operations, we are dedicated
+        to providing high-quality, professional services. We believe that
+        fostering strong relationships with business partners, clients, and
+        customers, along with embracing uniqueness and continuous improvement,
+        is essential for achieving sustainability and success.
       </p>
       <h4>Our Mission </h4>
       <p>
-        Although we are a small and new firm in Lao PDR, we have staff with long
+        While we are a small and new firm in Laos, our team boasts extensive
         experience in recruiting, interviewing, and selecting the right
-        candidates for the right jobs. Our experienced team of HR professionals
-        that has over 10 years of experience. Therefore, we are extremely
-        confident in our ability to provide professional services to all of our
-        clients and customers, as we deeply understand that all of our valued
-        customers want their job advertisements to be as widely publicized as
-        possible and would prefer to reach qualified and target candidates.
+        candidates for the right jobs. With over a decade of expertise in human
+        resources, we are confident in our ability to deliver exceptional
+        services. We understand that our clients want their job advertisements
+        to gain maximum visibility and attract qualified candidates and
+        services.
       </p>
       <h4>Our Vision</h4>
       <p>
-        We do not intend to compete with existing or other job advertisements,
-        but we intend to compete with ourselves and continue to make progress by
-        assisting all customers or clients in getting their jobs posted online
-        in order to become sustainable, where we also assist communities and
-        fresh graduates and provide training opportunities to understand the
-        employers' perspective.
+        Continuously improve ourselves. Our focus is on assisting clients in
+        posting their job openings online while supporting communities and fresh
+        graduates by providing training opportunities that offer insights into
+        employer perspectives.
       </p>
       <h4>Our Services</h4>
       <p>
-        1. Provide services for job posting and advertising online on our
-        website/facebook <br />
-        2. Provide consulting services on hiring and selection as well as
-        support to create a workable resume and cover letter, including some
-        effective strategies for our gentle customers. For instance, give a useful
-        strategy for job interview preparation to be a stand candidate.{" "}
+        <b>
+        1.  Job Posting and Advertising: 
+        </b>
+        {" "}We facilitate job postings and advertisements on our website and social media platforms. <br />
+        <b>
+        2.  Consulting Services: 
+        </b>
+        {" "}We provide consulting on hiring and selection, and support local and global companies in establishing subsidiaries in Laos.
         <br />
-        3. Provide services for data collection and analysis and surveys by utilizing
-        various platform, which will be our long-term project.
-      </p>
+        <b>
+        3.  Data Collection and Analysis: 
+        </b>
+        {" "}We offer data collection, analysis, and survey services tailored to client and customers inquiries using various platforms.      </p>
       <p></p>
     </div>
   );
