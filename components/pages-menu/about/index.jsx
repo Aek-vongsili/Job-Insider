@@ -11,7 +11,7 @@ import Testimonial2 from "../../testimonial/Testimonial2";
 import Block1 from "../../block/Block1";
 import Breadcrumb from "../../common/Breadcrumb";
 
-const index = () => {
+const  index = () => {
   return (
     <>
       {/* <!-- Header Span --> */}

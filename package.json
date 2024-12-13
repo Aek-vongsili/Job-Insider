@@ -4,7 +4,7 @@
   "private": true,
   "main": "function.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 5173",
     "build": "next build",
     "start": "next start",
     "clean": "npx rimraf .next out",

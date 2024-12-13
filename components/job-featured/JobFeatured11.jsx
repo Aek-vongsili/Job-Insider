@@ -75,7 +75,7 @@ const JobFeatured11 = () => {
             <div className="inner-box">
               <div className="content">
                 <span className="company-logo">
-                  <img src={item?.profile?.logoImage} alt="item brand" />
+                  <img src={item?.profile?.logoImage} alt="item brand" style={{objectFit:'scale-down'}}/>
                 </span>
                 <h4>
                   <Link href={`/job-single/${item?.id}`}>{item?.jobTitle}</Link>
@@ -89,7 +89,7 @@ const JobFeatured11 = () => {
                   {/* compnay info */}
                   <li>
                     <span className="icon flaticon-map-locator"></span>
-                    {item?.location?.address}
+                    {item?.location?.address || 'N/A'}
                   </li>
                   {/* location info */}
                 </ul>
