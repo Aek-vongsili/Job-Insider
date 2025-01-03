@@ -53,7 +53,7 @@ const Partner = () => {
   const sliderGallery = [
     { id: 1, link: "#", imgNumber: "64bit.jpeg" },
     { id: 2, link: "#", imgNumber: "post64.jpeg" },
-    { id: 3, link: "#", imgNumber: "purer.jpeg" },
+    { id: 3, link: "#", imgNumber: "Purer.jpeg" },
     { id: 4, link: "#", imgNumber: "FoodPanda.jpeg" },
     { id: 5, link: "#", imgNumber: "GpsLao.jpeg" },
     { id: 6, link: "#", imgNumber: "KxBroker.jpeg" },
