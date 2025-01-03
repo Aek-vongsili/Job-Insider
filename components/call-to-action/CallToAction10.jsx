@@ -14,9 +14,9 @@ const CallToAction10 = () => {
   };
 
   const sliderGallery = [
-    { id: 1, link: "#", imgNumber: "banner1.jpeg" },
-    { id: 2, link: "#", imgNumber: "banner2.jpeg" },
-    { id: 3, link: "#", imgNumber: "banner3.jpeg" },
+    { id: 1, link: "#", imgNumber: "banner1.jpg" },
+    { id: 2, link: "#", imgNumber: "banner2.jpg" },
+    { id: 3, link: "#", imgNumber: "banner3.jpg" },
   ];
 
   return (

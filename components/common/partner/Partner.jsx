@@ -51,9 +51,9 @@ const Partner = () => {
   };
 
   const sliderGallery = [
-    { id: 1, link: "#", imgNumber: "64BIT_LOGO.png" },
-    { id: 2, link: "#", imgNumber: "POST64-LOGO-03.png" },
-    { id: 3, link: "#", imgNumber: "purer.png" },
+    { id: 1, link: "#", imgNumber: "64bit.jpeg" },
+    { id: 2, link: "#", imgNumber: "post64.jpeg" },
+    { id: 3, link: "#", imgNumber: "purer.jpeg" },
     { id: 4, link: "#", imgNumber: "FoodPanda.jpeg" },
     { id: 5, link: "#", imgNumber: "GpsLao.jpeg" },
     { id: 6, link: "#", imgNumber: "KxBroker.jpeg" },
