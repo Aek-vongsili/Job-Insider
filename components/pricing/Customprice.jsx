@@ -160,7 +160,7 @@ const Customprice = () => {
                     <li style={{ paddingBottom: 0 }}>
                       <span class="col">tax (10%)</span>
                       <span class="col price">
-                        LAK {(subTotal * 0.1).toLocaleString()}
+                      LAK {((subTotal - subTotal * 0.2) * 0.1).toLocaleString()}
                       </span>
                     </li>
 
@@ -168,7 +168,7 @@ const Customprice = () => {
                       <span class="col">Total</span>
                       <span class="col price">
                         {" "}
-                        LAK {(subTotal * 1.1).toLocaleString()}
+                        LAK {((subTotal - subTotal * 0.2) + (subTotal - subTotal * 0.2) * 0.1).toLocaleString()}
                       </span>
                     </li>
                   </ul>
