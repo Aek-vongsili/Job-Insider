@@ -105,42 +105,56 @@ const jobReadData = (jobCategory) => {
     const db = getFirestore();
     try {
       dispatch(jobReadBegin());
-      const jobsData = [];
-      let query = db.collection("jobs").where("status", "!=", "expired");
 
-      // If a job category is specified, add a filter to the query
+      let query = db.collection("jobs").orderBy("createdAt", "desc");
+
       if (jobCategory) {
         query = query.where("jobType", "==", jobCategory);
       }
 
       const querySnapshot = await query.get();
 
-      // Iterate over each job document
-      for (const doc of querySnapshot.docs) {
-        const jobData = doc.data();
-
-        // Fetch corresponding company document using companyId stored in the job document
-        const companyDoc = await db
-          .collection("employers")
-          .doc(jobData?.company)
-          .get();
-        const companyData = companyDoc.exists ? companyDoc.data() : null;
-
-        // Combine jobData with companyData, if available
-        const combinedData = {
-          id: doc.id,
-          ...jobData,
-          ...companyData,
-        };
-        // Push combined data to jobsData array
-        jobsData.push(combinedData);
+      if (querySnapshot.empty) {
+        dispatch(jobReadSuccess([])); // No jobs found
+        return;
       }
-      dispatch(jobReadSuccess(jobsData));
+
+      // Extract job data and company IDs
+      const jobsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      })).filter(job => job.status !== "expired"); // Filter expired jobs manually
+
+      // Get unique company IDs to avoid duplicate fetches
+      const companyIds = [...new Set(jobsData.map(job => job.company).filter(Boolean))];
+
+      // Fetch all company data in parallel
+      const companyDocs = await Promise.all(
+        companyIds.map(id => db.collection("employers").doc(id).get())
+      );
+
+      // Map company data for quick lookup
+      const companyDataMap = {};
+      companyDocs.forEach(doc => {
+        if (doc.exists) {
+          companyDataMap[doc.id] = doc.data();
+        }
+      });
+
+      // Merge jobs with company data
+      const combinedJobsData = jobsData.map(job => ({
+        ...job,
+       ...companyDataMap[job.company] || null, // Attach company data if available
+      }));
+
+      dispatch(jobReadSuccess(combinedJobsData));
     } catch (err) {
+      console.error("Error fetching jobs:", err);
       dispatch(jobReadErr(err));
     }
   };
 };
+
 const jobSingleData = (jobUid) => {
   return async (dispatch, getState, { getFirebase, getFirestore }) => {
     const db = getFirestore();
