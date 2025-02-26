@@ -1,5 +1,19 @@
 import { useRef, useState } from "react";
 import { Modal, Form } from "react-bootstrap";
+const startYear = 1950;
+const endYear = new Date().getFullYear(); // Current year
+
+const generateYearOptions = (start, end) => {
+  const years = [];
+  for (let year = start; year <= end; year++) {
+    years.push(
+      <option key={year} value={year}>
+        {year}
+      </option>
+    );
+  }
+  return years;
+};
 const EditModal = ({
   showEdit,
   handleCloseEdit,
@@ -25,6 +39,7 @@ const EditModal = ({
       handleCloseEdit();
     }
   };
+
   return (
     <>
       <Modal show={showEdit === `modal${index}`} onHide={CloseEdit}>
@@ -77,9 +92,9 @@ const EditModal = ({
                       onChange={handleInputEdit}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
-                      <option value="2000">2000</option>
+                      {generateYearOptions(startYear, endYear)}
                     </select>
                     to
                     <select
@@ -89,9 +104,9 @@ const EditModal = ({
                       onChange={handleInputEdit}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
-                      <option value="2010">2010</option>
+                      {generateYearOptions(startYear, endYear)}
                     </select>
                     {errors?.start && (
                       <p className="ui-danger mb-0">{errors?.start}</p>
@@ -192,9 +207,9 @@ const AddEducation = ({
                       onChange={handleInputChange}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
-                      <option value="2000">2000</option>
+                      {generateYearOptions(startYear, endYear)}
                     </select>
                     to
                     <select
@@ -203,9 +218,9 @@ const AddEducation = ({
                       onChange={handleInputChange}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
-                      <option value="2010">2010</option>
+                      {generateYearOptions(startYear, endYear)}
                     </select>
                   </div>
                   {errors?.start && (

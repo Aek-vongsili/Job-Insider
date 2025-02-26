@@ -389,43 +389,30 @@ const FormInfoBox = () => {
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-3 col-md-12">
-          <label>Current Salary($)</label>
-          <select
-            className="chosen-single form-select"
+          <label>Current Salary (LAK)</label>
+          <input
+            className="chosen-single form-control"
+            type="text"
             name="currentSalary"
+            placeholder="Enter your Current Salary"
             onChange={handleInputChange}
             value={formData.currentSalary || ""}
-          >
-            <option disabled selected>
-              Select your Current Salary
-            </option>
-            <option>40-70 K</option>
-            <option>50-80 K</option>
-            <option>60-90 K</option>
-            <option>70-100 K</option>
-            <option>100-150 K</option>
-          </select>
+          />
+
         </div>
 
         {/* <!-- Input --> */}
         <div className="form-group col-lg-3 col-md-12">
-          <label>Expected Salary($)</label>
-          <select
+          <label>Expected Salary (LAK)</label>
+          <input
+            className="chosen-single form-control"
+            type="text"
             name="expectedSalary"
-            className="chosen-single form-select"
+            placeholder="Enter your Expected Salary"
+            list="expected-salary-options"
             onChange={handleInputChange}
             value={formData.expectedSalary || ""}
-          >
-            <option disabled selected>
-              Select your Expected Salary
-            </option>
-            <option>120-350 K</option>
-            <option>40-70 K</option>
-            <option>50-80 K</option>
-            <option>60-90 K</option>
-            <option>70-100 K</option>
-            <option>100-150 K</option>
-          </select>
+          />
         </div>
 
         {/* <!-- Input --> */}
@@ -440,7 +427,7 @@ const FormInfoBox = () => {
           />
         </div>
         <div className="form-group col-lg-6 col-md-12">
-          <label>Experience</label>
+          <label>Experience (Years)</label>
           <input
             type="text"
             name="experience"
@@ -449,8 +436,7 @@ const FormInfoBox = () => {
             onChange={handleInputChange}
           />
         </div>
-
-        {/* <!-- Search Select --> */}
+{/* 
         <div className="form-group col-lg-6 col-md-12">
           <label>Categories </label>
           <Select
@@ -463,16 +449,16 @@ const FormInfoBox = () => {
           />
         </div>
 
-        {/* <!-- Input --> */}
+    
         <div className="form-group col-lg-6 col-md-12">
           <label>Allow In Search & Listing</label>
           <select className="chosen-single form-select">
             <option>Yes</option>
             <option>No</option>
           </select>
-        </div>
+        </div> */}
 
-        {/* <!-- About Company --> */}
+
         <div className="form-group col-lg-12 col-md-12">
           <label>Description</label>
           <textarea

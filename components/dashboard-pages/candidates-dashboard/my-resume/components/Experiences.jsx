@@ -79,7 +79,7 @@ const EditModal = ({
                       onChange={handleInputEdit}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
                       {yearsArray.map((year) => (
                         <option key={year} value={year}>
@@ -95,7 +95,7 @@ const EditModal = ({
                       onChange={handleInputEdit}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
                       {yearsArray.map((year) => (
                         <option key={year} value={year}>
@@ -198,7 +198,7 @@ const AddExperience = ({
                       onChange={handleInputChange}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
                       {yearsArray.map((year) => (
                         <option key={year} value={year}>
@@ -213,7 +213,7 @@ const AddExperience = ({
                       onChange={handleInputChange}
                     >
                       <option value="" disabled selected>
-                        select year
+                        Select year
                       </option>
                       {yearsArray.map((year) => (
                         <option key={year} value={year}>

@@ -46,7 +46,7 @@ const EditModal = ({
                     value={editData?.language}
                   >
                     <option value="" disabled selected>
-                      Search language
+                      Select language
                     </option>
 
                     {languageNames.map((i, index) => (

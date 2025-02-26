@@ -196,14 +196,14 @@ const index = () => {
         </div> */}
         {/* <!-- End Award --> */}
 
-        <div className="form-group col-lg-6 col-md-12">
+        {/* <div className="form-group col-lg-6 col-md-12">
           <label>Skills </label>
           <SkillsMultiple />
-        </div>
+        </div> */}
         {/* <!-- Multi Selectbox --> */}
 
         <div className="form-group col-lg-12 col-md-12">
-          <button type="submit" className="theme-btn btn-style-one">
+          <button type="submit" className="theme-btn btn-style-one" disabled={!!loading}>
             {!!loading ? <Loading /> : "Save"}
           </button>
         </div>
