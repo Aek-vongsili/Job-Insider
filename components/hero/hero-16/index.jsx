@@ -3,10 +3,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 const index = () => {
   const imagePath = [
-    { id: 2, path: "/images/index-16/header/bg7.jpeg" },
-    { id: 2, path: "/images/index-16/header/bg8.jpeg" },
-    { id: 3, path: "/images/index-16/header/bg9.jpeg" },
-    { id: 4, path: "/images/index-16/header/bg10.jpeg" },
+    { id: 1, path: "/images/index-16/banner/BANNER_ADS_HUBJOB.png" },
+    { id: 2, path: "/images/index-16/banner/64BIT_DEVELOPMENT_BANNER.png" },
+    { id: 3, path: "/images/index-16/banner/POST64_BANNER.png" },
   ];
 
   return (
@@ -41,7 +40,7 @@ const index = () => {
           clickable: true,
         }}
         autoplay={{
-          delay: 3000,
+          delay: 5000,
           disableOnInteraction: false,
         }}
         navigation={true}
