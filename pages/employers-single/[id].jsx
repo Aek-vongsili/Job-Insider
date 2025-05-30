@@ -68,7 +68,7 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
                     <span className="company-logo">
                       <img src={profile?.logoImage} alt="logo" />
                     </span>
-                    <h4>{profile.company_name}</h4>
+                    <h4>{profile?.company_name}</h4>
 
                     <ul className="job-info">
                       <li>

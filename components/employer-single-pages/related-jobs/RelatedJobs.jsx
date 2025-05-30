@@ -67,12 +67,12 @@ const RelatedJobs = ({ item, location, profile }) => {
             <ul className="job-info">
               <li>
                 <span className="icon flaticon-briefcase"></span>
-                {profile.company_name}
+                {profile?.company_name|| ""}
               </li>
               {/* compnay info */}
               <li>
                 <span className="icon flaticon-map-locator"></span>
-                {location.address}
+                {location?.address}
               </li>
               {/* location info */}
               <li>
