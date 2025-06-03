@@ -246,7 +246,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       <strong style={{ color: "red" }}>
                         {new Date(
                           jobData?.deadlineDate.seconds * 1000 +
-                            jobData?.deadlineDate.nanoseconds / 1000000
+                          jobData?.deadlineDate.nanoseconds / 1000000
                         ).toLocaleDateString("en-GB")}
                       </strong>
                     </div>
@@ -376,11 +376,14 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                         </div>
                       </div>
                       {/* <!--  Map Widget --> */}
+                      {jobData?.jobSkills && jobData?.jobSkills > 0 && <><h4 className="widget-title">Job Skills</h4>
+                        <div className="widget-content">
+                          <JobSkills jobSkills={jobData?.jobSkills} />
+                        </div>
+                      </>
 
-                      <h4 className="widget-title">Job Skills</h4>
-                      <div className="widget-content">
-                        <JobSkills />
-                      </div>
+                      }
+
                       {/* <!-- Job Skills --> */}
                     </div>
                     {/* End .sidebar-widget */}

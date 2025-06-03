@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Map from "../../../Map";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -7,37 +7,38 @@ import {
   jobInsertData,
   resetInsertStatus,
 } from "../../../../../features/jobs/actionCreator";
+import { v4 as uuidv4 } from "uuid";
 import dynamic from "next/dynamic";
+import { useFirebase } from "react-redux-firebase";
+import Select from "react-select";
+import jobSkills from "../../../../../public/jobSkill";
+
 const TextEditor = dynamic(
   () => import("./TextEditor"),
-  { ssr: false } // This will make the component only rendered on client-side
+  { ssr: false }
 );
 
 const PostBoxForm = ({ pkgData }) => {
   const dispatch = useDispatch();
+  const firebase = useFirebase();
+  const textEditorRef = useRef();
   const { durationDays, quotaId } = pkgData;
-  const initialFormData = {
-    deadlineDate: "",
-    jobCategories: "",
-    jobDescription: "",
-    jobTitle: "",
-    jobType: "",
-    salary: "",
-    gender: "",
-    qualification: "",
-    // Add other fields as needed
-  };
-  const [skill, setSkill] = useState([{ skillList: "" }]);
-  const [keylist, setKeylist] = useState([{ keyList: "" }]);
-  const [formData, setFormData] = useState(initialFormData);
-  const [errors, setErrors] = useState({});
-  const userUid = useSelector((state) => state.user?.user?.uid);
+
+  const userUid = useSelector((state) => {
+    return state.firebase.auth.uid;
+  });
+
   const loading = useSelector((state) => {
     return state.jobs.loading;
   });
+
   const insertStatus = useSelector((state) => {
     return state.jobs.insertStatus;
   });
+
+  // Create a unique session key that persists during the form session
+  const SESSION_KEY = useRef(`temp_job_images_${userUid || 'anonymous'}_${Date.now()}`);
+  const TEMP_IMAGES_KEY = SESSION_KEY.current;
 
   const specialisms = [
     { value: "Banking", label: "Banking" },
@@ -77,15 +78,25 @@ const PostBoxForm = ({ pkgData }) => {
     { id: 15, name: "Cook" },
     { id: 16, name: "Internships" },
   ];
-  useEffect(() => {
-    if (insertStatus) {
-      setFormData(initialFormData);
-      setSkill([{ skillList: "" }]);
-      setKeylist([{ keyList: "" }]);
-      dispatch(resetInsertStatus());
-      // Reset quotaId if needed
-    }
-  }, [insertStatus]);
+
+  const initialFormData = {
+    deadlineDate: "",
+    jobCategories: "",
+    jobDetails: "",
+    jobTitle: "",
+    jobType: "",
+    jobSkills: [],
+    salary: "",
+    gender: "",
+    qualification: "",
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
+  const [uploadedImages, setUploadedImages] = useState(new Set());
+  const [isFormDirty, setIsFormDirty] = useState(false); // Track if form has unsaved changes
+  const [skill, setSkill] = useState([{ skillList: "" }]);
+  const [keylist, setKeylist] = useState([{ keyList: "" }]);
   const handleSkillChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...skill];
@@ -121,69 +132,339 @@ const PostBoxForm = ({ pkgData }) => {
     setKeylist([...keylist, { keyList: "" }]);
   };
 
+  // Enhanced image upload with better tracking
+  const uploadImageToFirebase = async (file) => {
+    try {
+      const storageRef = firebase.storage().ref();
+      const imageName = `${uuidv4()}-${file.name}`;
+      const imageRef = storageRef.child(`job-images/${userUid}/${imageName}`);
+      const snapshot = await imageRef.put(file);
+      const downloadURL = await snapshot.ref.getDownloadURL();
+
+      // Track uploaded image in state
+      setUploadedImages(prev => new Set([...prev, downloadURL]));
+
+      // Store in sessionStorage for cleanup tracking only
+      const tempImages = JSON.parse(sessionStorage.getItem(TEMP_IMAGES_KEY) || '[]');
+      if (!tempImages.includes(downloadURL)) {
+        tempImages.push(downloadURL);
+        sessionStorage.setItem(TEMP_IMAGES_KEY, JSON.stringify(tempImages));
+      }
+
+      // Mark form as dirty since content was uploaded
+      setIsFormDirty(true);
+
+      console.log("Image uploaded successfully:", downloadURL);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire("Error", "Failed to upload image", "error");
+      return null;
+    }
+  };
+
+  const handleImageUpload = async (file) => {
+    const imageUrl = await uploadImageToFirebase(file);
+    return imageUrl;
+  };
+
+  const getStoragePathFromUrl = (url) => {
+    try {
+      const match = url.match(/\/o\/(.+?)\?/);
+      if (match) {
+        return decodeURIComponent(match[1]);
+      }
+      return null;
+    } catch (error) {
+      console.error('Error extracting storage path:', error);
+      return null;
+    }
+  };
+
+  // Enhanced delete function that only deletes when explicitly called
+  const deleteImageFromFirebase = async (imageUrl, isExplicitDelete = false) => {
+    try {
+      const storagePath = getStoragePathFromUrl(imageUrl);
+      if (!storagePath) {
+        console.warn('Could not extract storage path from URL:', imageUrl);
+        return;
+      }
+
+      const imageRef = firebase.storage().ref(storagePath);
+      await imageRef.delete();
+
+      // Remove from tracking
+      setUploadedImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(imageUrl);
+        return newSet;
+      });
+
+      // Remove from sessionStorage
+      const tempImages = JSON.parse(sessionStorage.getItem(TEMP_IMAGES_KEY) || '[]');
+      const updatedImages = tempImages.filter(img => img !== imageUrl);
+      sessionStorage.setItem(TEMP_IMAGES_KEY, JSON.stringify(updatedImages));
+
+      console.log(`Image deleted ${isExplicitDelete ? 'by user' : 'during cleanup'}:`, imageUrl);
+    } catch (error) {
+      if (error.code === 'storage/object-not-found') {
+        console.warn('Image not found in storage (may have been already deleted):', imageUrl);
+        // Still remove from tracking even if not found in storage
+        setUploadedImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(imageUrl);
+          return newSet;
+        });
+      } else {
+        console.error('Error deleting image from Firebase:', error);
+      }
+    }
+  };
+
+  // Cleanup function that only runs when form is abandoned
+  const cleanupAbandonedImages = async () => {
+    try {
+      const tempImages = JSON.parse(sessionStorage.getItem(TEMP_IMAGES_KEY) || '[]');
+
+      if (tempImages.length > 0) {
+        console.log(`Cleaning up ${tempImages.length} abandoned images...`);
+
+        // Delete images from Firebase Storage
+        const deletePromises = tempImages.map(async (imageUrl) => {
+          await deleteImageFromFirebase(imageUrl, false);
+        });
+
+        await Promise.all(deletePromises);
+
+        // Clear from sessionStorage
+        sessionStorage.removeItem(TEMP_IMAGES_KEY);
+        console.log('Abandoned images cleaned up successfully');
+      }
+    } catch (error) {
+      console.error('Error during cleanup:', error);
+    }
+  };
+
+  // Check for dirty form state
+  useEffect(() => {
+    const hasFormData = Object.values(formData).some(value => value && value !== "");
+    setIsFormDirty(hasFormData || uploadedImages.size > 0);
+  }, [formData, uploadedImages]);
+
+  // Setup cleanup only for abandoned forms
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Only show warning and cleanup if form has unsaved changes
+      if (isFormDirty) {
+        event.preventDefault();
+        event.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+
+        // Mark for cleanup on page unload
+        if (uploadedImages.size > 0) {
+          sessionStorage.setItem(`cleanup_needed_${Date.now()}`, JSON.stringify([...uploadedImages]));
+        }
+
+        return event.returnValue;
+      }
+    };
+
+    // Check for any pending cleanup from previous sessions on mount
+    const checkPendingCleanup = async () => {
+      const keys = Object.keys(sessionStorage);
+      const cleanupKeys = keys.filter(key =>
+        key.startsWith('cleanup_needed_') ||
+        (key.startsWith('temp_job_images_') && key !== TEMP_IMAGES_KEY)
+      );
+
+      for (const key of cleanupKeys) {
+        try {
+          const images = JSON.parse(sessionStorage.getItem(key) || '[]');
+          if (images.length > 0) {
+            console.log(`Found ${images.length} images to cleanup from previous session`);
+            const deletePromises = images.map(async (imageUrl) => {
+              await deleteImageFromFirebase(imageUrl, false);
+            });
+            await Promise.all(deletePromises);
+          }
+          sessionStorage.removeItem(key);
+        } catch (error) {
+          console.error('Error cleaning up previous session images:', error);
+          sessionStorage.removeItem(key);
+        }
+      }
+    };
+
+    // Run cleanup check on component mount
+    checkPendingCleanup();
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isFormDirty, uploadedImages, TEMP_IMAGES_KEY]);
+
+  // Handle successful form submission
+  useEffect(() => {
+    if (insertStatus) {
+      // Form was successfully submitted - don't clean up images, they're now part of the job
+      sessionStorage.removeItem(TEMP_IMAGES_KEY);
+      setUploadedImages(new Set());
+      setFormData(initialFormData);
+      setIsFormDirty(false);
+      dispatch(resetInsertStatus());
+
+      Swal.fire({
+        title: 'Success!',
+        text: 'Job posted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    }
+  }, [insertStatus, dispatch, TEMP_IMAGES_KEY]);
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
+    setErrors(prev => ({
+      ...prev,
+      [name]: null
+    }));
   };
+  const handleJobSkillsChange = (selectedOptions) => {
+    // Extract only the values from selected options
+    const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+
+    setFormData(prev => ({
+      ...prev,
+      jobSkills:selectedOptions
+    }));
+
+    // Clear error when user selects skills
+    if (selectedOptions.length > 0 && errors.jobSkills) {
+      setErrors(prev => ({
+        ...prev,
+        jobSkills: null
+      }));
+    }
+
+  };
+  const handleEditorChange = (field, content) => {
+    setFormData((prevFormData) => ({ ...prevFormData, [field]: content }));
+  };
+
+  const handleClearForm = async () => {
+    const result = await Swal.fire({
+      title: 'Clear Form?',
+      text: 'This will clear all form data and delete any uploaded images. This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, clear it!'
+    });
+
+    if (result.isConfirmed) {
+      // Clean up images since user explicitly wants to clear
+      await cleanupAbandonedImages();
+
+      // Clear editor
+      if (textEditorRef.current && textEditorRef.current.clearEditor) {
+        await textEditorRef.current.clearEditor();
+      }
+
+      // Reset form data and tracking
+      setFormData(initialFormData);
+      setUploadedImages(new Set());
+      setErrors({});
+      setIsFormDirty(false);
+
+      Swal.fire('Cleared!', 'Form has been cleared and images deleted.', 'success');
+    }
+  };
+
+  const handleResetJobDetails = async () => {
+    const result = await Swal.fire({
+      title: 'Reset Job Details?',
+      text: 'This will clear the job details content. Images will be preserved unless you clear the entire form.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, reset it!'
+    });
+
+    if (result.isConfirmed) {
+      if (textEditorRef.current && textEditorRef.current.clearEditor) {
+        await textEditorRef.current.clearEditor();
+      }
+
+      setFormData(prev => ({ ...prev, jobDetails: '' }));
+
+      if (errors.jobDetails) {
+        setErrors(prev => ({ ...prev, jobDetails: undefined }));
+      }
+    }
+  };
+
   const validate = (values) => {
     const errors = {};
 
     if (!values.jobTitle) {
       errors.jobTitle = "Job Title is required!";
     }
-    if (!values.jobDescription) {
-      errors.jobDescription = "Job Description is required!";
+    if (!values.jobDetails) {
+      errors.jobDetails = "Job Details is required!";
     }
     if (!values.jobType) {
       errors.jobType = "Please Select Job Type";
     }
+    if (values.jobSkills.length < 1) {
+      errors.jobSkills = "Please Select Job Skill";
+    }
     if (!values.salary) {
       errors.salary = "Please Select Salary";
     }
-
     if (!values.jobCategories) {
       errors.jobCategories = "Please Select job categories";
     }
-
     if (!values.gender) {
       errors.gender = "Select gender";
     }
     if (!values.qualification) {
       errors.qualification = "Select qualification";
     }
-    if (!values.skill || values.skill[0]?.skillList.trim() === "") {
-      errors.skill = "Please enter at least one skill";
-    }
-
-    // Validate the first keylist entry
-    if (!values.keylist || values.keylist[0]?.keyList.trim() === "") {
-      errors.keylist = "Please enter at least one key responsibilities";
-    }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validate({ ...formData, skill, keylist })) {
+    if (validate(formData)) {
       const data = {
         ...formData,
         deadlineDate: new Date(
           new Date().getTime() + durationDays * 24 * 60 * 60 * 1000
-        ), // Add durationDays to current date
+        ),
         skill,
         keylist,
       };
+
+      // Dispatch job insertion
       dispatch(jobInsertData(data, quotaId));
+
+      // Note: Images are now considered "committed" to the job posting
+      // Don't clean them up - let the success handler manage the state
     }
   };
 
   const borderStyle = "1px solid red";
+
   return (
     <form className="default-form" onSubmit={handleSubmit}>
       <div className="row">
-        {/* <!-- Input --> */}
+        {/* Job Title */}
         <div className="form-group col-lg-12 col-md-12">
           <label>Job Title</label>
           <input
@@ -199,21 +480,8 @@ const PostBoxForm = ({ pkgData }) => {
           )}
         </div>
 
-        {/* <!-- About Company --> */}
-        <div className="form-group col-lg-12 col-md-12">
-          <label>Job Description</label>
-          <textarea
-            onChange={handleInputChange}
-            name="jobDescription"
-            style={{ border: `${errors?.jobDescription ? borderStyle : ""}` }}
-            value={formData.jobDescription}
-            placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
-          ></textarea>
-          {errors?.jobDescription && (
-            <p className="err-message">{errors?.jobDescription}</p>
-          )}
-        </div>
 
+        {/* Job Type */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Job Type</label>
           <select
@@ -225,11 +493,13 @@ const PostBoxForm = ({ pkgData }) => {
           >
             <option value="">Select</option>
             {jobTypes.map((i, index) => (
-              <option key={i.id}>{i.name}</option>
+              <option key={i.id} value={i.name}>{i.name}</option>
             ))}
           </select>
           {errors?.jobType && <p className="err-message">{errors?.jobType}</p>}
         </div>
+
+        {/* Gender */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Gender</label>
           <select
@@ -240,13 +510,14 @@ const PostBoxForm = ({ pkgData }) => {
             style={{ border: `${errors?.gender ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
-
             <option value="male">Male</option>
             <option value="female">Female</option>
             <option value="others">Others</option>
           </select>
           {errors?.gender && <p className="err-message">{errors?.gender}</p>}
         </div>
+
+        {/* Qualification */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Qualification</label>
           <select
@@ -269,7 +540,7 @@ const PostBoxForm = ({ pkgData }) => {
           )}
         </div>
 
-        {/* <!-- Input --> */}
+        {/* Offered Salary */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Offered Salary</label>
           <select
@@ -280,22 +551,17 @@ const PostBoxForm = ({ pkgData }) => {
             style={{ border: `${errors?.salary ? borderStyle : ""}` }}
           >
             <option value="">Select</option>
-            <option value="neogitiable">Neogitiable</option>
+            <option value="negotiable">Negotiable</option>
             <option value="< 2.000.000"> less than 2.000.000</option>
-            <option value="2.000.000 - 3.000.0000">
-              2.000.000 - 3.000.0000
-            </option>
-            <option value="3.000.000 - 5.000.0000">
-              3.000.000 - 5.000.0000
-            </option>
-            <option value="5.000.000 - 7.000.0000">
-              5.000.000 - 7.000.0000
-            </option>
+            <option value="2.000.000 - 3.000.0000">2.000.000 - 3.000.0000</option>
+            <option value="3.000.000 - 5.000.0000">3.000.000 - 5.000.0000</option>
+            <option value="5.000.000 - 7.000.0000">5.000.000 - 7.000.0000</option>
             <option value="> 7.000.000">more than 7.000.000</option>
           </select>
           {errors?.salary && <p className="err-message">{errors?.salary}</p>}
         </div>
 
+        {/* Job Categories */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Job Categories</label>
           <select
@@ -307,15 +573,30 @@ const PostBoxForm = ({ pkgData }) => {
           >
             <option value="">Select option</option>
             {jobCategories.map((i, index) => (
-              <option key={i.id}>{i.name}</option>
+              <option key={i.id} value={i.name}>{i.name}</option>
             ))}
           </select>
           {errors?.jobCategories && (
             <p className="err-message">{errors?.jobCategories}</p>
           )}
         </div>
+        <div className="form-group col-lg-6 col-md-12">
+          <label>Job Skills</label>
+          <Select
+            // defaultValue={[jobSkills[1]]}
+            isMulti
+            name="jobSkills"
+            options={jobSkills}
+            className="basic-multi-select"
+            classNamePrefix="select"
+            onChange={handleJobSkillsChange}
+          />
+          {errors?.jobSkills && (
+            <p className="err-message">{errors?.jobSkills}</p>
+          )}
+        </div>
 
-        {/* <!-- Input --> */}
+        {/* Deadline Days */}
         <div className="form-group col-lg-6 col-md-12">
           <label>Deadline Days</label>
           <input
@@ -325,9 +606,58 @@ const PostBoxForm = ({ pkgData }) => {
             disabled
           />
         </div>
-        {/* <div className="form-group col-lg-12 col-md-12">
-          <TextEditor />
-        </div> */}
+        {/* Job Details with TextEditor */}
+        <div className="form-group col-lg-12 col-md-12">
+          <label style={{ display: "flex", alignItems: 'center' }}>Job Details (Description, Key Responsibilities & Required Skills)
+            <div style={{ float: 'right', marginLeft: "10px" }}>
+              <button
+                type="button"
+                onClick={handleResetJobDetails}
+                style={{
+                  background: '#dc3545',
+                  color: 'white',
+                  border: 'none',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  marginRight: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                Reset Job Details
+              </button>
+            </div>
+          </label>
+          <div style={{ border: `${errors?.jobDetails ? borderStyle : ""}` }}>
+            <TextEditor
+              ref={textEditorRef}
+              value={formData.jobDetails}
+              onChange={(content) => handleEditorChange('jobDetails', content)}
+              onImageUpload={handleImageUpload}
+              deleteImageFromFirebase={(url) => deleteImageFromFirebase(url, true)}
+              placeholder="Write your complete job details here including:
+              
+              Job Description:
+              [Enter detailed job description here...]
+              
+              Key Responsibilities:
+              • [Responsibility 1]
+              • [Responsibility 2]
+              • [Responsibility 3]
+              
+              Required Skills:
+              • [Skill 1]
+              • [Skill 2]
+              • [Skill 3]
+              
+              Click the image button in the toolbar to add images."
+              height="400px"
+              maxImageSize={5 * 1024 * 1024}
+              allowedImageTypes={['image/jpeg', 'image/png', 'image/gif', 'image/webp']}
+              error={errors?.jobDetails}
+            />
+          </div>
+        </div>
         <div className="form-group col-lg-12 col-md-12">
           <label>Key Responsibilities</label>
           {keylist.map((singleKey, index) => (
@@ -396,10 +726,17 @@ const PostBoxForm = ({ pkgData }) => {
             </div>
           ))}
         </div>
-        {/* <!-- Input --> */}
+        {/* Submit Button */}
         <div className="form-group col-lg-12 col-md-12 text-right">
-          <button className="theme-btn btn-style-one" disabled={loading}>
-            {!!loading ? <Loading /> : "Post"}
+          <button
+            type="button"
+            onClick={handleClearForm}
+            className="btn btn-outline-danger me-2"
+          >
+            Clear Form
+          </button>
+          <button className="theme-btn btn-style-one" type="submit">
+            {loading ? <Loading /> : "Post Job"}
           </button>
         </div>
       </div>

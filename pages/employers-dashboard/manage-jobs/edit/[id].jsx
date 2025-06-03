@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactLoading from "react-loading";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
@@ -18,34 +18,60 @@ import CopyrightFooter from "../../../../components/dashboard-pages/CopyrightFoo
 import Layout from "../../../../components/Layout";
 import { useRouter } from "next/router";
 import { employerEditJob } from "../../../../features/employer/actionCreator";
+import { useFirebase } from "react-redux-firebase";
+import { v4 as uuidv4 } from "uuid";
+import Select from 'react-select'
+import jobSkills from "../../../../public/jobSkill"
+const TextEditor = dynamic(
+  () => import("../../../../components/dashboard-pages/employers-dashboard/post-jobs/components/TextEditor"),
+  { ssr: false }
+);
+
 const EditJob = () => {
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useDispatch();
+  const firebase = useFirebase();
+  const textEditorRef = useRef();
+
   const initialFormData = {
     deadlineDate: "",
     jobCategories: "",
     jobDescription: "",
     jobTitle: "",
     jobType: "",
+    jobDetails: "",
     salary: "",
     gender: "",
-    // ... other fields
+    qualification: "",
+    jobSkills: []
   };
+
   const [skill, setSkill] = useState([{ skillList: "" }]);
   const [keylist, setKeylist] = useState([{ keyList: "" }]);
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
+  const [uploadedImages, setUploadedImages] = useState(new Set());
+  const [isFormDirty, setIsFormDirty] = useState(false);
+
   const userUid = useSelector((state) => {
     return state.firebase.auth.uid;
   });
+
   const loading = useSelector((state) => {
     return state.employerSingle.jobLoading;
   });
+
   const jobData = useSelector((state) => {
     return state.jobSingle.data;
   });
+
+  // Create a unique session key for tracking uploaded images
+  const SESSION_KEY = useRef(`edit_job_images_${userUid || 'anonymous'}_${id}_${Date.now()}`);
+  const TEMP_IMAGES_KEY = SESSION_KEY.current;
+
   console.log(jobData);
+
   const jobTypes = [
     { id: 1, name: "Full-Time" },
     { id: 2, name: "Part-Time" },
@@ -74,6 +100,94 @@ const EditJob = () => {
     { id: 16, name: "Internships" },
   ];
 
+  // Image upload functionality
+  const uploadImageToFirebase = async (file) => {
+    try {
+      const storageRef = firebase.storage().ref();
+      const imageName = `${uuidv4()}-${file.name}`;
+      const imageRef = storageRef.child(`job-images/${userUid}/${imageName}`);
+      const snapshot = await imageRef.put(file);
+      const downloadURL = await snapshot.ref.getDownloadURL();
+
+      // Track uploaded image in state
+      setUploadedImages(prev => new Set([...prev, downloadURL]));
+
+      // Store in sessionStorage for cleanup tracking only
+      const tempImages = JSON.parse(sessionStorage.getItem(TEMP_IMAGES_KEY) || '[]');
+      if (!tempImages.includes(downloadURL)) {
+        tempImages.push(downloadURL);
+        sessionStorage.setItem(TEMP_IMAGES_KEY, JSON.stringify(tempImages));
+      }
+
+      // Mark form as dirty since content was uploaded
+      setIsFormDirty(true);
+
+      console.log("Image uploaded successfully:", downloadURL);
+      return downloadURL;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      Swal.fire("Error", "Failed to upload image", "error");
+      return null;
+    }
+  };
+
+  const handleImageUpload = async (file) => {
+    const imageUrl = await uploadImageToFirebase(file);
+    return imageUrl;
+  };
+
+  const getStoragePathFromUrl = (url) => {
+    try {
+      const match = url.match(/\/o\/(.+?)\?/);
+      if (match) {
+        return decodeURIComponent(match[1]);
+      }
+      return null;
+    } catch (error) {
+      console.error('Error extracting storage path:', error);
+      return null;
+    }
+  };
+
+  const deleteImageFromFirebase = async (imageUrl, isExplicitDelete = false) => {
+    try {
+      const storagePath = getStoragePathFromUrl(imageUrl);
+      if (!storagePath) {
+        console.warn('Could not extract storage path from URL:', imageUrl);
+        return;
+      }
+
+      const imageRef = firebase.storage().ref(storagePath);
+      await imageRef.delete();
+
+      // Remove from tracking
+      setUploadedImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(imageUrl);
+        return newSet;
+      });
+
+      // Remove from sessionStorage
+      const tempImages = JSON.parse(sessionStorage.getItem(TEMP_IMAGES_KEY) || '[]');
+      const updatedImages = tempImages.filter(img => img !== imageUrl);
+      sessionStorage.setItem(TEMP_IMAGES_KEY, JSON.stringify(updatedImages));
+
+      console.log(`Image deleted ${isExplicitDelete ? 'by user' : 'during cleanup'}:`, imageUrl);
+    } catch (error) {
+      if (error.code === 'storage/object-not-found') {
+        console.warn('Image not found in storage (may have been already deleted):', imageUrl);
+        // Still remove from tracking even if not found in storage
+        setUploadedImages(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(imageUrl);
+          return newSet;
+        });
+      } else {
+        console.error('Error deleting image from Firebase:', error);
+      }
+    }
+  };
+
   const handleSkillChange = (e, index) => {
     const { name, value } = e.target;
     const list = [...skill];
@@ -83,11 +197,8 @@ const EditJob = () => {
 
   const handleSkillRemove = (index) => {
     console.log("Removing skill at index:", index);
-
-    // Filter out the skill at the specified index
     const updatedSkill = skill.filter((_, i) => i !== index);
     console.log("Updated skill array:", updatedSkill);
-
     setSkill(updatedSkill);
   };
 
@@ -117,14 +228,57 @@ const EditJob = () => {
     console.log(name, value);
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
+  const handleJobSkillsChange = (selectedOptions) => {
+    // Extract only the values from selected options
+    const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
+
+    setFormData(prev => ({
+      ...prev,
+      jobSkills: selectedOptions
+    }));
+
+    // Clear error when user selects skills
+    if (selectedOptions.length > 0 && errors.jobSkills) {
+      setErrors(prev => ({
+        ...prev,
+        jobSkills: null
+      }));
+    }
+
+  };
+  const handleEditorChange = (field, content) => {
+    setFormData((prevFormData) => ({ ...prevFormData, [field]: content }));
+  };
+
+  const handleResetJobDetails = async () => {
+    const result = await Swal.fire({
+      title: 'Reset Job Description?',
+      text: 'This will clear the job description content. Images will be preserved unless you clear the entire form.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, reset it!'
+    });
+
+    if (result.isConfirmed) {
+      if (textEditorRef.current && textEditorRef.current.clearEditor) {
+        await textEditorRef.current.clearEditor();
+      }
+
+      setFormData(prev => ({ ...prev, jobDescription: '' }));
+
+      if (errors.jobDescription) {
+        setErrors(prev => ({ ...prev, jobDescription: undefined }));
+      }
+    }
+  };
+
   const validate = (values) => {
     const errors = {};
 
     if (!values.jobTitle) {
       errors.jobTitle = "Job Title is required!";
-    }
-    if (!values.jobDescription) {
-      errors.jobDescription = "Job Description is required!";
     }
     if (!values.jobType) {
       errors.jobType = "Please Select Job Type";
@@ -132,11 +286,12 @@ const EditJob = () => {
     if (!values.salary) {
       errors.salary = "Please Select Salary";
     }
-
     if (!values.jobCategories) {
       errors.jobCategories = "Please Select job categories";
     }
-
+    if (values.jobSkills.length < 1) {
+      errors.jobSkills = "Please Select Job Skill";
+    }
     if (!values.deadlineDate) {
       errors.deadlineDate = "Deadline date is required";
     }
@@ -146,27 +301,31 @@ const EditJob = () => {
     if (!values.qualification) {
       errors.qualification = "Select qualification";
     }
-    if (!values.skill || values.skill[0]?.skillList.trim() === "") {
-      errors.skill = "Please enter at least one skill";
-    }
-
-    // Validate the first keylist entry
-    if (!values.keylist || values.keylist[0]?.keyList.trim() === "") {
-      errors.keylist = "Please enter at least one key responsibilities";
-    }
+    // if (!values.skill || values.skill[0]?.skillList.trim() === "") {
+    //   errors.skill = "Please enter at least one skill";
+    // }
+    // if (!values.keylist || values.keylist[0]?.keyList.trim() === "") {
+    //   errors.keylist = "Please enter at least one key responsibilities";
+    // }
 
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
+
   const handleEdit = (e) => {
     e.preventDefault();
     console.log(formData);
     if (validate({ ...formData, skill, keylist })) {
       const data = { ...formData, skill, keylist };
       dispatch(employerEditJob(userUid, id, data)).then(() => {
+        // Clear temp images tracking on successful update
+        sessionStorage.removeItem(TEMP_IMAGES_KEY);
+        setUploadedImages(new Set());
+        setIsFormDirty(false);
+
         Swal.fire({
           title: "Success",
-          text: "Your Job has been posted",
+          text: "Your Job has been updated",
           icon: "success",
           confirmButtonText: "Accept",
           timer: 3000,
@@ -175,62 +334,72 @@ const EditJob = () => {
       });
     }
   };
+
+  // Check for dirty form state
+  useEffect(() => {
+    const hasFormData = Object.values(formData).some(value => value && value !== "");
+    const hasSkillData = skill.some(s => s.skillList && s.skillList.trim() !== "");
+    const hasKeyData = keylist.some(k => k.keyList && k.keyList.trim() !== "");
+    setIsFormDirty(hasFormData || hasSkillData || hasKeyData || uploadedImages.size > 0);
+  }, [formData, skill, keylist, uploadedImages]);
+
+  // Setup cleanup for abandoned forms
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (isFormDirty && uploadedImages.size > 0) {
+        // Mark for cleanup on page unload
+        sessionStorage.setItem(`cleanup_needed_${Date.now()}`, JSON.stringify([...uploadedImages]));
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isFormDirty, uploadedImages]);
+
   useEffect(() => {
     dispatch(jobSingleData(id));
   }, [id, dispatch]);
-  // useEffect(() => {
-  //   console.log(errors);
-  //   if (Object.keys(errors).length === 0) {
-  //     console.log(formData);
-  //   }
-  // }, [errors]);
+
   useEffect(() => {
     if (jobData) {
       setFormData({
-        deadlineDate: jobData.deadlineDate || "", // Example: jobData.deadlineDate is the property from jobData
+        deadlineDate: jobData.deadlineDate || "",
         jobCategories: jobData.jobCategories || "",
-        jobDescription: jobData.jobDescription || "",
+        // jobDescription: jobData.jobDescription || "",
+        jobDetails: jobData.jobDetails || "",
+        jobSkills: jobData.jobSkills || [],
         jobTitle: jobData.jobTitle || "",
         jobType: jobData.jobType || "",
         salary: jobData.salary || "",
         gender: jobData.gender || "",
         qualification: jobData.qualification || "",
       });
-      setKeylist(jobData.keylist || []); // Provide a default value if keylist is initially undefined
-      setSkill(jobData.skill || []); // Provide a default value if skill is initially undefined
+      setKeylist(jobData.keylist || [{ keyList: "" }]);
+      setSkill(jobData.skill || [{ skillList: "" }]);
     }
   }, [jobData]);
+
   const borderStyle = "1px solid red";
+
   return (
     <Layout authPage={true}>
       <div className="page-wrapper dashboard">
         <span className="header-span"></span>
-        {/* <!-- Header Span for hight --> */}
 
         <LoginPopup />
-        {/* End Login Popup Modal */}
-
-        {/* <DashboardHeader /> */}
-        {/* End Header */}
-
         <MobileMenu />
-        {/* End MobileMenu */}
-
         <DashboardEmployerSidebar />
-        {/* <!-- End User Sidebar Menu --> */}
 
-        {/* <!-- Dashboard --> */}
         <section className="user-dashboard">
           <div className="dashboard-outer">
             <BreadCrumb title="Edit Job" />
-            {/* breadCrumb */}
-
             <MenuToggler />
-            {/* Collapsible sidebar button */}
 
             <div className="row">
               <div className="col-lg-12">
-                {/* <!-- Ls widget --> */}
                 <div className="ls-widget">
                   <div className="tabs-box">
                     <div className="widget-title">
@@ -238,10 +407,9 @@ const EditJob = () => {
                     </div>
 
                     <div className="widget-content">
-                      {/* End job steps form */}
                       <form className="default-form" onSubmit={handleEdit}>
                         <div className="row">
-                          {/* <!-- Input --> */}
+                          {/* Job Title */}
                           <div className="form-group col-lg-12 col-md-12">
                             <label>Job Title</label>
                             <input
@@ -251,9 +419,8 @@ const EditJob = () => {
                               value={formData.jobTitle}
                               onChange={handleInputChange}
                               style={{
-                                border: `${
-                                  errors?.jobTitle ? borderStyle : ""
-                                }`,
+                                border: `${errors?.jobTitle ? borderStyle : ""
+                                  }`,
                               }}
                             />
                             {errors?.jobTitle && (
@@ -261,40 +428,10 @@ const EditJob = () => {
                             )}
                           </div>
 
-                          {/* <!-- About Company --> */}
-                          <div className="form-group col-lg-12 col-md-12">
-                            <label>Job Description</label>
-                            <textarea
-                              onChange={handleInputChange}
-                              name="jobDescription"
-                              value={formData.jobDescription}
-                              style={{
-                                border: `${
-                                  errors?.jobDescription ? borderStyle : ""
-                                }`,
-                              }}
-                              placeholder="Spent several years working on sheep on Wall Street. Had moderate success investing in Yugo's on Wall Street. Managed a small team buying and selling Pogo sticks for farmers. Spent several years licensing licorice in West Palm Beach, FL. Developed several new methods for working it banjos in the aftermarket. Spent a weekend importing banjos in West Palm Beach, FL.In this position, the Software Engineer collaborates with Evention's Development team to continuously enhance our current software solutions as well as create new solutions to eliminate the back-office operations and management challenges present"
-                            ></textarea>
-                            {errors?.jobDescription && (
-                              <p className="err-message">
-                                {errors?.jobDescription}
-                              </p>
-                            )}
-                          </div>
+                          {/* Job Description with TextEditor */}
 
-                          {/* <!-- Search Select --> */}
-                          {/* <div className="form-group col-lg-6 col-md-12">
-          <label>Specialisms </label>
-          <Select
-            defaultValue={[specialisms[2]]}
-            isMulti
-            name="colors"
-            options={specialisms}
-            className="basic-multi-select"
-            classNamePrefix="select"
-          />
-        </div> */}
 
+                          {/* Job Type */}
                           <div className="form-group col-lg-6 col-md-12">
                             <label>Job Type</label>
                             <select
@@ -308,13 +445,15 @@ const EditJob = () => {
                             >
                               <option value="">Select</option>
                               {jobTypes.map((i, index) => (
-                                <option key={i.id}>{i.name}</option>
+                                <option key={i.id} value={i.name}>{i.name}</option>
                               ))}
                             </select>
                             {errors?.jobType && (
                               <p className="err-message">{errors?.jobType}</p>
                             )}
                           </div>
+
+                          {/* Gender */}
                           <div className="form-group col-lg-6 col-md-12">
                             <label>Gender</label>
                             <select
@@ -327,7 +466,6 @@ const EditJob = () => {
                               }}
                             >
                               <option value="">Select</option>
-
                               <option value="male">Male</option>
                               <option value="female">Female</option>
                               <option value="others">Others</option>
@@ -336,6 +474,8 @@ const EditJob = () => {
                               <p className="err-message">{errors?.gender}</p>
                             )}
                           </div>
+
+                          {/* Qualification */}
                           <div className="form-group col-lg-6 col-md-12">
                             <label>Qualification</label>
                             <select
@@ -344,27 +484,17 @@ const EditJob = () => {
                               value={formData.qualification}
                               onChange={handleInputChange}
                               style={{
-                                border: `${
-                                  errors?.qualification ? borderStyle : ""
-                                }`,
+                                border: `${errors?.qualification ? borderStyle : ""
+                                  }`,
                               }}
                             >
                               <option value="">Select</option>
-
                               <option value="Certificate">Certificate</option>
                               <option value="Not specific">Not specific</option>
-                              <option value="Associate Degree">
-                                Associate Degree
-                              </option>
-                              <option value="Bachelor Degree">
-                                Bachelor Degree
-                              </option>
-                              <option value="Master's Degree">
-                                Master's Degree
-                              </option>
-                              <option value="Doctorate Degree">
-                                Doctorate Degree
-                              </option>
+                              <option value="Associate Degree">Associate Degree</option>
+                              <option value="Bachelor Degree">Bachelor Degree</option>
+                              <option value="Master's Degree">Master's Degree</option>
+                              <option value="Doctorate Degree">Doctorate Degree</option>
                             </select>
                             {errors?.qualification && (
                               <p className="err-message">
@@ -373,7 +503,7 @@ const EditJob = () => {
                             )}
                           </div>
 
-                          {/* <!-- Input --> */}
+                          {/* Offered Salary */}
                           <div className="form-group col-lg-6 col-md-12">
                             <label>Offered Salary</label>
                             <select
@@ -398,6 +528,7 @@ const EditJob = () => {
                             )}
                           </div>
 
+                          {/* Job Categories */}
                           <div className="form-group col-lg-6 col-md-12">
                             <label>Job Categories</label>
                             <select
@@ -406,14 +537,13 @@ const EditJob = () => {
                               value={formData.jobCategories}
                               onChange={handleInputChange}
                               style={{
-                                border: `${
-                                  errors?.jobCategories ? borderStyle : ""
-                                }`,
+                                border: `${errors?.jobCategories ? borderStyle : ""
+                                  }`,
                               }}
                             >
                               <option value="">Select option</option>
                               {jobCategories.map((i, index) => (
-                                <option key={i.id}>{i.name}</option>
+                                <option key={i.id} value={i.name}>{i.name}</option>
                               ))}
                             </select>
                             {errors?.jobCategories && (
@@ -422,8 +552,23 @@ const EditJob = () => {
                               </p>
                             )}
                           </div>
-
-                          {/* <!-- Input --> */}
+                          <div className="form-group col-lg-6 col-md-12">
+                            <label>Job Skills</label>
+                            <Select
+                              // defaultValue={[jobSkills[1]]}
+                              isMulti
+                              value={formData.jobSkills}
+                              name="jobSkills"
+                              options={jobSkills}
+                              className="basic-multi-select"
+                              classNamePrefix="select"
+                              onChange={handleJobSkillsChange}
+                            />
+                            {errors?.jobSkills && (
+                              <p className="err-message">{errors?.jobSkills}</p>
+                            )}
+                          </div>
+                          {/* Application Deadline Date */}
                           <div className="form-group col-lg-6 col-md-12">
                             <label>Application Deadline Date</label>
                             <input
@@ -433,10 +578,10 @@ const EditJob = () => {
                               value={
                                 formData.deadlineDate
                                   ? new Date(
-                                      formData.deadlineDate.seconds * 1000
-                                    )
-                                      .toISOString()
-                                      .split("T")[0]
+                                    formData.deadlineDate.seconds * 1000
+                                  )
+                                    .toISOString()
+                                    .split("T")[0]
                                   : ""
                               }
                               style={{
@@ -446,6 +591,48 @@ const EditJob = () => {
                               disabled
                             />
                           </div>
+                          <div className="form-group col-lg-12 col-md-12">
+                            <label style={{ display: "flex", alignItems: 'center' }}>Job Details (Description, Key Responsibilities & Required Skills)
+                              <div style={{ float: 'right', marginLeft: "10px" }}>
+                                <button
+                                  type="button"
+                                  onClick={handleResetJobDetails}
+                                  style={{
+                                    background: '#dc3545',
+                                    color: 'white',
+                                    border: 'none',
+                                    padding: '4px 8px',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    marginRight: '5px',
+                                    cursor: 'pointer'
+                                  }}
+                                >
+                                  Reset Job Details
+                                </button>
+                              </div>
+                            </label>
+                            <div style={{ border: `${errors?.jobDescription ? borderStyle : ""}` }}>
+                              <TextEditor
+                                ref={textEditorRef}
+                                value={formData.jobDetails}
+                                onChange={(content) => handleEditorChange('jobDetails', content)}
+                                onImageUpload={handleImageUpload}
+                                deleteImageFromFirebase={(url) => deleteImageFromFirebase(url, true)}
+                                placeholder="Write your complete job description here including job details, requirements, and other relevant information. Click the image button in the toolbar to add images."
+                                height="400px"
+                                maxImageSize={5 * 1024 * 1024}
+                                allowedImageTypes={['image/jpeg', 'image/png', 'image/gif', 'image/webp']}
+                                error={errors?.jobDescription}
+                              />
+                            </div>
+                            {/* {errors?.jobDescription && (
+                              <p className="err-message">
+                                {errors?.jobDescription}
+                              </p>
+                            )} */}
+                          </div>
+                          {/* Key Responsibilities */}
                           <div className="form-group col-lg-12 col-md-12">
                             <label>Key Responsibilities</label>
                             {keylist.map((singleKey, index) => (
@@ -458,9 +645,8 @@ const EditJob = () => {
                                     value={singleKey.keyList}
                                     onChange={(e) => handleKeyChange(e, index)}
                                     style={{
-                                      border: `${
-                                        errors?.keylist ? borderStyle : ""
-                                      }`,
+                                      border: `${errors?.keylist ? borderStyle : ""
+                                        }`,
                                     }}
                                   />
                                   {errors?.keylist && (
@@ -490,6 +676,8 @@ const EditJob = () => {
                               </div>
                             ))}
                           </div>
+
+                          {/* Skill & Experience */}
                           <div className="form-group col-lg-12 col-md-12">
                             <label>Skill & Experience</label>
                             {skill.map((singleKey, index) => (
@@ -504,9 +692,8 @@ const EditJob = () => {
                                       handleSkillChange(e, index)
                                     }
                                     style={{
-                                      border: `${
-                                        errors?.skill ? borderStyle : ""
-                                      }`,
+                                      border: `${errors?.skill ? borderStyle : ""
+                                        }`,
                                     }}
                                   />
                                   {errors?.skill && (
@@ -536,12 +723,12 @@ const EditJob = () => {
                               </div>
                             ))}
                           </div>
-                          {/* <!-- Input --> */}
+
+                          {/* Submit Button */}
                           <div className="form-group col-lg-12 col-md-12 text-right">
                             <button
                               className="theme-btn btn-style-one d-flex justify-content-center align-items-center"
                               disabled={loading}
-                              // Ensure button has a minimum width
                             >
                               {!loading ? (
                                 <span>Update</span>
@@ -557,24 +744,20 @@ const EditJob = () => {
                           </div>
                         </div>
                       </form>
-                      {/* End post box form */}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            {/* End .row */}
           </div>
-          {/* End dashboard-outer */}
         </section>
-        {/* <!-- End Dashboard --> */}
 
         <CopyrightFooter />
-        {/* <!-- End Copyright --> */}
       </div>
     </Layout>
   );
 };
+
 export default dynamic(() => Promise.resolve(EditJob), {
   ssr: false,
 });

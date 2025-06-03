@@ -193,12 +193,8 @@ const EmployersSingleV1 = ({ employerData, openJobs }) => {
                       <div className="widget-content">
                         {/*  compnay-info */}
                         <ul className="company-info mt-0">
-                          <li>
-                            Primary industry: <span>Software</span>
-                          </li>
-                          <li>
-                            Company size: <span>501-1,000</span>
-                          </li>
+                         
+                          
                           <li>
                             Founded in: <span>{profile?.founded_date}</span>
                           </li>

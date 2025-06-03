@@ -6,14 +6,7 @@ const CopyrightFooter = () => {
       <div className="auto-container">
         <div className="outer-box">
           <div className="copyright-text">
-            © {new Date().getFullYear()} Hubjob by{" "}
-            <a
-              href="https://www.64bitdev.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              64Bit-Development
-            </a>
+            © {new Date().getFullYear()} Hubjob
             . All Right Reserved.
           </div>
           <div className="social-links">

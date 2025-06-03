@@ -23,17 +23,63 @@ const index = () => {
   const userUid = useSelector((state) => {
     return state.firebase.auth.uid;
   });
+
+  // Check if user is out of jobs for selected package
+  const isOutOfJobs = (packageData) => {
+    if (!packageData) return false;
+    return packageData.postedJobs >= packageData.totalJobs;
+  };
+
+  // Get remaining jobs count
+  const getRemainingJobs = (packageData) => {
+    if (!packageData) return 0;
+    return Math.max(0, packageData.totalJobs - packageData.postedJobs);
+  };
+
+  // Check if package has expired (optional - based on your business logic)
+  const isPackageExpired = (packageData) => {
+    if (!packageData || !packageData.createdAt) return false;
+    const createdDate = new Date(packageData.createdAt.seconds * 1000);
+    const expiryDate = new Date(createdDate.getTime() + (packageData.durationDays * 24 * 60 * 60 * 1000));
+    return new Date() > expiryDate;
+  };
+
   const handleContinueUsingQuota = (e) => {
     e.preventDefault();
     if (!selectedPackage) {
       setError("Please select a package before continuing.");
       return;
     }
+
+    if (!selectedPackageData) {
+      setError("Package data not found. Please try again.");
+      return;
+    }
+
+    // Check if package has expired
+    if (isPackageExpired(selectedPackageData)) {
+      setError("This package has expired. Please purchase a new package or contact support.");
+      return;
+    }
+
+    // Check if user is out of jobs
+    if (isOutOfJobs(selectedPackageData)) {
+      setError(`You have reached your job posting limit for the ${selectedPackageData.package} package (${selectedPackageData.postedJobs}/${selectedPackageData.totalJobs} jobs used). Please upgrade your package or wait for quota renewal.`);
+      return;
+    }
+
+    console.log(selectedPackageData);
+    console.log(`Remaining jobs: ${getRemainingJobs(selectedPackageData)}`);
+    
+    // Clear any previous errors and continue
+    setError("");
     setShowPostBoxForm(true);
   };
+
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
+
   const handlePackageChange = (event) => {
     setError("");
     const selectedPackage = event.target.value;
@@ -47,6 +93,23 @@ const index = () => {
 
     setSelectedPackageData(pkgData);
   };
+
+  // Get status color based on quota usage
+  const getQuotaStatusColor = (pkg) => {
+    const usagePercentage = (pkg.postedJobs / pkg.totalJobs) * 100;
+    if (usagePercentage >= 100) return "#e74c3c"; // Red for exhausted
+    if (usagePercentage >= 80) return "#f39c12"; // Orange for almost exhausted
+    return "#27ae60"; // Green for available
+  };
+
+  // Get status text
+  const getQuotaStatusText = (pkg) => {
+    if (isPackageExpired(pkg)) return "EXPIRED";
+    if (isOutOfJobs(pkg)) return "QUOTA EXHAUSTED";
+    const remaining = getRemainingJobs(pkg);
+    return `${remaining} JOBS REMAINING`;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,8 +120,16 @@ const index = () => {
           .get();
         if (snapshot.exists) {
           const fetchedData = [...snapshot.data()?.postQuotas];
-
           setData(fetchedData);
+
+          // Auto-select first available package (not exhausted)
+          if (fetchedData.length > 0) {
+            const availablePackage = fetchedData.find(pkg => !isOutOfJobs(pkg) && !isPackageExpired(pkg));
+            if (availablePackage) {
+              setSelectedPackage(availablePackage.package.toLowerCase());
+              setSelectedPackageData(availablePackage);
+            }
+          }
         } else {
           console.error("No such document!");
         }
@@ -73,6 +144,7 @@ const index = () => {
       fetchData();
     }
   }, [firebase, userUid]);
+
   return (
     <div className="page-wrapper dashboard">
       <span className="header-span"></span>
@@ -138,11 +210,20 @@ const index = () => {
                               <div
                                 key={index}
                                 className="form-group col-lg-12 col-md-12"
+                                style={{
+                                  border: `2px solid ${getQuotaStatusColor(pkg)}`,
+                                  borderRadius: "8px",
+                                  padding: "15px",
+                                  marginBottom: "15px",
+                                  backgroundColor: isOutOfJobs(pkg) || isPackageExpired(pkg) ? "#f8f9fa" : "transparent",
+                                  opacity: isOutOfJobs(pkg) || isPackageExpired(pkg) ? 0.7 : 1
+                                }}
                               >
                                 <label
                                   style={{
                                     display: "flex",
                                     alignItems: "center",
+                                    cursor: isOutOfJobs(pkg) || isPackageExpired(pkg) ? "not-allowed" : "pointer"
                                   }}
                                 >
                                   <input
@@ -151,16 +232,54 @@ const index = () => {
                                     value={pkg.package.toLowerCase()}
                                     style={{ marginRight: 10 }}
                                     onChange={handlePackageChange}
+                                    disabled={isOutOfJobs(pkg) || isPackageExpired(pkg)}
+                                    checked={selectedPackage === pkg.package.toLowerCase()}
                                   />
-                                  <span
-                                    style={{
-                                      fontWeight: "bold",
-                                      marginRight: 10,
-                                    }}
-                                  >
-                                    {capitalizeFirstLetter(pkg.package)}
-                                  </span>
-                                  <span>{`${pkg.postedJobs} jobs posted out of ${pkg.totalJobs}, listed for ${pkg.durationDays} days`}</span>
+                                  <div style={{ flex: 1 }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                      <span
+                                        style={{
+                                          fontWeight: "bold",
+                                          fontSize: "16px",
+                                          color: "#2c3e50"
+                                        }}
+                                      >
+                                        {capitalizeFirstLetter(pkg.package)} Package
+                                      </span>
+                                      <span
+                                        style={{
+                                          fontSize: "12px",
+                                          fontWeight: "bold",
+                                          color: getQuotaStatusColor(pkg),
+                                          backgroundColor: `${getQuotaStatusColor(pkg)}20`,
+                                          padding: "4px 8px",
+                                          borderRadius: "4px"
+                                        }}
+                                      >
+                                        {getQuotaStatusText(pkg)}
+                                      </span>
+                                    </div>
+                                    <div style={{ marginTop: "8px", color: "#7f8c8d" }}>
+                                      <span>{`${pkg.postedJobs} jobs posted out of ${pkg.totalJobs} • Listed for ${pkg.durationDays} days`}</span>
+                                    </div>
+                                    {/* Progress bar */}
+                                    <div style={{ marginTop: "8px" }}>
+                                      <div style={{
+                                        width: "100%",
+                                        height: "6px",
+                                        backgroundColor: "#ecf0f1",
+                                        borderRadius: "3px",
+                                        overflow: "hidden"
+                                      }}>
+                                        <div style={{
+                                          width: `${Math.min((pkg.postedJobs / pkg.totalJobs) * 100, 100)}%`,
+                                          height: "100%",
+                                          backgroundColor: getQuotaStatusColor(pkg),
+                                          transition: "width 0.3s ease"
+                                        }} />
+                                      </div>
+                                    </div>
+                                  </div>
                                 </label>
                               </div>
                             ))
@@ -169,14 +288,52 @@ const index = () => {
                               Quota not found!
                             </div>
                           )}
-                          {error && <p style={{ color: "red" }}>{error}</p>}{" "}
-                          {/* Display error message */}
+                          
+                          {error && (
+                            <div className="col-lg-12">
+                              <div style={{ 
+                                color: "#e74c3c", 
+                                backgroundColor: "#ffeaea",
+                                border: "1px solid #e74c3c",
+                                borderRadius: "4px",
+                                padding: "12px",
+                                marginBottom: "20px"
+                              }}>
+                                <strong>⚠️ {error}</strong>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Show selected package summary */}
+                          {selectedPackageData && !error && (
+                            <div className="col-lg-12">
+                              <div style={{
+                                backgroundColor: "#e8f5e8",
+                                border: "1px solid #27ae60",
+                                borderRadius: "4px",
+                                padding: "12px",
+                                marginBottom: "20px"
+                              }}>
+                                <strong>✓ Selected: {capitalizeFirstLetter(selectedPackageData.package)} Package</strong>
+                                <br />
+                                <span style={{ color: "#27ae60" }}>
+                                  You have {getRemainingJobs(selectedPackageData)} job posting(s) remaining.
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
                           <div className="form-group col-lg-12 col-md-12">
                             <button
                               className="theme-btn btn-style-one"
                               onClick={handleContinueUsingQuota}
+                              disabled={!selectedPackage || isLoading}
+                              style={{
+                                opacity: (!selectedPackage || isLoading) ? 0.6 : 1,
+                                cursor: (!selectedPackage || isLoading) ? "not-allowed" : "pointer"
+                              }}
                             >
-                              Continue using quota
+                              {isLoading ? "Loading..." : "Continue using quota"}
                             </button>
                           </div>
                         </div>
