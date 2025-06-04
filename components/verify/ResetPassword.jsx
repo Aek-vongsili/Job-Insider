@@ -74,7 +74,7 @@ const ResetPassword = ({ actionCode }) => {
         <div className="logo">
           <Link href="/">
             <Image
-              src="/images/HUBJOB LOGO_WHITE.svg"
+              src="/images/HUBJOB LOGO_BLUE.svg"
               alt="brand"
               width={150}
               height={150}
