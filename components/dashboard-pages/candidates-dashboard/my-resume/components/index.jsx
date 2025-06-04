@@ -57,7 +57,6 @@ const index = () => {
 
   const cvManagerHandler = (e) => {
     const file = e.target.files[0];
-    console.log(file);
     if (file && file.name !== oldFileName) {
       setOldFilename(file.name);
       // Change the file name

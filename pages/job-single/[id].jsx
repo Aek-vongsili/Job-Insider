@@ -46,7 +46,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   const isApplied = useSelector((state) => {
     return state.jobSingle.isApplied;
   });
-  console.log(isApplied);
+
 
   useEffect(() => {
     dispatch(getFavouriteJob(userUid));

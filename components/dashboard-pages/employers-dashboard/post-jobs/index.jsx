@@ -68,8 +68,8 @@ const index = () => {
       return;
     }
 
-    console.log(selectedPackageData);
-    console.log(`Remaining jobs: ${getRemainingJobs(selectedPackageData)}`);
+
+
     
     // Clear any previous errors and continue
     setError("");

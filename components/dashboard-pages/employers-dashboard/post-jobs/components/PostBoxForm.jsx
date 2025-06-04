@@ -154,7 +154,7 @@ const PostBoxForm = ({ pkgData }) => {
       // Mark form as dirty since content was uploaded
       setIsFormDirty(true);
 
-      console.log("Image uploaded successfully:", downloadURL);
+
       return downloadURL;
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -205,7 +205,6 @@ const PostBoxForm = ({ pkgData }) => {
       const updatedImages = tempImages.filter(img => img !== imageUrl);
       sessionStorage.setItem(TEMP_IMAGES_KEY, JSON.stringify(updatedImages));
 
-      console.log(`Image deleted ${isExplicitDelete ? 'by user' : 'during cleanup'}:`, imageUrl);
     } catch (error) {
       if (error.code === 'storage/object-not-found') {
         console.warn('Image not found in storage (may have been already deleted):', imageUrl);
@@ -227,7 +226,6 @@ const PostBoxForm = ({ pkgData }) => {
       const tempImages = JSON.parse(sessionStorage.getItem(TEMP_IMAGES_KEY) || '[]');
 
       if (tempImages.length > 0) {
-        console.log(`Cleaning up ${tempImages.length} abandoned images...`);
 
         // Delete images from Firebase Storage
         const deletePromises = tempImages.map(async (imageUrl) => {
@@ -238,7 +236,6 @@ const PostBoxForm = ({ pkgData }) => {
 
         // Clear from sessionStorage
         sessionStorage.removeItem(TEMP_IMAGES_KEY);
-        console.log('Abandoned images cleaned up successfully');
       }
     } catch (error) {
       console.error('Error during cleanup:', error);
@@ -280,7 +277,6 @@ const PostBoxForm = ({ pkgData }) => {
         try {
           const images = JSON.parse(sessionStorage.getItem(key) || '[]');
           if (images.length > 0) {
-            console.log(`Found ${images.length} images to cleanup from previous session`);
             const deletePromises = images.map(async (imageUrl) => {
               await deleteImageFromFirebase(imageUrl, false);
             });

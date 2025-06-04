@@ -68,7 +68,7 @@ const employerUploadFile = (imageAsString, path) => {
         (error) => {
           // Handle unsuccessful uploads
           dispatch(employerUploadErr(error));
-          console.log(error);
+
         },
         async () => {
           // Upload completed successfully, now get the download URL
@@ -118,11 +118,9 @@ const employersProfileData = (uid) => {
         // If the document exists and profile field is not empty
         dispatch(employerSingleSuccess(companyData.data())); // Example dispatch to handle the data
       } else {
-        console.log("Company profile is empty or does not exist.");
         dispatch(employerSingleSuccess(null));
       }
     } catch (err) {
-      console.log(err);
       dispatch(employerSingleErr(err));
     }
   };
@@ -211,7 +209,7 @@ const employerJobListRead = (uid) => {
             candidate: candidateData,
           });
         }
-        console.log(applicantsData);
+
         // Push job data along with applicants to jobsData array
         jobsData.push({ id: jobId, ...jobData, applicants: applicantsData });
       }
@@ -220,11 +218,11 @@ const employerJobListRead = (uid) => {
         dispatch(employerJobListReadSuccess([]));
       } else {
         // Dispatch the retrieved job data
-        console.log(jobsData);
+
         dispatch(employerJobListReadSuccess(jobsData));
       }
     } catch (err) {
-      console.log(err);
+
       dispatch(employerJobListReadErr(err));
     }
   };
@@ -326,7 +324,7 @@ const employerApproveApplicant = (uid, jobId, applicantId) => {
         }
       }
     } catch (err) {
-      console.log(err);
+
       dispatch(employerApproveApplicantErr(err));
       Swal.fire({
         title: "Error!",
@@ -377,7 +375,7 @@ const employerRejectApplicant = (uid, jobId, applicantId) => {
         }
       }
     } catch (err) {
-      console.log(err);
+
       dispatch(employerRejectApplicantErr(err));
       Swal.fire({
         title: "Error!",
@@ -428,7 +426,6 @@ const employerUndoApplicant = (uid, jobId, applicantId) => {
         }
       }
     } catch (err) {
-      console.log(err);
       dispatch(employerUndoApplicantErr(err));
       Swal.fire({
         title: "Error!",

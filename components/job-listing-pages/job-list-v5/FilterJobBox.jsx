@@ -109,7 +109,7 @@ const FilterJobBox = () => {
   } = jobList || {};
 
   const { sort, perPage } = jobSort;
-  console.log(educationSelect);
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(jobReadData());

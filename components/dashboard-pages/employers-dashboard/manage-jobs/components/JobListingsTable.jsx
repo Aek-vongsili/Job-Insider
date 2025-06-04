@@ -17,7 +17,6 @@ const JobListingsTable = () => {
   const jobsData = useSelector((state) => {
     return state.employerSingle.jobData;
   });
-  console.log(jobsData);
   const loading = useSelector((state) => {
     return state.employerSingle.jobLoading;
   });

@@ -165,7 +165,7 @@ const jobSingleData = (jobUid) => {
         dispatch(jobSingleSuccess(jobData.data()));
       }
     } catch (err) {
-      console.log(err);
+
       dispatch(jobSingleErr(err));
     }
   };
@@ -241,7 +241,7 @@ const removeFavouriteJob = (userUid, jobId) => {
       dispatch(removeFavJobSuccess());
       toast.error("Removed from favorites");
     } catch (err) {
-      console.log(err);
+
       dispatch(removeFavJobErr(err));
     }
   };
@@ -291,7 +291,7 @@ const getFavouriteJob = (uid) => {
       }
     } catch (err) {
       // Handle errors
-      console.log(err);
+
       dispatch(favJobGetErr(err));
     }
   };
@@ -353,7 +353,7 @@ const jobApplyApplication = (userUid, jobId) => {
         }
       }
     } catch (err) {
-      console.log(err);
+
       dispatch(jobApplyErr(err));
     }
   };
@@ -411,7 +411,6 @@ const checkIfUserApplied = (userId, jobId) => {
       applicationQuery.forEach((doc) => {
         // Access data of each document
         const data = doc.data();
-        console.log(data); // Log data of each document
         userApplied = true; // Assuming if any document exists, user has applied
       });
 
@@ -419,7 +418,7 @@ const checkIfUserApplied = (userId, jobId) => {
       return userApplied;
     } catch (err) {
       dispatch(jobApplicationCheckErr(err));
-      console.log(err);
+
       // throw new Error("Error checking if user applied for job: " + err.message);
     }
   };

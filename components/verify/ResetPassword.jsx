@@ -41,7 +41,7 @@ const ResetPassword = ({ actionCode }) => {
             text: 'Your password has been successfully reset.',
             confirmButtonText: 'OK',
           });
-          console.log("Password reset successful");
+
         }
       } else {
         setErrorMessage("Passwords do not match");
@@ -74,7 +74,7 @@ const ResetPassword = ({ actionCode }) => {
         <div className="logo">
           <Link href="/">
             <Image
-              src="/images/HUBJOB_LOGO_BLUE.svg"
+              src="/images/HUBJOB LOGO_WHITE.svg"
               alt="brand"
               width={150}
               height={150}

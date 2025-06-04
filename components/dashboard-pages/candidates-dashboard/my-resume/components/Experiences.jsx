@@ -25,7 +25,6 @@ const EditModal = ({
     setEditData(data);
   };
   const handleEdit = () => {
-    console.log(editData);
     if (validation(editData)) {
       updatedExperience(index, editData);
       handleCloseEdit();
@@ -294,7 +293,6 @@ const Experiences = ({ experiences, setExperiences, deleteExperience }) => {
     setExperiences((prevData) => {
       return prevData.map((item, i) => {
         if (i === index) {
-          console.log(item);
           return { ...data };
         }
         return item;

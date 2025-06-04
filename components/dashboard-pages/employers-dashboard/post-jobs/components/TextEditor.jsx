@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, forwardRef, useImperativeHandle } from "react";
+import React, { useMemo, useState, useEffect, forwardRef, useImperativeHandle, useCallback, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import DOMPurify from "dompurify";
@@ -26,7 +26,7 @@ const TextEditor = forwardRef(({
 }, ref) => {
   const [content, setContent] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
-  const quillRef = React.useRef();
+  const quillRef = useRef(null);
   // Setup custom fonts
   const Quill = ReactQuill.Quill;
   const Font = Quill.import("formats/font");
@@ -41,46 +41,41 @@ const TextEditor = forwardRef(({
   Quill.register(Font, true);
 
   // Custom image handler
-  const imageHandler = () => {
+  const imageHandler = useCallback(() => {
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
     input.click();
 
     input.onchange = async () => {
-      const file = input.files[0];
-      if (file) {
-        try {
-          // Show loading state (optional)
-          const range = quillRef.current.getEditor().getSelection(true);
-          quillRef.current.getEditor().insertText(range.index, 'Uploading image...', 'user');
+      if (input !== null && input.files !== null) {
+        const file = input.files[0];
+        if (file) {
+          try {
+            // Show loading state (optional)
+            const range = quillRef.current.getEditor().getSelection(true);
+            quillRef.current.getEditor().insertText(range.index, 'Uploading image...', 'user');
 
-          let imageUrl;
+            const imageUrl = await onImageUpload(file);
 
-          if (onImageUpload) {
-            // Use custom upload function
-            imageUrl = await onImageUpload(file);
-          } else {
-            // Default upload function (you need to implement this)
-            imageUrl = await defaultImageUpload(file);
+            // Remove the loading text and insert the image
+            quillRef.current.getEditor().deleteText(range.index, 'Uploading image...'.length);
+            quillRef.current.getEditor().insertEmbed(range.index, 'image', imageUrl);
+            quillRef.current.getEditor().setSelection(range.index + 1);
+
+          } catch (error) {
+            console.error('Image upload failed:', error);
+            // Remove loading text on error
+            const range = quillRef.current.getEditor().getSelection(true);
+            quillRef.current.getEditor().deleteText(range.index, 'Uploading image...'.length);
+            // Optionally show error message
+            alert('Image upload failed. Please try again.');
           }
-
-          // Remove the loading text and insert the image
-          quillRef.current.getEditor().deleteText(range.index, 'Uploading image...'.length);
-          quillRef.current.getEditor().insertEmbed(range.index, 'image', imageUrl);
-          quillRef.current.getEditor().setSelection(range.index + 1);
-
-        } catch (error) {
-          console.error('Image upload failed:', error);
-          // Remove loading text on error
-          const range = quillRef.current.getEditor().getSelection(true);
-          quillRef.current.getEditor().deleteText(range.index, 'Uploading image...'.length);
-          // Optionally show error message
-          alert('Image upload failed. Please try again.');
         }
       }
+
     };
-  };
+  }, []);
 
 
   // Improved useEffect with better image tracking
@@ -137,7 +132,6 @@ const TextEditor = forwardRef(({
 
         // Delete from Firebase
         if (deletedImages.length > 0) {
-          console.log('Deleting images:', deletedImages);
 
           // Delete images from Firebase (don't wait for all to complete)
           deletedImages.forEach(imageUrl => {
@@ -174,7 +168,6 @@ const TextEditor = forwardRef(({
       .map(op => op.insert.image);
 
     if (imagesToDelete.length > 0) {
-      console.log('Cleaning up content images:', imagesToDelete);
 
       const deletePromises = imagesToDelete.map(imageUrl =>
         deleteImageFromFirebase(imageUrl)
@@ -281,7 +274,7 @@ const TextEditor = forwardRef(({
       toolbar: {
         container: [
           [{ header: [1, 2, 3, false] }],
-          [{ font: Font.whitelist }],
+          // [{ font: Font.whitelist }],
           ["bold", "italic", "underline", "strike"],
           [{ list: "ordered" }, { list: "bullet" }],
           [{ align: [] }],
@@ -331,10 +324,8 @@ const TextEditor = forwardRef(({
 
   // Handle content changes
   const handleChange = (newContent) => {
-    const sanitizedContent = sanitizeOnChange
-      ? DOMPurify.sanitize(newContent)
-      : newContent;
-
+    const sanitizedContent =
+      DOMPurify.sanitize(newContent)
     setContent(sanitizedContent);
 
     if (onChange) {
@@ -415,7 +406,7 @@ const TextEditor = forwardRef(({
           readOnly={readOnly}
           placeholder={placeholder}
           style={editorStyle}
-          {...props}
+        // {...props}
         />
       </div>
 

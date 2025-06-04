@@ -70,8 +70,6 @@ const EditJob = () => {
   const SESSION_KEY = useRef(`edit_job_images_${userUid || 'anonymous'}_${id}_${Date.now()}`);
   const TEMP_IMAGES_KEY = SESSION_KEY.current;
 
-  console.log(jobData);
-
   const jobTypes = [
     { id: 1, name: "Full-Time" },
     { id: 2, name: "Part-Time" },
@@ -122,7 +120,7 @@ const EditJob = () => {
       // Mark form as dirty since content was uploaded
       setIsFormDirty(true);
 
-      console.log("Image uploaded successfully:", downloadURL);
+
       return downloadURL;
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -172,7 +170,7 @@ const EditJob = () => {
       const updatedImages = tempImages.filter(img => img !== imageUrl);
       sessionStorage.setItem(TEMP_IMAGES_KEY, JSON.stringify(updatedImages));
 
-      console.log(`Image deleted ${isExplicitDelete ? 'by user' : 'during cleanup'}:`, imageUrl);
+
     } catch (error) {
       if (error.code === 'storage/object-not-found') {
         console.warn('Image not found in storage (may have been already deleted):', imageUrl);
@@ -196,9 +194,7 @@ const EditJob = () => {
   };
 
   const handleSkillRemove = (index) => {
-    console.log("Removing skill at index:", index);
     const updatedSkill = skill.filter((_, i) => i !== index);
-    console.log("Updated skill array:", updatedSkill);
     setSkill(updatedSkill);
   };
 
@@ -225,7 +221,6 @@ const EditJob = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log(name, value);
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
   const handleJobSkillsChange = (selectedOptions) => {
@@ -314,7 +309,6 @@ const EditJob = () => {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    console.log(formData);
     if (validate({ ...formData, skill, keylist })) {
       const data = { ...formData, skill, keylist };
       dispatch(employerEditJob(userUid, id, data)).then(() => {

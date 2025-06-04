@@ -92,7 +92,7 @@ const candidateUploadFile = (imageAsString, uid) => {
         (error) => {
           // Handle unsuccessful uploads
           dispatch(candidateUploadErr(error));
-          console.log(error);
+
         },
         async () => {
           // Upload completed successfully, now get the download URL
@@ -135,7 +135,7 @@ const candidateUploadCv = (file, uid) => {
         (error) => {
           // Handle unsuccessful uploads
           dispatch(candidateCvErr(error));
-          console.log(error);
+
         },
         async () => {
           // Upload completed successfully, now get the download URL

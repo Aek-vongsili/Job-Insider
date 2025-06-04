@@ -33,7 +33,6 @@ const FilterTopBox = () => {
   const loading = useSelector((state) => {
     return state.employerData.loading;
   });
-  console.log(employerData);
 
   useEffect(() => {
     dispatch(employersListRead());

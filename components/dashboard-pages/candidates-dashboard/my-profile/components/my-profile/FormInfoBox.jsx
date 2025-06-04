@@ -105,7 +105,6 @@ const FormInfoBox = () => {
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
   const handleDayChange = (event) => {
-    console.log(event.target.value);
     setDay(event.target.value);
   };
   const handleMonthChange = (event) => {

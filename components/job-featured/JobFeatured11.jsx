@@ -30,7 +30,7 @@ const JobFeatured11 = () => {
   const handleClick = (event) => {
     setActive(event.target.id);
   };
-  console.log(jobData);
+
   useEffect(() => {
     dispatch(jobReadData());
   }, []);
