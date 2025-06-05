@@ -27,6 +27,7 @@ const TextEditor = forwardRef(({
   const [content, setContent] = useState(value);
   const [isFocused, setIsFocused] = useState(false);
   const quillRef = useRef(null);
+  const isInternalChange = useRef(false);
   // Setup custom fonts
   const Quill = ReactQuill.Quill;
   const Font = Quill.import("formats/font");
@@ -317,21 +318,20 @@ const TextEditor = forwardRef(({
 
   // Sync with external value changes
   useEffect(() => {
-    if (value !== content) {
+    if (value) {
       setContent(value);
     }
   }, [value]);
 
   // Handle content changes
-  const handleChange = (newContent) => {
-    const sanitizedContent =
-      DOMPurify.sanitize(newContent)
-    setContent(sanitizedContent);
+  const handleChange = useCallback((newContent) => {
+    const sanitizedContent = DOMPurify.sanitize(newContent);
+    setContent(newContent); // This changes content
 
     if (onChange) {
-      onChange(sanitizedContent, name);
+      onChange(newContent, name); // Parent might update value prop
     }
-  };
+  }, [onChange,name]);
 
   // Handle blur events
   const handleBlur = () => {

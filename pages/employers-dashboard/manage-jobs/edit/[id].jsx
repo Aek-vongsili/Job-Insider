@@ -61,11 +61,12 @@ const EditJob = () => {
   const loading = useSelector((state) => {
     return state.employerSingle.jobLoading;
   });
-
+  
   const jobData = useSelector((state) => {
     return state.jobSingle.data;
   });
-
+  console.log(jobData);
+  
   // Create a unique session key for tracking uploaded images
   const SESSION_KEY = useRef(`edit_job_images_${userUid || 'anonymous'}_${id}_${Date.now()}`);
   const TEMP_IMAGES_KEY = SESSION_KEY.current;
@@ -358,7 +359,7 @@ const EditJob = () => {
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (jobData) {
+      if (jobData && !loading && id) {
       setFormData({
         deadlineDate: jobData.deadlineDate || "",
         jobCategories: jobData.jobCategories || "",
@@ -374,7 +375,7 @@ const EditJob = () => {
       setKeylist(jobData.keylist || [{ keyList: "" }]);
       setSkill(jobData.skill || [{ skillList: "" }]);
     }
-  }, [jobData]);
+  }, [jobData,loading,id]);
 
   const borderStyle = "1px solid red";
 
@@ -617,7 +618,7 @@ const EditJob = () => {
                                 height="400px"
                                 maxImageSize={5 * 1024 * 1024}
                                 allowedImageTypes={['image/jpeg', 'image/png', 'image/gif', 'image/webp']}
-                                error={errors?.jobDescription}
+                                // error={errors?.jobDescription}
                               />
                             </div>
                             {/* {errors?.jobDescription && (
