@@ -318,7 +318,7 @@ const TextEditor = forwardRef(({
 
   // Sync with external value changes
   useEffect(() => {
-    if (value) {
+    if (value != content) {
       setContent(value);
     }
   }, [value]);
@@ -331,7 +331,7 @@ const TextEditor = forwardRef(({
     if (onChange) {
       onChange(newContent, name); // Parent might update value prop
     }
-  }, [onChange,name]);
+  }, [onChange, name]);
 
   // Handle blur events
   const handleBlur = () => {

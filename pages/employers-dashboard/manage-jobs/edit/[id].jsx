@@ -65,7 +65,6 @@ const EditJob = () => {
   const jobData = useSelector((state) => {
     return state.jobSingle.data;
   });
-  console.log(jobData);
   
   // Create a unique session key for tracking uploaded images
   const SESSION_KEY = useRef(`edit_job_images_${userUid || 'anonymous'}_${id}_${Date.now()}`);
