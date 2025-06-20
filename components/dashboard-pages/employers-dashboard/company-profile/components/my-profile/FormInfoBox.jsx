@@ -109,10 +109,7 @@ const FormInfoBox = () => {
     }
     if (!values.company_about) {
       errors.company_about = "Company about is required";
-    } else if (values.company_about.length < 150) {
-      errors.company_about = "Company about must be at least 150 words";
-    }
-
+    } 
     setErrors(errors);
     return Object.keys(errors).length === 0;
   };
