@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useState, useEffect } from "react";
 import jobs from "../../../data/job-featured";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,6 +20,9 @@ import {
     clearExperienceToggle,
     clearJobTypeToggle,
 } from "../../../features/job/jobSlice";
+import EnhancedJobCard from "../components/EnhancedJobCard";
+import ModernPagination from "../components/ModernPagination";
+import JobListingLayout from "../components/JobListingLayout";
 
 const FilterJobsBox = () => {
     const { jobList, jobSort } = useSelector((state) => state.filter);
@@ -37,6 +41,16 @@ const FilterJobsBox = () => {
     const { sort, perPage } = jobSort;
 
     const dispatch = useDispatch();
+    
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [jobsPerPage, setJobsPerPage] = useState(10);
+
+    // Reset pagination when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [keyword, location, destination, category, jobType, datePosted, experience, salary, tag, sort]);
 
     // keyword filter on title
     const keywordFilter = (item) =>
@@ -107,7 +121,7 @@ const FilterJobsBox = () => {
     const sortFilter = (a, b) =>
         sort === "des" ? a.id > b.id && -1 : a.id < b.id && -1;
 
-    let content = jobs
+    const filteredJobs = jobs
         ?.filter(keywordFilter)
         ?.filter(locationFilter)
         ?.filter(destinationFilter)
@@ -117,62 +131,44 @@ const FilterJobsBox = () => {
         ?.filter(experienceFilter)
         ?.filter(salaryFilter)
         ?.filter(tagFilter)
-        ?.sort(sortFilter)
-        .slice(perPage.start, perPage.end !== 0 ? perPage.end : 10)
-        ?.map((item) => (
-            <div className="job-block" key={item.id}>
-                <div className="inner-box">
-                    <div className="content">
-                        <span className="company-logo">
-                            <img src={item.logo} alt="item brand" />
-                        </span>
-                        <h4>
-                            <Link href={`/job-single-v1/${item.id}`}>
-                                {item.jobTitle}
-                            </Link>
-                        </h4>
+        ?.sort(sortFilter);
 
-                        <ul className="job-info">
-                            <li>
-                                <span className="icon flaticon-briefcase"></span>
-                                {item.company}
-                            </li>
-                            {/* compnay info */}
-                            <li>
-                                <span className="icon flaticon-map-locator"></span>
-                                {item.location}
-                            </li>
-                            {/* location info */}
-                            <li>
-                                <span className="icon flaticon-clock-3"></span>{" "}
-                                {item.time}
-                            </li>
-                            {/* time info */}
-                            <li>
-                                <span className="icon flaticon-money"></span>{" "}
-                                {item.salary}
-                            </li>
-                            {/* salary info */}
-                        </ul>
-                        {/* End .job-info */}
+    // Calculate pagination
+    const totalJobs = filteredJobs?.length || 0;
+    const totalPages = Math.ceil(totalJobs / jobsPerPage);
+    const startIndex = (currentPage - 1) * jobsPerPage;
+    const endIndex = startIndex + jobsPerPage;
+    
+    const paginatedJobs = filteredJobs?.slice(startIndex, endIndex);
 
-                        <ul className="job-other-info">
-                            {item?.jobType?.map((val, i) => (
-                                <li key={i} className={`${val.styleClass}`}>
-                                    {val.type}
-                                </li>
-                            ))}
-                        </ul>
-                        {/* End .job-other-info */}
+    const handlePageChange = (page) => {
+        if (page === currentPage) return;
+        
+        setIsLoading(true);
+        setCurrentPage(page);
+        
+        // Simulate loading delay for smooth UX
+        setTimeout(() => {
+            setIsLoading(false);
+        }, 500);
+        
+        // Scroll to top of job listings smoothly
+        const jobListingElement = document.querySelector('.job-listing-layout');
+        if (jobListingElement) {
+            jobListingElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
 
-                        <button className="bookmark-btn">
-                            <span className="flaticon-bookmark"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            // End all jobs
-        ));
+    let content = paginatedJobs?.map((item) => (
+        <div className="col-12" key={item.id}>
+            <EnhancedJobCard 
+                job={item} 
+                linkPrefix="/job-single-v1"
+            />
+        </div>
+    ));
 
     // sort handler
     const sortHandler = (e) => {
@@ -182,7 +178,11 @@ const FilterJobsBox = () => {
     // per page handler
     const perPageHandler = (e) => {
         const pageData = JSON.parse(e.target.value);
+        const newJobsPerPage = pageData.end === 0 ? 999 : pageData.end || 10; // Use large number for "All"
+        
         dispatch(addPerPage(pageData));
+        setJobsPerPage(newJobsPerPage);
+        setCurrentPage(1); // Reset to first page when changing items per page
     };
 
     // clear all filters
@@ -263,7 +263,7 @@ const FilterJobsBox = () => {
                     <select
                         onChange={perPageHandler}
                         className="chosen-single form-select ms-3 "
-                        value={JSON.stringify(perPage)}
+                        value={JSON.stringify({ start: 0, end: jobsPerPage })}
                     >
                         <option
                             value={JSON.stringify({
@@ -302,15 +302,40 @@ const FilterJobsBox = () => {
                 </div>
             </div>
             {/* End top filter bar box */}
-            {content}
-            {/* <!-- List Show More --> */}
-            <div className="ls-show-more">
-                <p>Show 36 of 497 Jobs</p>
-                <div className="bar">
-                    <span className="bar-inner" style={{ width: "40%" }}></span>
-                </div>
-                <button className="show-more">Show More</button>
+            <div className="job-listing-container">
+                <JobListingLayout 
+                    viewMode="list" 
+                    isLoading={isLoading}
+                >
+                    {content}
+                </JobListingLayout>
+                
+                {isLoading && (
+                    <div className="pagination-loading-overlay">
+                        <div className="loading-content">
+                            <i className="fas fa-spinner fa-spin"></i>
+                            <span>Loading page {currentPage}...</span>
+                        </div>
+                    </div>
+                )}
             </div>
+            
+            {/* Job Results Summary */}
+            <div className="job-results-summary text-center mt-4">
+                <p className="text-muted">
+                    Showing {startIndex + 1} - {Math.min(endIndex, totalJobs)} of {totalJobs} jobs
+                </p>
+            </div>
+
+            {/* Modern Pagination */}
+            {totalPages > 1 && (
+                <ModernPagination 
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                    isLoading={isLoading}
+                />
+            )}
         </>
     );
 };
