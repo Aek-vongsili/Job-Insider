@@ -16,6 +16,10 @@
   padding: 20px;
 }
 
+.ad-popup-overlay.closing {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
 .ad-popup-container {
   position: relative;
   max-width: 600px;
@@ -26,6 +30,10 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   animation: slideIn 0.4s ease-out;
   transform-origin: center;
+}
+
+.ad-popup-container.closing {
+  animation: slideOut 0.3s ease-in forwards;
 }
 
 .ad-popup-close {
@@ -52,6 +60,26 @@
   background: #fff;
   transform: scale(1.1);
   color: #ff4757;
+}
+
+.ad-popup-close:active {
+  transform: scale(0.9);
+  transition: transform 0.1s ease;
+}
+
+.ad-popup-container.closing .ad-popup-close {
+  animation: spin 0.3s ease-in forwards;
+}
+
+@keyframes spin {
+  from {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.3) rotate(180deg);
+    opacity: 0;
+  }
 }
 
 .ad-popup-timer {
@@ -176,6 +204,22 @@
   height: 100%;
   background: linear-gradient(90deg, var(--primary-color), #4CAF50);
   width: 0%;
+  transition: width 1s linear;
+}
+
+.ad-popup-container.closing .ad-popup-progress {
+  animation: progressFadeOut 0.3s ease-in forwards;
+}
+
+@keyframes progressFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }
 
 .ad-popup-timer i {
@@ -185,6 +229,21 @@
 
 .ad-popup-timer:hover {
   opacity: 1;
+}
+
+.ad-popup-container.closing .ad-popup-timer {
+  animation: timerFadeOut 0.3s ease-in forwards;
+}
+
+@keyframes timerFadeOut {
+  from {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
 }
 
 /* Animations */
@@ -197,6 +256,15 @@
   }
 }
 
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
@@ -205,6 +273,21 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.95) translateY(-5px) rotate(1deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85) translateY(-20px) rotate(2deg);
   }
 }
 

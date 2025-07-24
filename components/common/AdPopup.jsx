@@ -1,9 +1,11 @@
+import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 
 const AdPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const [timeLeft, setTimeLeft] = useState(10);
-
+  const router = useRouter()
   useEffect(() => {
     // Check if we're in browser environment
     if (typeof window === 'undefined') {
@@ -28,7 +30,7 @@ const AdPopup = () => {
     // Show popup after a small delay
     const showTimer = setTimeout(() => {
       setIsVisible(true);
-    }, 2000); // 2 seconds delay
+    }, 1000); // 2 seconds delay
 
     return () => clearTimeout(showTimer);
   }, []);
@@ -38,7 +40,7 @@ const AdPopup = () => {
 
     // Auto-close after 10 seconds
     const autoCloseTimer = setTimeout(() => {
-      setIsVisible(false);
+      handleClose();
     }, 10000);
 
     // Countdown timer
@@ -59,10 +61,15 @@ const AdPopup = () => {
   }, [isVisible]);
 
   const handleClose = () => {
-    setIsVisible(false);
-    // Store today's date to prevent showing again today
-    const today = new Date().toDateString();
-    localStorage.setItem('adPopupLastClosed', today);
+    setIsClosing(true);
+    // Wait for animation to complete before hiding
+    setTimeout(() => {
+      setIsVisible(false);
+      setIsClosing(false);
+      // Store today's date to prevent showing again today
+      const today = new Date().toDateString();
+      localStorage.setItem('adPopupLastClosed', today);
+    }, 300); // Animation duration
   };
 
   const handleBackdropClick = (e) => {
@@ -82,8 +89,8 @@ const AdPopup = () => {
   if (!isVisible) return null;
 
   return (
-    <div className="ad-popup-overlay" onClick={handleBackdropClick}>
-      <div className="ad-popup-container">
+    <div className={`ad-popup-overlay ${isClosing ? 'closing' : ''}`} onClick={handleBackdropClick}>
+      <div className={`ad-popup-container ${isClosing ? 'closing' : ''}`}>
         {/* Close Button */}
         <button 
           className="ad-popup-close" 
@@ -107,6 +114,8 @@ const AdPopup = () => {
             className="ad-popup-image"
             onError={handleImageError}
             loading="lazy"
+            onClick={()=>router.push("/job-single/p5asmFgQw89egBEa0PCD")}
+            style={{cursor: "pointer"}}
           />
           
           {/* Fallback content if image doesn't load */}
