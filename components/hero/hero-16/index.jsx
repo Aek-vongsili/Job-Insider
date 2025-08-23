@@ -6,6 +6,7 @@ const index = () => {
     { id: 1, path: "/images/index-16/banner/BANNER_ADS_HUBJOB.png" },
     { id: 2, path: "/images/index-16/banner/64BIT_DEVELOPMENT_BANNER.png" },
     { id: 3, path: "/images/index-16/banner/POST64_BANNER.png" },
+    { id: 4, path: "/images/index-16/banner/CV_BANNER.jpg" },
   ];
 
   return (
