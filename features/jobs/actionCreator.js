@@ -423,6 +423,28 @@ const checkIfUserApplied = (userId, jobId) => {
     }
   };
 };
+
+// Add view tracking function - increments view every time it's called
+const trackJobView = (jobId) => {
+  return async (dispatch, getState, { getFirebase, getFirestore }) => {
+    const db = getFirestore();
+    try {
+      console.log('Incrementing view for job:', jobId); // Debug log
+      
+      // Always increment view count in database
+      await db.collection('jobs').doc(jobId).update({
+        views: db.FieldValue.increment(1)
+      });
+      
+      console.log('View count incremented successfully'); // Debug log
+      return true; // Successfully tracked view
+    } catch (err) {
+      console.error('Error tracking job view:', err);
+      return false;
+    }
+  };
+};
+
 export {
   jobInsertData,
   jobReadData,
@@ -432,5 +454,6 @@ export {
   removeFavouriteJob,
   jobApplyApplication,
   checkIfUserApplied,
-  resetInsertStatus
+  resetInsertStatus,
+  trackJobView,
 };

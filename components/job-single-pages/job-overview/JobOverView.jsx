@@ -1,4 +1,4 @@
-const JobOverView = ({ jobData, timeDistance }) => {
+const JobOverView = ({ jobData, timeDistance, viewCount }) => {
   // Replace with your date string
   return (
     <div className="widget-content">
@@ -28,6 +28,15 @@ const JobOverView = ({ jobData, timeDistance }) => {
           <i className="icon icon-location"></i>
           <h5>Location:</h5>
           <span>{jobData?.location?.address}</span>
+        </li>
+        <li>
+          <span style={{ 
+            fontSize: '16px',
+            color: '#1e7bb8',
+            marginRight: '8px'
+          }}>👁</span>
+          <h5>Total Views:</h5>
+          <span>{viewCount ? viewCount.toLocaleString() : '0'}</span>
         </li>
         <li>
           <i className="icon icon-user-2"></i>

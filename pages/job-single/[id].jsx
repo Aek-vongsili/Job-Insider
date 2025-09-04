@@ -23,6 +23,7 @@ import {
   getFavouriteJob,
   jobApplyApplication,
   removeFavouriteJob,
+  trackJobView,
 } from "../../features/jobs/actionCreator";
 import { Modal } from "react-bootstrap";
 
@@ -40,6 +41,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
   const role = useSelector((state) => state.auth.role);
 
   const [like, setLike] = useState(false);
+  const [viewCount, setViewCount] = useState(jobData?.views || 0); // Initialize immediately with jobData
   const favJobData = useSelector((state) => {
     return state.jobs.jobFavData;
   });
@@ -47,10 +49,46 @@ const JobSingleDynamicV1 = ({ jobData }) => {
     return state.jobSingle.isApplied;
   });
 
-
   useEffect(() => {
     dispatch(getFavouriteJob(userUid));
   }, [userUid, like]);
+
+  // Track job view - increment immediately when page loads
+  useEffect(() => {
+    const trackView = async () => {
+      if (id) {
+        try {
+          console.log('Tracking view for job:', id); // Debug log
+          
+          // Optimistically update UI immediately
+          setViewCount(prev => {
+            const newCount = prev + 1;
+            console.log('View count updated optimistically:', newCount); // Debug log
+            return newCount;
+          });
+          
+          // Then update database in background
+          const success = await dispatch(trackJobView(id));
+          
+          if (!success) {
+            // If database update failed, revert the optimistic update
+            setViewCount(prev => prev - 1);
+            console.log('Database update failed, reverted view count');
+          }
+          
+        } catch (error) {
+          console.error('Error tracking job view:', error);
+          // Revert optimistic update on error
+          setViewCount(prev => prev - 1);
+        }
+      }
+    };
+
+    // Track view immediately when component mounts and id is available
+    if (id) {
+      trackView(); // No delay - execute immediately
+    }
+  }, [id, dispatch]); // Track on every page load when id changes
   useEffect(() => {
     const isJobFavorited = favJobData.some((job) => job.jobId === id);
     if (isJobFavorited) {
@@ -229,6 +267,26 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                           {jobData?.jobType2}
                         </li>
                       )}
+                      <li className="views-count" style={{ 
+                        backgroundColor: '#e8f4fd', 
+                        color: '#1e7bb8', 
+                        border: '1px solid #bde0ff',
+                        borderRadius: '6px',
+                        padding: '6px 12px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        whiteSpace: 'nowrap',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                      }}>
+                        <span style={{ 
+                          fontSize: '14px',
+                          opacity: '0.8'
+                        }}>👁</span>
+                        {viewCount.toLocaleString()} {viewCount === 1 ? 'view' : 'views'}
+                      </li>
                     </ul>
                     {/* End .job-other-info */}
                   </div>
@@ -355,6 +413,7 @@ const JobSingleDynamicV1 = ({ jobData }) => {
                       <h4 className="widget-title">Job Overview</h4>
                       <JobOverView
                         jobData={jobData}
+                        viewCount={viewCount}
                         timeDistance={calculateTimeDistanceFromNow(
                           jobData?.createdAt?.seconds,
                           jobData?.createdAt?.nanoseconds
@@ -494,6 +553,12 @@ export const getServerSideProps = wrapper.getServerSideProps(
       const serializedEmployerData = employerData.data()
         ? JSON.parse(JSON.stringify(employerData.data()))
         : null;
+      
+      // Ensure views field exists, default to 0 if not present
+      if (serializedJobData && !serializedJobData.views) {
+        serializedJobData.views = 0;
+      }
+      
       const combineData = { ...serializedJobData, ...serializedEmployerData };
 
       return {
