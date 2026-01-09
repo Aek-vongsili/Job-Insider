@@ -3,12 +3,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 const index = () => {
   const imagePath = [
-    { id: 1, path: "/images/index-16/banner/LANDROVER.jpeg" },
-    { id: 2, path: "/images/index-16/banner/Mag_FBcover_afterlaunch.jpg" },
-    { id: 3, path: "/images/index-16/banner/BANNER_ADS_HUBJOB.png" },
-    { id: 4, path: "/images/index-16/banner/64BIT_DEVELOPMENT_BANNER.png" },
-    { id: 5, path: "/images/index-16/banner/POST64_BANNER.png" },
-    { id: 6, path: "/images/index-16/banner/CV_BANNER.png" },
+    { id: 1, path: "/images/index-16/banner/BANNER ADS 3 PROJECT.png" },
+    { id: 2, path: "/images/index-16/banner/LANDROVER.jpeg" },
+    { id: 3, path: "/images/index-16/banner/Mag_FBcover_afterlaunch.jpg" },
+    { id: 4, path: "/images/index-16/banner/BANNER_ADS_HUBJOB.png" },
+    { id: 5, path: "/images/index-16/banner/64BIT_DEVELOPMENT_BANNER.png" },
+    { id: 6, path: "/images/index-16/banner/POST64_BANNER.png" },
+    { id: 7, path: "/images/index-16/banner/CV_BANNER.png" },
   ];
 
   return (
